@@ -30,7 +30,7 @@ webpack为你完成所有的预处理工作，然后根据你定义的配置和�
 
 ## 该书是如何组织的
 
-本书开发解释webpack是什么。之后，你会发现很多章节从不同的角度讨论webpack。在阅读这些章节时，你将形成你自己的webpack配置，同时掌握基本的技术。
+本书开发解释webpack是什么。之后，你会发现很多章节从不同的角度讲解webpack。在阅读这些章节时，你将形成你自己的webpack配置，同时掌握基本的技术。
 
 这本书分为以下几部分:
 
@@ -39,8 +39,8 @@ webpack为你完成所有的预处理工作，然后根据你定义的配置和�
 * **Loading** 详细介绍webpack加载起的意义，并向你展示如何加载静态资源，如：images, fonts, 和 JavaScript。
 * **Building** 介绍source-map， 并讲解打包和代码分离的思想。你将学会如何整理你的生产模式配置。
 * **Optimizing** 将你的的构建提升到生产质量级别，然后进行一系列小的调整使最终打包文件变得更小，你将学会如何调整来提升webpack性能。
-* **Output** 讨论webpack输出的相关技术。与名字无关，webpack不仅用于web。webpack可是实现多页面的配置， 并学习服务端渲染的思想ssr（Server Side Rendering）。
-* **Techniques** 讨论集中思想，如：动态加载，web workers, 国际化（i118），部署你的项目, 以及webpack添加npm依赖.
+* **Output** 讲解webpack输出的相关技术。与名字无关，webpack不仅用于web。webpack可是实现多页面的配置， 并学习服务端渲染的思想ssr（Server Side Rendering）。
+* **Techniques** 讲解技术思想，如：动态加载，web workers, 国际化（i118），部署你的项目, 以及webpack添加npm依赖.
 * **Extending** 展示如何用加载器（loader）和插件（plugins）扩展webpack。
 
 最后，有一个结束章节简短的概括了本书的主要观点。它包含一个技术清单，可以让你有条不紊的完成项目。
