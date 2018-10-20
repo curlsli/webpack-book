@@ -1,33 +1,16 @@
 {
-  "name": "survivejs-webpack",
-  "private": true,
-  "version": "2.4.6",
-  "description": "SurviveJS - Webpack",
+  "name": "webpack",
+  "version": "0.0.1",
+  "description": "Webpack",
   "scripts": {
-    "publish:silent": "leanpub-cli publish-silent survivejs-webpack",
-    "preview": "leanpub-cli preview survivejs-webpack",
-    "job-status": "leanpub-cli job-status survivejs-webpack",
-    "test": "npm run textlint && npm run remark",
-    "test:links": "check-markdown-links manuscript",
-    "proselint": "proselintjs \"manuscript/**/*.md\"",
-    "textlint": "textlint \"manuscript/*.md\" && textlint \"manuscript/**/*.md\"",
-    "keywords": "node ./utils/keywords",
-    "remark": "remark manuscript",
-    "postcommit": "npm test",
-    "prepush": "npm test",
-    "push": "git push && npm run preview"
-  },
-  "remarkConfig": {
-    "plugins": [
-      "preset-survivejs"
-    ]
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/survivejs/webpack-book.git"
+    "url": "https://github.com/lvzhenbang/webpack-book.git"
   },
   "keywords": [
-    "react",
     "webpack"
   ],
   "author": "",
@@ -35,23 +18,9 @@
   "bugs": {
     "url": "https://github.com/survivejs/webpack-book/issues"
   },
-  "homepage": "https://github.com/survivejs/webpack-book",
-  "dependencies": {},
-  "devDependencies": {
-    "check-markdown-links": "^0.1.1",
-    "glob": "^7.1.1",
-    "husky": "^0.13.2",
-    "leanpub-cli": "^0.2.0",
-    "nlcst-to-string": "^2.0.0",
-    "proselint": "^0.1.7",
-    "remark-cli": "^3.0.0",
-    "remark-preset-survivejs": "^0.2.1",
-    "retext": "^5.0.0",
-    "retext-keywords": "^4.0.0",
-    "textlint": "^7.3.0",
-    "textlint-rule-common-misspellings": "^1.0.1",
-    "textlint-rule-terminology": "^1.1.6",
-    "textlint-rule-write-good": "^1.6.0",
-    "to-vfile": "^2.1.1"
+  "homepage": "https://github.com/lvzhenbag/webpack-book",
+  "dependencies": {
+    "vuepress": "0.12.0",
+    "vuepress-theme-vue": "^1.1.0"
   }
 }
