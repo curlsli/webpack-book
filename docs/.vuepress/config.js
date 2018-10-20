@@ -22,6 +22,8 @@ module.exports = {
             description: 'webpack SruriveJS'
         }
     },
+    base: '/webpack-book/dist/',
+    dest: './dist',
     theme: 'vue',
     themeConfig: {
         repo: 'webpack',
