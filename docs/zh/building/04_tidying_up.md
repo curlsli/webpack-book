@@ -38,17 +38,13 @@ Connect it with the project:
 ```javascript
 const PATHS = {
   app: path.join(__dirname, "src"),
-leanpub-start-insert
   build: path.join(__dirname, "dist"),
-leanpub-end-insert
 };
 
 ...
 
 const productionConfig = merge([
-leanpub-start-insert
   parts.clean(PATHS.build),
-leanpub-end-insert
   ...
 ]);
 ```
@@ -96,9 +92,7 @@ And connect it to the main configuration:
 ```javascript
 const productionConfig = merge([
   ...
-leanpub-start-insert
   parts.attachRevision(),
-leanpub-end-insert
 ]);
 ```
 

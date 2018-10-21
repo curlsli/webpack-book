@@ -43,9 +43,7 @@ Hook it up to the configuration:
 ```javascript
 const productionConfig = merge([
   parts.clean(PATHS.build),
-leanpub-start-insert
   parts.minifyJavaScript(),
-leanpub-end-insert
   ...
 ]);
 ```
@@ -137,7 +135,6 @@ Then, connect with the main configuration:
 const productionConfig = merge([
   ...
   parts.minifyJavaScript(),
-leanpub-start-insert
   parts.minifyCSS({
     options: {
       discardComments: {
@@ -148,7 +145,6 @@ leanpub-start-insert
       safe: true,
     },
   }),
-leanpub-end-insert
   ...
 ]);
 ```
@@ -164,10 +160,8 @@ Built at: 3/16/2018 5:32:55 PM
       chunk.0.js  162 bytes       0  [emitted]
       chunk.1.js   96.8 KiB       1  [emitted]  vendors~main
          main.js   2.19 KiB       2  [emitted]  main
-leanpub-start-insert
         main.css    1.2 KiB       2  [emitted]  main
 vendors~main.css   1.32 KiB       1  [emitted]  vendors~main
-leanpub-end-insert
   chunk.0.js.map  204 bytes       0  [emitted]
   chunk.1.js.map    235 KiB       1  [emitted]  vendors~main
 ...

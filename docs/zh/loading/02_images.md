@@ -87,21 +87,17 @@ To attach it to the configuration, adjust as follows. The configuration defaults
 ```javascript
 const productionConfig = merge([
   ...
-leanpub-start-insert
   parts.loadImages({
     options: {
       limit: 15000,
       name: "[name].[ext]",
     },
   }),
-leanpub-end-insert
 ]);
 
 const developmentConfig = merge([
   ...
-leanpub-start-insert
   parts.loadImages(),
-leanpub-end-insert
 ]);
 ```
 
@@ -112,11 +108,9 @@ To test that the setup works, download an image or generate it (`convert -size 1
 ```css
 body {
   background: cornsilk;
-leanpub-start-insert
   background-image: url("./logo.png");
   background-repeat: no-repeat;
   background-position: center;
-leanpub-end-insert
 }
 ```
 

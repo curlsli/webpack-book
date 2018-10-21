@@ -54,24 +54,18 @@ The build needs tweaking to generate proper hashes. Images and fonts should rece
 
 ```javascript
 const productionConfig = merge([
-leanpub-start-insert
   {
     output: {
       chunkFilename: "[name].[chunkhash:4].js",
       filename: "[name].[chunkhash:4].js",
     },
   },
-leanpub-end-insert
   ...
   parts.loadImages({
     options: {
       limit: 15000,
-leanpub-start-delete
-      name: "[name].[ext]",
-leanpub-end-delete
-leanpub-start-insert
+      // name: "[name].[ext]",
       name: "[name].[hash:4].[ext]",
-leanpub-end-insert
     },
   }),
   ...
@@ -92,12 +86,8 @@ Therefore, instead of `chunkhash`, you can use `contenthash` that is generated b
 exports.extractCSS = ({ include, exclude, use }) => {
   // Output extracted CSS to a file
   const plugin = new MiniCssExtractPlugin({
-leanpub-start-delete
-    filename: "[name].css",
-leanpub-end-delete
-leanpub-start-insert
+    // filename: "[name].css",
     filename: "[name].[contenthash:4].css",
-leanpub-end-insert
   });
 
   ...

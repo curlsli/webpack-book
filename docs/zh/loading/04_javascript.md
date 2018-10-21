@@ -41,8 +41,6 @@ T> Given that [Node supports the ES2015 specification well](http://node.green/) 
 
 W> If you use *webpack.config.babel.js*, take care with the `"modules": false,` setting. If you want to use ES2015 modules, you could skip the setting in your global Babel configuration and then configure it per environment as discussed below.
 
-{pagebreak}
-
 ### Setting Up *babel-loader*
 
 The first step towards configuring Babel to work with webpack is to set up [babel-loader](https://www.npmjs.com/package/babel-loader). It takes the code and turns it into a format older browsers can understand. Install *babel-loader* and include its peer dependency *@babel/core*:
@@ -72,8 +70,6 @@ exports.loadJavaScript = ({ include, exclude } = {}) => ({
 
 Next, you need to connect this to the main configuration. If you are using a modern browser for development, you can consider processing only the production code through Babel. It's used for both production and development environments in this case. Also, only application code is processed through Babel.
 
-{pagebreak}
-
 Adjust as below:
 
 **webpack.config.js**
@@ -81,9 +77,7 @@ Adjust as below:
 ```javascript
 const commonConfig = merge([
   ...
-leanpub-start-insert
   parts.loadJavaScript({ include: PATHS.app }),
-leanpub-end-insert
 ]);
 ```
 
@@ -121,8 +115,6 @@ Adjust the target definition as you like. As long as you follow [browserslist](h
 ```
 
 If you execute `npm run build -- --devtool false --mode development` now and examine *dist/main.js*, you will see something different based on your `.browserslistrc` file.
-
-{pagebreak}
 
 Try to include only a definition like `IE 8` there, and the code should change accordingly:
 
@@ -165,8 +157,6 @@ Sometimes you want to use experimental features that fit your project. Although 
 
 Babel isn't the only option although it's the most popular one. [Buble](https://buble.surge.sh) by Rich Harris is another compiler worth checking out. There's experimental [buble-loader](https://www.npmjs.com/package/buble-loader) that allows you to use it with webpack. Buble doesn't support ES2015 modules, but that's not a problem as webpack provides that functionality.
 
-{pagebreak}
-
 ## Babel Plugins
 
 Perhaps the greatest thing about Babel is that it's possible to extend with plugins:
@@ -208,17 +198,13 @@ Consider the example below:
 
 Any shared presets and plugins are available to all targets still. `env` allows you to specialize your Babel configuration further.
 
-{pagebreak}
-
 It's possible to pass the webpack environment to Babel with a tweak:
 
 **webpack.config.js**
 
 ```javascript
 module.exports = mode => {
-leanpub-start-insert
   process.env.BABEL_ENV = mode;
-leanpub-end-insert
 
   ...
 };
@@ -248,8 +234,6 @@ If you use React, the React specific Babel preset does most of the work through 
 There's also [babel-plugin-typecheck](https://www.npmjs.com/package/babel-plugin-typecheck) that allows you to perform runtime checks based on your Flow annotations. [flow-runtime](https://codemix.github.io/flow-runtime/) goes a notch further and provides more functionality. These approaches complement Flow static checker and allow you to catch even more issues.
 
 T> [flow-coverage-report](https://www.npmjs.com/package/flow-coverage-report) shows how much of your code is covered by Flow type annotations.
-
-{pagebreak}
 
 ## Conclusion
 

@@ -43,8 +43,6 @@ exports.page = ({
 });
 ```
 
-{pagebreak}
-
 ### Integrating to Configuration
 
 To incorporate the idea into the configuration, the way it's composed has to change. Also, a page definition is required. To get started, let's reuse the same JavaScript logic for each page for now:
@@ -53,36 +51,29 @@ To incorporate the idea into the configuration, the way it's composed has to cha
 
 ```javascript
 ...
-leanpub-start-delete
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-leanpub-end-delete
+// const HtmlWebpackPlugin = require("html-webpack-plugin");
 ...
 
 
 const commonConfig = merge([
-leanpub-start-delete
-  {
-    plugins: [
-      new HtmlWebpackPlugin({
-        title: "Webpack demo",
-      }),
-    ],
-  },
-leanpub-end-delete
+  // {
+  //   plugins: [
+  //     new HtmlWebpackPlugin({
+  //       title: "Webpack demo",
+  //     }),
+  //   ],
+  // },
   ...
 ]);
 
 ...
 
 module.exports = mode => {
-leanpub-start-delete
-  if (mode === "production") {
-    return merge(commonConfig, productionConfig, { mode });
-  }
+  // if (mode === "production") {
+  //   return merge(commonConfig, productionConfig, { mode });
+  // }
 
-  return merge(commonConfig, developmentConfig, { mode });
-leanpub-end-delete
-leanpub-start-insert
+  // return merge(commonConfig, developmentConfig, { mode });
   const pages = [
     parts.page({ title: "Webpack demo" }),
     parts.page({ title: "Another demo", path: "another" }),
@@ -93,7 +84,6 @@ leanpub-start-insert
   return pages.map(page =>
     merge(commonConfig, config, page, { mode })
   );
-leanpub-end-insert
 };
 ```
 
@@ -114,8 +104,6 @@ const demoComponent = component("Another");
 document.body.appendChild(demoComponent);
 ```
 
-{pagebreak}
-
 The file could go to a directory of its own. Here the existing code is reused to get something to show up. Webpack configuration has to point to this file:
 
 **webpack.config.js**
@@ -124,27 +112,22 @@ The file could go to a directory of its own. Here the existing code is reused to
 ...
 
 const commonConfig = merge([
-leanpub-start-insert
   {
     output: {
       // Needed for code splitting to work in nested paths
       publicPath: "/",
     },
   },
-leanpub-end-insert
   ...
 ]);
 
 ...
 
 module.exports = mode => {
-leanpub-start-delete
-  const pages = [
-    parts.page({ title: "Webpack demo" }),
-    parts.page({ title: "Another demo", path: "another" }),
-  ];
-leanpub-end-delete
-leanpub-start-insert
+  // const pages = [
+  //   parts.page({ title: "Webpack demo" }),
+  //   parts.page({ title: "Another demo", path: "another" }),
+  // ];
   const pages = [
     parts.page({
       title: "Webpack demo",
@@ -160,7 +143,6 @@ leanpub-start-insert
       },
     }),
   ];
-leanpub-end-insert
   const config =
     mode === "production" ? productionConfig : developmentConfig;
 
@@ -182,14 +164,10 @@ exports.page = (
       "html-webpack-plugin/default_index.ejs"
     ),
     title,
-leanpub-start-insert
     entry,
-leanpub-end-insert
   } = {}
 ) => ({
-leanpub-start-insert
   entry,
-leanpub-end-insert
   plugins: [
     new HtmlWebpackPlugin({
       filename: `${path && path + "/"}index.html`,
@@ -199,11 +177,9 @@ leanpub-end-insert
 });
 ```
 
-{pagebreak}
-
 After these changes `/another` should show something familiar:
 
-![Another page shows up](images/another.png)
+![Another page shows up](../../images/another.png)
 
 ### Pros and Cons
 

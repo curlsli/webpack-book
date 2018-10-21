@@ -10,9 +10,7 @@ To get suitable output, you need to do a couple of tweaks to the configuration. 
 
 ```json
 "scripts": {
-leanpub-start-insert
   "build:stats": "webpack --env production --json > stats.json",
-leanpub-end-insert
   ...
 },
 ```
@@ -73,7 +71,6 @@ To integrate the feature into the project, adjust the configuration:
 
 ```javascript
 const productionConfig = merge([
-leanpub-start-insert
   {
     performance: {
       hints: "warning", // "error" or false are valid too
@@ -81,7 +78,6 @@ leanpub-start-insert
       maxAssetSize: 450000, // in bytes
     },
   },
-leanpub-end-insert
   ...
 ]);
 ```

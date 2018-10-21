@@ -24,9 +24,7 @@ You are also going to need a script in *package.json*:
 
 ```json
 "scripts": {
-leanpub-start-insert
   "deploy": "gh-pages -d build",
-leanpub-end-insert
   ...
 },
 ```

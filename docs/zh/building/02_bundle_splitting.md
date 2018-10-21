@@ -29,10 +29,8 @@ Then make the project depend on it:
 **src/index.js**
 
 ```
-leanpub-start-insert
 import "react";
 import "react-dom";
-leanpub-end-insert
 ...
 ```
 
@@ -44,9 +42,7 @@ Version: webpack 4.1.1
 Time: 3276ms
 Built at: 3/16/2018 4:59:25 PM
        Asset       Size  Chunks             Chunk Names
-leanpub-start-insert
      main.js   97.5 KiB       0  [emitted]  main
-leanpub-end-insert
     main.css   3.49 KiB       0  [emitted]  main
  main.js.map    240 KiB       0  [emitted]  main
 main.css.map   85 bytes       0  [emitted]  main
@@ -66,7 +62,6 @@ Before webpack 4, there used to be `CommonsChunkPlugin` for managing bundle spli
 ```javascript
 const productionConfig = merge([
   ...
-leanpub-start-insert
   {
     optimization: {
       splitChunks: {
@@ -74,7 +69,6 @@ leanpub-start-insert
       },
     },
   },
-leanpub-end-insert
 ]);
 ```
 
@@ -86,16 +80,12 @@ Version: webpack 4.1.1
 Time: 3172ms
 Built at: 3/16/2018 5:00:03 PM
                Asset       Size  Chunks             Chunk Names
-leanpub-start-insert
      vendors~main.js   96.8 KiB       0  [emitted]  vendors~main
-leanpub-end-insert
              main.js   1.35 KiB       1  [emitted]  main
             main.css   1.27 KiB       1  [emitted]  main
-leanpub-start-insert
     vendors~main.css   2.27 KiB       0  [emitted]  vendors~main
  vendors~main.js.map    235 KiB       0  [emitted]  vendors~main
 vendors~main.css.map   93 bytes       0  [emitted]  vendors~main
-leanpub-end-insert
          main.js.map   7.11 KiB       1  [emitted]  main
         main.css.map   85 bytes       1  [emitted]  main
           index.html  329 bytes          [emitted]
@@ -105,7 +95,7 @@ Entrypoint main = vendors~main.js vendors~main.css ...
 
 Now the bundles look the way they should. The image below illustrates the current situation.
 
-![Main and vendor bundles after applying configuration](images/bundle_02.png)
+![Main and vendor bundles after applying configuration](../../images/bundle_02.png)
 
 {pagebreak}
 
@@ -118,7 +108,6 @@ The configuration above can be rewritten with an explicit test against *node_mod
 ```javascript
 const productionConfig = merge([
   ...
-leanpub-start-insert
   {
     optimization: {
       splitChunks: {

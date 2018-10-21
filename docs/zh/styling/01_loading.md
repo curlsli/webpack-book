@@ -46,9 +46,7 @@ exports.loadCSS = ({ include, exclude } = {}) => ({
 ```javascript
 const commonConfig = merge([
   ...
-leanpub-start-insert
   parts.loadCSS(),
-leanpub-end-insert
 ]);
 ```
 
@@ -73,9 +71,7 @@ body {
 在入口文件 **src/index.js** 中，引入 **src/main.css** 文件：
 
 ```javascript
-leanpub-start-insert
 import "./main.css";
-leanpub-end-insert
 ...
 ```
 

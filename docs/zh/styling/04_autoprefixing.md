@@ -23,8 +23,6 @@ exports.autoprefix = () => ({
 });
 ```
 
-{pagebreak}
-
 To connect the loader with CSS extraction, hook it up as follows:
 
 **webpack.config.js**
@@ -32,12 +30,8 @@ To connect the loader with CSS extraction, hook it up as follows:
 ```javascript
 const productionConfig = merge([
   parts.extractCSS({
-leanpub-start-delete
-    use: "css-loader",
-leanpub-end-delete
-leanpub-start-insert
+    // use: "css-loader",
     use: ["css-loader", parts.autoprefix()],
-leanpub-end-insert
   }),
   ...
 ]);
@@ -50,19 +44,15 @@ To confirm that the setup works, we have to add something to autoprefix. Adjust 
 ```css
 ...
 
-leanpub-start-insert
 .pure-button {
   -webkit-border-radius: 1em;
   border-radius: 1em;
 }
-leanpub-end-insert
 ```
 
 If you know what browsers you prefer to support, it's possible to set up a [.browserslistrc](https://www.npmjs.com/package/browserslist) file. Different tools pick up this definition, *autoprefixer* included.
 
 T> You can lint CSS through [Stylelint](http://stylelint.io/). It can be set up the same way through *postcss-loader* as autoprefixing above.
-
-{pagebreak}
 
 Set up a file as follows:
 
@@ -79,11 +69,9 @@ If you build the application now (`npm run build`) and examine the built CSS, yo
 ```css
 ...
 
-leanpub-start-insert
 .pure-button {
   border-radius: 1em;
 }
-leanpub-end-insert
 ```
 
 *autoprefixer* is able to **remove** unnecessary rules and also add rules which are required based on the browser definition.

@@ -18,11 +18,9 @@ const productionConfig = merge([
       splitChunks: {
         ...
       },
-leanpub-start-insert
       runtimeChunk: {
         name: "manifest",
       },
-leanpub-end-insert
     },
   },
   ...
@@ -39,21 +37,15 @@ Version: webpack 4.1.1
 Time: 3347ms
 Built at: 3/16/2018 6:24:51 PM
                    Asset       Size  Chunks             Chunk Names
-leanpub-start-insert
        manifest.d41d.css    0 bytes       1  [emitted]  manifest
-leanpub-end-insert
                0.73a8.js  160 bytes       0  [emitted]
     vendors~main.3af5.js   96.8 KiB       2  [emitted]  vendors~main
             main.8da2.js  546 bytes       3  [emitted]  main
            main.5524.css    1.2 KiB       3  [emitted]  main
    vendors~main.3dd5.css   1.32 KiB       2  [emitted]  vendors~main
-leanpub-start-insert
         manifest.8cac.js   1.81 KiB       1  [emitted]  manifest
-leanpub-end-insert
            0.73a8.js.map  203 bytes       0  [emitted]
-leanpub-start-insert
     manifest.8cac.js.map     10 KiB       1  [emitted]  manifest
-leanpub-end-insert
 vendors~main.3af5.js.map    235 KiB       2  [emitted]  vendors~main
         main.8da2.js.map   1.45 KiB       3  [emitted]  main
               index.html  460 bytes          [emitted]
@@ -86,9 +78,7 @@ To generate a *records.json* file, adjust the configuration as follows:
 const productionConfig = merge([
   {
     ...
-leanpub-start-insert
     recordsPath: path.join(__dirname, "records.json"),
-leanpub-end-insert
   },
   ...
 ]);

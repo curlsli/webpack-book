@@ -51,9 +51,7 @@ To make it convenient to run, set up a build shortcut:
 
 ```json
 "scripts": {
-leanpub-start-insert
   "build:plugin": "webpack --config webpack.plugin.js",
-leanpub-end-insert
   ...
 },
 ```
@@ -106,12 +104,8 @@ Adjust the configuration to pass an option:
 ```javascript
 module.exports = {
   ...
-leanpub-start-delete
-  plugins: [new DemoPlugin()],
-leanpub-end-delete
-leanpub-start-insert
+  // plugins: [new DemoPlugin()],
   plugins: [new DemoPlugin({ name: "demo" })],
-leanpub-end-insert
   ],
 };
 ```
@@ -151,16 +145,12 @@ module.exports = class DemoPlugin {
     this.options = options;
   }
   apply(compiler) {
-leanpub-start-delete
-    console.log(compiler);
-leanpub-end-delete
-leanpub-start-insert
+    // console.log(compiler);
     compiler.plugin("emit", (compilation, cb) => {
       console.log(compilation);
 
       cb();
     });
-leanpub-end-insert
   }
 };
 ```
@@ -190,26 +180,18 @@ Adjust the code as follows to write through `RawSource`:
 **plugins/demo-plugin.js**
 
 ```javascript
-leanpub-start-insert
 const { RawSource } = require("webpack-sources");
-leanpub-end-insert
 
 module.exports = class DemoPlugin {
   constructor(options) {
     this.options = options;
   }
   apply(compiler) {
-leanpub-start-insert
     const { name } = this.options;
-leanpub-end-insert
 
     compiler.plugin("emit", (compilation, cb) => {
-leanpub-start-delete
-      console.log(compilation);
-leanpub-end-delete
-leanpub-start-insert
+      // console.log(compilation);
       compilation.assets[name] = new RawSource("demo");
-leanpub-end-insert
 
       cb();
     });

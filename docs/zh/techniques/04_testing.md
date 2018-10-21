@@ -244,9 +244,7 @@ module.exports = config => {
 
   config.set({
     ...
-leanpub-start-insert
     browsers: ["PhantomJS"],
-leanpub-end-insert
   });
 };
 ```
@@ -275,9 +273,7 @@ Accessing Karma's watch mode is possible as follows:
 
 ```json
 "scripts": {
-leanpub-start-insert
   "test:karma:watch": "karma start --auto-watch --no-single-run",
-leanpub-end-insert
   ...
 },
 ```
@@ -306,7 +302,6 @@ Connect the Babel plugin so that the instrumentation happens when Karma is run:
 
 ```json
 ...
-leanpub-start-insert
 "env": {
   "karma": {
     "plugins": [
@@ -317,7 +312,6 @@ leanpub-start-insert
     ]
   }
 }
-leanpub-end-insert
 ```
 
 Make sure to set Babel environment, so it picks up the plugin:
@@ -328,9 +322,7 @@ Make sure to set Babel environment, so it picks up the plugin:
 module.exports = config => {
   ...
 
-leanpub-start-insert
   process.env.BABEL_ENV = "karma";
-leanpub-end-insert
 
   config.set({
     ...
@@ -345,9 +337,7 @@ On Karma side, reporting has to be set up, and Karma configuration has to be con
 **karma.conf.js**
 
 ```javascript
-leanpub-start-insert
 const path = require("path");
-leanpub-end-insert
 
 ...
 
@@ -356,13 +346,11 @@ module.exports = config => {
 
   config.set({
     ...
-leanpub-start-insert
     reporters: ["coverage"],
     coverageReporter: {
       dir: "build",
       reporters: [{ type: "html" }, { type: "lcov" }],
     },
-leanpub-end-insert
   });
 };
 ```
@@ -395,10 +383,8 @@ Jest captures tests through *package.json* [configuration](https://facebook.gith
 
 ```json
 "scripts": {
-leanpub-start-insert
   "test:jest:watch": "jest --watch",
   "test:jest": "jest",
-leanpub-end-insert
   ...
 },
 ```

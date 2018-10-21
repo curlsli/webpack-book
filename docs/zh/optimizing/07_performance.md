@@ -69,12 +69,8 @@ exports.loadJavaScript = ({ include, exclude }) => ({
     rules: [
       {
         ...
-leanpub-start-delete
-        loader: "babel-loader",
-leanpub-end-delete
-leanpub-start-insert
+        // loader: "babel-loader",
         loader: "happypack/loader",
-leanpub-end-insert
         ...
       },
     ],

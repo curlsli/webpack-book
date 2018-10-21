@@ -78,9 +78,7 @@ To connect it with the project, adjust the configuration as follows:
 
 ```json
 {
-leanpub-start-insert
   "plugins": ["@babel/plugin-syntax-dynamic-import"],
-leanpub-end-insert
   ...
 }
 ```
@@ -109,7 +107,6 @@ export default (text = "Hello world") => {
 
   element.className = "pure-button";
   element.innerHTML = text;
-leanpub-start-insert
   element.onclick = () =>
     import("./lazy")
       .then(lazy => {
@@ -118,7 +115,6 @@ leanpub-start-insert
       .catch(err => {
         console.error(err);
       });
-leanpub-end-insert
 
   return element;
 };
@@ -136,10 +132,8 @@ Version: webpack 4.1.1
 Time: 3185ms
 Built at: 3/16/2018 5:04:04 PM
                Asset       Size  Chunks             Chunk Names
-leanpub-start-insert
             0.js.map  198 bytes       0  [emitted]
                 0.js  156 bytes       0  [emitted]
-leanpub-end-insert
              main.js    2.2 KiB       2  [emitted]  main
             main.css   1.27 KiB       2  [emitted]  main
     vendors~main.css   2.27 KiB       1  [emitted]  vendors~main

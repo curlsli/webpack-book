@@ -14,8 +14,6 @@ T> If you want a good starting point for a standalone loader or plugin project, 
 npm install loader-runner --save-dev
 ```
 
-{pagebreak}
-
 To have something to test with, set up a loader that returns twice what's passed to it:
 
 **loaders/demo-loader.js**
@@ -51,8 +49,6 @@ runLoaders(
 );
 ```
 
-{pagebreak}
-
 If you run the script now (`node run-loader.js`), you should see output:
 
 ```javascript
@@ -74,8 +70,6 @@ T> It's possible to refer to loaders installed to the local project by name inst
 Even though you can implement a lot of loaders using the synchronous interface, there are times when an asynchronous calculation is required. Wrapping a third party package as a loader can force you to this.
 
 The example above can be adapted to asynchronous form by using webpack specific API through `this.async()`. Webpack sets this, and the function returns a callback following Node conventions (error first, result second).
-
-{pagebreak}
 
 Tweak as follows:
 
@@ -110,8 +104,6 @@ module.exports = function(input) {
 
 The result should contain `Error: Demo error` with a stack trace showing where the error originates.
 
-{pagebreak}
-
 ## Returning Only Output
 
 Loaders can be used to output code alone. You could have an implementation as below:
@@ -128,8 +120,6 @@ But what's the point? You can pass to loaders through webpack entries. Instead o
 
 T> If you want to return `Buffer` output, set `module.exports.raw = true`. The flag overrides the default behavior which expects a string is returned.
 
-{pagebreak}
-
 ## Writing Files
 
 Loaders, like *file-loader*, emit files. Webpack provides a single method, `this.emitFile`, for this. Given *loader-runner* does not implement it, you have to mock it:
@@ -143,11 +133,9 @@ runLoaders(
   {
     resource: "./demo.txt",
     loaders: [path.resolve(__dirname, "./loaders/demo-loader")],
-leanpub-start-insert
     context: {
       emitFile: () => {},
     },
-leanpub-end-insert
     readResource: fs.readFile.bind(fs),
   },
   (err, result) => (err ? console.error(err) : console.log(result))
@@ -197,10 +185,7 @@ const { runLoaders } = require("loader-runner");
 runLoaders(
   {
     resource: "./demo.txt",
-leanpub-start-delete
-    loaders: [path.resolve(__dirname, "./loaders/demo-loader")],
-leanpub-end-delete
-leanpub-start-insert
+    // loaders: [path.resolve(__dirname, "./loaders/demo-loader")],
     loaders: [
       {
         loader: path.resolve(__dirname, "./loaders/demo-loader"),
@@ -209,7 +194,6 @@ leanpub-start-insert
         },
       },
     ],
-leanpub-end-insert
     context: {
       emitFile: () => {},
     },
@@ -233,24 +217,16 @@ To connect it to the loader, set it to capture `name` and pass it through webpac
 const loaderUtils = require("loader-utils");
 
 module.exports = function(content) {
-leanpub-start-insert
   const { name } = loaderUtils.getOptions(this);
-leanpub-end-insert
-leanpub-start-delete
-  const url = loaderUtils.interpolateName(this, "[hash].[ext]", {
-    content,
-  });
-leanpub-end-delete
-leanpub-start-insert
+  // const url = loaderUtils.interpolateName(this, "[hash].[ext]", {
+  //   content,
+  // });
   const url = loaderUtils.interpolateName(this, name, { content });
-leanpub-end-insert
   );
 
   ...
 };
 ```
-
-{pagebreak}
 
 After running (`node ./run-loader.js`), you should see something:
 
@@ -273,12 +249,8 @@ To get most out of loaders, you have to connect them with webpack. To achieve th
 **src/component.js**
 
 ```javascript
-leanpub-start-insert
 import "!../loaders/demo-loader?name=foo!./main.css";
-leanpub-end-insert
 ```
-
-{pagebreak}
 
 Given the definition is verbose, the loader can be aliased as below:
 
@@ -288,7 +260,6 @@ Given the definition is verbose, the loader can be aliased as below:
 const commonConfig = merge([
   {
   ...
-leanpub-start-insert
     resolveLoader: {
       alias: {
         "demo-loader": path.resolve(
@@ -297,7 +268,6 @@ leanpub-start-insert
         ),
       },
     },
-leanpub-end-insert
   },
   ...
 ]);
@@ -306,12 +276,8 @@ leanpub-end-insert
 With this change the import can be simplified:
 
 ```javascript
-leanpub-start-delete
 import "!../loaders/demo-loader?name=foo!./main.css";
-leanpub-end-delete
-leanpub-start-insert
 import "!demo-loader?name=foo!./main.css";
-leanpub-end-insert
 ```
 
 You could also handle the loader definition through `rules`. Once the loader is stable enough, set up a project based on *webpack-defaults*, push the logic there, and begin to consume the loader as a package.
@@ -320,11 +286,9 @@ W> Although using *loader-runner* can be convenient for developing and testing l
 
 ## Pitch Loaders
 
-![Webpack loader processing](images/loader-processing.png)
+![Webpack loader processing](../../images/loader-processing.png)
 
 Webpack evaluates loaders in two phases: pitching and evaluating. If you are used to web event semantics, these map to capturing and bubbling. The idea is that webpack allows you to intercept execution during the pitching (capturing) phase. It goes through the loaders left to right first and executes them from right to left after that.
-
-{pagebreak}
 
 A pitch loader allows you shape the request and even terminate it. Set it up:
 
@@ -359,17 +323,13 @@ runLoaders(
     resource: "./demo.txt",
     loaders: [
       ...
-leanpub-start-insert
       path.resolve(__dirname, "./loaders/pitch-loader"),
-leanpub-end-insert
     ],
     ...
   },
   (err, result) => (err ? console.error(err) : console.log(result))
 );
 ```
-
-{pagebreak}
 
 If you run (`node ./run-loader.js`) now, the pitch loader should log intermediate data and intercept the execution:
 
@@ -422,8 +382,6 @@ module.exports.pitch = function() {
 A pitch loader can be used to attach metadata to the input to use later. In this example, a cache was constructed during the pitching stage, and it was accessed during normal execution.
 
 T> The [official documentation](https://webpack.js.org/api/loaders/) covers the loader API in detail. You can see all fields available through `this` there.
-
-{pagebreak}
 
 ## Conclusion
 

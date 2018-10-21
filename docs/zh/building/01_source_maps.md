@@ -44,9 +44,7 @@ Webpack supports a wide variety of source map types. These vary based on quality
 
 ```javascript
 const productionConfig = merge([
-leanpub-start-insert
   parts.generateSourceMaps({ type: "source-map" }),
-leanpub-end-insert
   ...
 ]);
 ```

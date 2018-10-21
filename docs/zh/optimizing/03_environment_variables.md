@@ -105,9 +105,7 @@ Connect this with the configuration:
 ```javascript
 const commonConfig = merge([
   ...
-leanpub-start-insert
   parts.setFreeVariable("HELLO", "hello from config"),
-leanpub-end-insert
 ]);
 ```
 
@@ -118,12 +116,8 @@ Finally, add something to replace:
 **src/component.js**
 
 ```javascript
-leanpub-start-delete
-export default (text = "Hello world") => {
-leanpub-end-delete
-leanpub-start-insert
+// export default (text = "Hello world") => {
 export default (text = HELLO) => {
-leanpub-end-insert
   const element = document.createElement("div");
 
   ...
