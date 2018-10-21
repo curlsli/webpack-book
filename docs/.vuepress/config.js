@@ -28,7 +28,7 @@ module.exports = {
     themeConfig: {
         repo: 'lvzhenbang/webpack-book',
         docsBranch: 'dev',
-        editLink: true,
+        editLinks: true,
         docsDir: 'docs',
         locales: {
             '/': {

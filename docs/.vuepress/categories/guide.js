@@ -21,7 +21,7 @@ const guideEn = {
 
 const guideCn = {
     title: '指南',
-    collapsable: false,
+    collapsable: true,
     children: [
         '/zh/guide/01_foreword',
         '/zh/guide/02_preface',
