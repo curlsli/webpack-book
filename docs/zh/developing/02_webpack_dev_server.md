@@ -1,55 +1,54 @@
 # webpack-dev-server（WDS）
 
-Tools, such as [LiveReload](http://livereload.com/) or [Browsersync](http://www.browsersync.io/), allow refreshing the browser as you develop the application and avoid a refresh for CSS changes. It's possible to setup Browsersync to work with webpack through [browser-sync-webpack-plugin](https://www.npmjs.com/package/browser-sync-webpack-plugin), but webpack has more tricks in store.
+你可以使用 [LiveReload](http://livereload.com/)、 [Browsersync](http://www.browsersync.io/) 来实现应用改变，浏览器自动刷新。你也可以使用 [browser-sync-webpack-plugin](https://www.npmjs.com/package/browser-sync-webpack-plugin) 插件实现浏览器的同步刷新，但webpack还有一些隐藏的功能。
 
 ## Webpack 的 `watch` 模式 和 *webpack-dev-server*
 
-A good first step towards a better development environment is to use webpack in its **watch** mode. You can activate it by passing the `--watch` to webpack. Example: `npm run build -- --watch`.
+实现更好的开发环境的第一步就是使用webpack的监视模式。通过向webpack传递 `--watch` 来激活它。 如：`npm run build -- --watch` 。
 
-Once enabled, the watch mode detects changes made to your files and recompiles automatically. *webpack-dev-server* (WDS) implements a watch mode and goes even further.
+这个功能一旦开启，监视模式将检测文件是否发生改变，如果改变，将自动重新编译。*webpack-dev-server* (WDS) 同样实现了监视模式，但它更进一步。
 
-WDS is a development server running **in-memory**, meaning the bundle contents aren't written out to files but stored in memory. The distinction is important when trying to debug code and styles.
+WDS 是运行在内存的服务器，也就是说打包的内容不被写在输出文件中，而是存在内存中。在你调试代码和样式的时候，你要明白这个区别。
 
-By default, WDS refreshes content automatically in the browser while you develop your application, so you don't have to do it yourself. However it also supports an advanced webpack feature, **Hot Module Replacement** (HMR).
+WDS默认配置是自动刷新浏览器，因此在你开发的时候，不用自己设置。此外，它也支持webpack的高级功能——模块热替换（HMR）。
 
-HMR allows patching the browser state without a full refresh making it particularly handy with libraries like React where an update blows away the application state. The *Hot Module Replacement* appendix covers the feature in detail.
+HMR 允许修改浏览器的状态是部分刷新，而不是全部。就像 React(vue.js，angular.js) y一样。附录中 [*模块热替换*](https://lvzhenbang.github.io/webpack-book/dist/zh/appendices/02_hmr.html) 这一部分将详细介绍。
 
-WDS provides an interface that makes it possible to patch code on the fly, however for this to work efficiently you have to implement this interface for the client-side code. It's trivial for something like CSS because it's stateless, but the problem is harder with JavaScript frameworks and libraries.
+WDS提供了一个接口，使即时修改代码成为可能，但要想高效的工作，你必须在客户端代码实现这个接口。css是无状态的，所以很简单，但是js框架和库实现起来有点困难。
 
 ## WDS 分发文件
 
-Even though it's good that WDS operates in-memory by default for performance reasons, sometimes it can be good to emit files to the file system. If you are integrating with another server that expects to find the files, this becomes essential. [write-file-webpack-plugin](https://www.npmjs.com/package/write-file-webpack-plugin) allows you to do this.
+虽然因为性能原因WDS在内存中进行操作，但有时分发文件到文件系统中比较好。如果你正在集成另一个服务器，这个服务器需要访问同样文件，那么后者将变得很有必要。这个插件[write-file-webpack-plugin](https://www.npmjs.com/package/write-file-webpack-plugin)
+可以帮你实现这个功能。
 
-W> You should use WDS strictly for development. If you want to host your application, consider other standard solutions, such as Apache or Nginx.
+> 你应该严格的用WDS在开发模式。如果你想要托管你的应用程序，你可以使用其他的解决方案，如：Apache、Nginx。
 
 ## 添加WDS依赖
 
-To get started with WDS, install it first:
+使用前，需要在项目中添加 WDS 依赖：
 
 ```bash
 npm install webpack-dev-server --save-dev
 ```
 
-As before, this command generates a command below the `npm bin` directory, and you could run *webpack-dev-server* from there. After running the WDS, you have a development server running at `http://localhost:8080`. Automatic browser refresh is in place now, although at a fundamental level.
+之后，将在 `npm bin` 目录下生成一个命令文件，你可以从这儿运行 *webpack-dev-server*，启动WDS之后, 你将有一个开发模式下的服务器，运行在`http://localhost:8080`。这样自动刷新浏览器的功能就实现了。
 
 ## 在项目中引入 WDS
 
-To integrate WDS to the project, define an npm script for launching it. To follow npm conventions, call it as *start* like below:
+将WDS集成到项目中，定义一个npm脚本命令来启动它，代码修改如下：
 
 **package.json**
 
 ```json
 "scripts": {
-leanpub-start-insert
   "start": "webpack-dev-server --mode development",
-leanpub-end-insert
   "build": "webpack --mode production"
 },
 ```
 
-T> WDS picks up configuration like webpack itself. The same rules apply.
+> WDS 不仅可以使用webpack的配置，也可以使用它的命令。
 
-If you execute either *npm run start* or *npm start* now, you should see something in the terminal:
+如果现在你运行 *npm run start* 或 *npm start* 命令，在终端中你会看到下面的内容：
 
 ```bash
 > webpack-dev-server --mode development
@@ -67,21 +66,21 @@ Entrypoint main [big] = main.js
 ...
 ```
 
-The server is running, and if you open `http://localhost:8080/` at your browser, you should see something familiar:
+这是服务器已经启动，如果你在浏览器中访问 `http://localhost:8080/` ，你会看到与下面一样的效果：
 
 ![Hello world](../../images/hello_01.png)
 
-If you try modifying the code, you should see the output in your terminal. The browser should also perform a hard refresh on change.
+如果你修改了源代码，你将在终端看到新的输出内容，同时浏览器也将自动刷新，完成后，显示新的内容。
 
-T> WDS tries to run in another port in case the default one is being used. The terminal output tells you where it ends up running. You can debug the situation with a command like `netstat -na | grep 8080`. If something is running on the port 8080, it should display a message on Unix.
+> 如果默认端口被占用，WDS 将尝试打开新的端口。你可以用 `netstat -na | grep 8080` 命令，查看端口情况。
 
-T> In addition to `production` and `development`, there's a third mode, `none`, which disables everything and is close to the behavior you had in versions before webpack 4.
+> 除了 `production` 和 `development`，webpack还有一个 `none` 模式（禁用所有内容）。
 
 ## 在webpack中配置 WDS
 
-WDS functionality can be customized through the `devServer` field in the webpack configuration. You can set most of these options through the CLI as well, but managing them through webpack is a decent approach.
+可以同webpack的 `devServer` 选项来自定以 WDS 的功能。当然你也可以在 CLI 中定义，但是在webpack中定义可能更方便管理。
 
-Enable additional functionality as below:
+可以启动下面这些功能：
 
 **webpack.config.js**
 
@@ -89,36 +88,33 @@ Enable additional functionality as below:
 ...
 
 module.exports = {
-leanpub-start-insert
   devServer: {
-    // Display only errors to reduce the amount of output.
+    // 为了减少输出量，可以只显示错误
     stats: "errors-only",
 
-    // Parse host and port from env to allow customization.
+    // 开发环境的 host 和 port，允许自定义
     //
-    // If you use Docker, Vagrant or Cloud9, set
-    // host: "0.0.0.0";
+    // 如果你使用 Docker, Vagrant 或 Cloud9 虚拟机，
+    // 你可以设置 host: "0.0.0.0";
     //
-    // 0.0.0.0 is available to all network devices
-    // unlike default `localhost`.
-    host: process.env.HOST, // Defaults to `localhost`
-    port: process.env.PORT, // Defaults to 8080
-    open: true, // Open the page in browser
+    // 不像默认的 `localhost`，0.0.0.0 适用于所有的网络设备。
+    host: process.env.HOST, // 默认是：`localhost`
+    port: process.env.PORT, // 默认是：8080
+    open: true, // 浏览器自启动
   },
-leanpub-end-insert
   ...
 };
 ```
 
-After this change, you can configure the server host and port options through environment parameters (example: `PORT=3000 npm start`).
+之后，你就可以用 host 和 port 选项，配置服务器 (如： `PORT=3000 npm start`)。
 
-T> [dotenv](https://www.npmjs.com/package/dotenv) allows you to define environment variables through a *.env* file. *dotenv* allows you to control the host and port setting of the setup quickly.
+> [dotenv](https://www.npmjs.com/package/dotenv) 允许你用 *.env* 文件来定义环境变量，实现快速的配置。
 
-T> Enable `devServer.historyApiFallback` if you are using HTML5 History API based routing.
+> 如果你的路由使用了HTML5 History API，则开启`devServer.historyApiFallback`。
 
-## 开启错误覆盖功能
+## 开启浏览器端的错误浮层功能
 
-WDS provides an overlay for capturing compilation related warnings and errors:
+WDS 提供了一个浏览器端的错误浮层的功能：
 
 **webpack.config.js**
 
@@ -126,37 +122,37 @@ WDS provides an overlay for capturing compilation related warnings and errors:
 module.exports = {
   devServer: {
     ...
-leanpub-start-insert
     overlay: true,
-leanpub-end-insert
   },
   ...
 };
 ```
 
-Run the server now (`npm start`) and break the code to see an overlay in the browser:
+用 `npm start` 命令启动服务器，然后破坏源代码，你将在浏览器中看到一个包含错误和警告弹出层：
 
 ![Error overlay](../../images/error-overlay.png)
 
-T> If you want even better output, consider [error-overlay-webpack-plugin](https://www.npmjs.com/package/error-overlay-webpack-plugin) as it shows the origin of the error better.
+> 如果你想要更好的错误提示，可以考虑 [error-overlay-webpack-plugin](https://www.npmjs.com/package/error-overlay-webpack-plugin) ，因为它展示错误的效果更好。
 
-W> WDS overlay does *not* capture runtime errors of the application.
+> WDS 错误提示浮层 *not* 不提示应用的运行时错误。
 
-## 开启热交换功能
+## 开启模块热替换功能
 
-Hot Module Replacement is one of those features that set webpack apart. Implementing it requires additional effort on both server and client-side. The *Hot Module Replacement* appendix discusses the topic in greater detail. If you want to integrate HMR to your project, give it a look. It won't be needed to complete the tutorial, though.
+模块热替换功能使webpack变得与众不同。实现它需要从服务器和客户端同时着手。 附录 [*模块热替换*](https://lvzhenbang.github.io/webpack-book/dist/zh/appendices/02_hmr.html) 将详细介绍。 
 
 ## 可以通过网络访问开发服务器
 
-It's possible to customize host and port settings through the environment in the setup (i.e., `export PORT=3000` on Unix or `SET PORT=3000` on Windows). The default settings are enough on most platforms.
+你可以通过环境来自定义port和host, (如：在Unix上 `export PORT=3000`，在windows上 `SET PORT=3000`)。
 
-To access your server, you need to figure out the ip of your machine. On Unix, this can be achieved using `ifconfig | grep inet`. On Windows, `ipconfig` can be utilized. An npm package, such as [node-ip](https://www.npmjs.com/package/node-ip) come in handy as well. Especially on Windows, you need to set your `HOST` to match your ip to make it accessible.
+访问你的服务器，你需要知道你的机器的ip。在Unix上，你可以用 `ifconfig | grep inet` 获得。在Windows上，你可以用 `ipconfig` 获得。[node-ip](https://www.npmjs.com/package/node-ip)使用起来更方便。特别是在windows上，你需要设置 `HOST` 完成。
 
-## 在开发模式的配置中用它更快
+这样可以模拟一个本地服务器的网络运行环境。
 
-WDS will handle restarting the server when you change a bundled file, but what about when you edit the webpack config? Restarting the development server each time you make a change tends to get boring after a while. The process can be automated as [discussed in GitHub](https://github.com/webpack/webpack-dev-server/issues/440#issuecomment-205757892) by using [nodemon](https://www.npmjs.com/package/nodemon) monitoring tool.
+## 在开发模式的配置中用它更高效
 
-To get it to work, you have to install it first through `npm install nodemon --save-dev`. After that, you can make it watch webpack config and restart WDS on change. Here's the script if you want to give it a go:
+当你改变构建文件时，WDS将重启服务器。如果你改变webpack配置时呢？你需要手动的重启开发服务器，这是一个无聊的工作。[GitHub上讨论的结果](https://github.com/webpack/webpack-dev-server/issues/440#issuecomment-205757892)，你可以使用[nodemon](https://www.npmjs.com/package/nodemon) 监视器工具。
+
+为了让它工作，你不得不用 `npm install nodemon --save-dev` 安装它。之后，当源代码改变时，你可以用它监视webpack的配置和重启WDS，NPM脚本修改如下：
 
 **package.json**
 
@@ -167,11 +163,11 @@ To get it to work, you have to install it first through `npm install nodemon --s
 },
 ```
 
-It's possible WDS [will support the functionality](https://github.com/webpack/webpack-cli/issues/15) itself in the future. If you want to make it reload itself on change, you should implement this workaround for now.
+WDS在未来 [将支持这个功能](https://github.com/webpack/webpack-cli/issues/15)。如果配置文件发生改变，你想要实现它自己调用自己，你可以尝试实现这个解决方案。
 
 ## 用轮询机制替代监视机制
 
-Sometimes the file watching setup provided by WDS won't work on your system. It can be problematic on older versions of Windows, Ubuntu, Vagrant, and Docker. Enabling polling is a good option then:
+当你的系统时老版本的Windows、Ubuntu、Vagrant 或 Docker时，开启轮询（polling）是一个好的选择：
 
 **webpack.config.js**
 
@@ -199,61 +195,62 @@ module.exports = {
 };
 ```
 
-The setup is more resource intensive than the default, but it's worth trying out.
+设置它比用默认的设置更消耗内存资源，但值得尝试。
 
 ## WDS的替代方案
 
-You could have passed the WDS options through a terminal. It's clearer to manage the options within webpack configuration as that helps to keep *package.json* nice and tidy. It's also easier to understand what's going on as you don't need to dig out the answers from the webpack source.
+你可以通过终端传递WDS选项。在webpack配置中管理选项更清楚，因为这有助于保持 *package。json* 漂亮和整洁。也更容易理解发生了什么，因为你不需要从webpack源代码中找出答案。
 
-Alternately, you could have set up an Express server and use a middleware. There are a couple of options:
+
+你可以创建Express服务器并使用中间件。有下面几个选择:
 
 * [The official WDS middleware](https://webpack.js.org/guides/development/#using-webpack-dev-middleware)
 * [webpack-hot-middleware](https://www.npmjs.com/package/webpack-hot-middleware)
 * [webpack-isomorphic-dev-middleware](https://www.npmjs.com/package/webpack-isomorphic-dev-middleware)
 
-There's also a [Node API](https://webpack.js.org/configuration/dev-server/) if you want more control and flexibility.
+有一个 [Node API](https://webpack.js.org/configuration/dev-server/)可以给你更多且更灵活的选择。
 
-W> There are [slight differences](https://github.com/webpack/webpack-dev-server/issues/616) between the CLI and the Node API.
+> CLI 和 Node API之间[有些许不同](https://github.com/webpack/webpack-dev-server/issues/616) 
 
 ## WDS的其他特性
 
-WDS provides functionality beyond what was covered above. There are a couple of relevant fields that you should be aware of:
+WDS 提供的功能不止上面描述的。你需要留意这些下面这些：
 
-* `devServer.contentBase` - Assuming you don't generate *index.html* dynamically and prefer to maintain it yourself in a specific directory, you need to point WDS to it. `contentBase` accepts either a path (e.g., `"build"`) or an array of paths (e.g., `["build", "images"]`). The value defaults to the project root.
-* `devServer.proxy` - If you are using multiple servers, you have to proxy WDS to them. The proxy setting accepts an object of proxy mappings (e.g., `{ "/api": "http://localhost:3000/api" }`) that resolve matching queries to another server. Proxy settings are disabled by default.
-* `devServer.headers` - Attach custom headers to your requests here.
+* `devServer.contentBase` - 如果你不动态的生成 *index.html* 且比较喜欢在特定的目录操作它，这是你可以用 `contentBase` 向 WDS 做说明，`contentBase` 接受 一个路径（如：`"build"`）或者一个路径数组（如：`["build", "images"]`）。它的默认值是项目根目录。
+* `devServer.proxy` - 如果你使用多个服务器，你需要将WDS代理给它们。`proxy` 选项接受一个代理映射对象(`{ "/api": "http://localhost:3000/api" }`) 。默认不能代理。
+* `devServer.headers` - 定义你的请求headers。
 
-T> [The official documentation](https://webpack.js.org/configuration/dev-server/) covers more options.
+> [官方文档](https://webpack.js.org/configuration/dev-server/) 包含所有的选项。
 
 ## Development Plugins
 
-The webpack plugin ecosystem is diverse, and there are a lot of plugins that can help specifically with development:
+Webapck的生态系统多样化，所以有很多插件辅助开发：
 
-* [case-sensitive-paths-webpack-plugin](https://www.npmjs.com/package/case-sensitive-paths-webpack-plugin) can be handy when you are developing on case-insensitive environments like macOS or Windows but using case-sensitive environment like Linux for production.
-* [npm-install-webpack-plugin](https://www.npmjs.com/package/npm-install-webpack-plugin) allows webpack to install and wire the installed packages with your *package.json* as you import new packages to your project.
-* [react-dev-utils](https://www.npmjs.com/package/react-dev-utils) contains webpack utilities developed for [Create React App](https://www.npmjs.com/package/create-react-app). Despite its name, they can find use beyond React. If you want only webpack message formatting, consider [webpack-format-messages](https://www.npmjs.com/package/webpack-format-messages).
-* [start-server-webpack-plugin](https://www.npmjs.com/package/start-server-webpack-plugin) is able to start your server after webpack build completes.
+* [case-sensitive-paths-webpack-plugin](https://www.npmjs.com/package/case-sensitive-paths-webpack-plugin) 当你在macOS或Windows等不区分大小写的环境上进行开发，但使用Linux等区分大小写的环境进行生产时，这将非常方便。
+* [npm-install-webpack-plugin](https://www.npmjs.com/package/npm-install-webpack-plugin) 允许webpack在你导入新包到你的项目时，用 *package.json* 来安装和连接已经安装的包。
+* [react-dev-utils](https://www.npmjs.com/package/react-dev-utils) 包含所有 为[创建React应用](https://www.npmjs.com/package/create-react-app)的工具集，不管它的名字是什么，都可以在React中找到用途。如果你只想要webpack信息被格式化，你可以考虑用[webpack-format-messages](https://www.npmjs.com/package/webpack-format-messages).
+* [start-server-webpack-plugin](https://www.npmjs.com/package/start-server-webpack-plugin) 能够在你完成构建后重启服务器。
 
 ## Output Plugins
 
-There are also plugins that make the webpack output easier to notice and understand:
+还有一些插件可以使webpack输出更容易被注意到和理解:
 
-* [system-bell-webpack-plugin](https://www.npmjs.com/package/system-bell-webpack-plugin) rings the system bell on failure instead of letting webpack fail silently.
-* [webpack-notifier](https://www.npmjs.com/package/webpack-notifier) uses system notifications to let you know of webpack status.
-* [nyan-progress-webpack-plugin](https://www.npmjs.com/package/nyan-progress-webpack-plugin) can be used to get tidier output during the build process. Take care if you are using Continuous Integration (CI) systems like Travis as they can clobber the output. Webpack provides `ProgressPlugin` for the same purpose. No nyan there, though.
-* [friendly-errors-webpack-plugin](https://www.npmjs.com/package/friendly-errors-webpack-plugin) improves on error reporting of webpack. It captures common errors and displays them in a friendlier manner.
-* [webpack-dashboard](https://www.npmjs.com/package/webpack-dashboard) gives an entire terminal based dashboard over the standard webpack output. If you prefer clear visual output, this one comes in handy.
+* [system-bell-webpack-plugin](https://www.npmjs.com/package/system-bell-webpack-plugin) 在失败时提醒系统，而不是webpack失败时保持静默。
+* [webpack-notifier](https://www.npmjs.com/package/webpack-notifier) 使用系统通知让你知道webpack状态。
+* [nyan-progress-webpack-plugin](https://www.npmjs.com/package/nyan-progress-webpack-plugin) 可用于在构建过程中获得更整洁的输出。如果你使用的是像Travis这样的持续集成(CI)系统，请小心，因为它们会破坏输出。Webpack提供了 `ProgressPlugin` 用于同样的目的。
+* [friendly-errors-webpack-plugin](https://www.npmjs.com/package/friendly-errors-webpack-plugin) 改进了webpack的错误提示，它可以捕获常见错误并用更友好的方式显示它们。
+* [webpack-dashboard](https://www.npmjs.com/package/webpack-dashboard) 在标准webpack输出上提供一个基于终端的仪表板。如果你更喜欢清晰的视觉输出，这个会很有用。
 
 ## 总结
 
-WDS complements webpack and makes it more friendly for developers by providing development oriented functionality.
+WDS完善了webpack，并通过提供面向开发的功能使其对开发人员更友好
 
 内容回顾：
 
-* Webpack's `watch` mode is the first step towards a better development experience. You can have webpack compile bundles as you edit your source.
-* WDS can refresh the browser on change. It also implements **Hot Module Replacement**.
-* The default WDS setup can be problematic on specific systems. For this reason, more resource intensive polling is an alternative.
-* WDS can be integrated into an existing Node server using a middleware. Doing this gives you more control than relying on the command line interface.
-* WDS does far more than refreshing and HMR. For example proxying allows you to connect it to other servers.
+* Webpack的 `watch` 模式，为提升开体验迈出了重要的一步。但你改变了源代码时，webpack能实现重新编译。
+* 但源代码改变后，WDS 能刷新浏览器，它也实现了 **模块的热替换**。
+* WDS在某些旧系统上使用会出现问题，基于这个原因，轮询是一个不错的替代方案。
+* WDS可以以中间件的形式集成在一个Node服务器中。与依赖命令行接口相比，这样做可以提供更多的控制。
+* WDS不仅可以做自动刷新和HMR。如：通过代理连接其它服务器。
 
-In the next chapter, you learn to compose configuration so that it can be developed further later in the book.
+在下一章，你将学习如何组合配置，以便本书后面部分的进一步使用。
