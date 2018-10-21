@@ -1,4 +1,4 @@
-# Adding Hashes to Filenames
+# 在文件名中添加hash
 
 Even though the generated build works the file names it uses is problematic. It doesn't allow to leverage client level cache efficiently as there's no way tell whether or not a file has changed. Cache invalidation can be achieved by including a hash to the filenames.
 
