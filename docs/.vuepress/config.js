@@ -39,13 +39,13 @@ module.exports = {
                     '/',
                     guide.guideCn,
                     developing.developingCn,
+                    techniques.techniquesCn,
                     styling.stylingCn,
                     loading.loadingCn,
                     output.outputCn,
                     building.buildingCn,
                     optimizing.optimizingCn,
                     extending.extendingCn,
-                    techniques.techniquesCn,
                     appendices.appendicesCn
                 ]
             },
@@ -57,13 +57,13 @@ module.exports = {
                     '/en/',
                     guide.guideEn,
                     developing.developingEn,
+                    techniques.techniquesEn,
                     styling.stylingEn,
                     loading.loadingEn,
                     output.outputEn,
                     building.buildingEn,
                     optimizing.optimizingEn,
                     extending.extendingEn,
-                    techniques.techniquesEn,
                     appendices.appendicesEn
                 ]
             }
