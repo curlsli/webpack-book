@@ -1,4 +1,4 @@
-# Autoprefixing
+# Autoprefixing && styleint
 
 要记住特定CSS规则必须使用哪些厂商前缀才能支持大量用户，这是一项非常很有挑战性的工作。 **Autoprefixing** 解决了这个问题。你可以使用PostCSS 和 [autoprefixer](https://www.npmjs.com/package/autoprefixer) 插件开启这个功能。 *autoprefixer* 使用 [Can I Use](http://caniuse.com/) 提供服务，用来识别那个样式应该添加前缀。
 
@@ -34,7 +34,7 @@ const productionConfig = merge([
 ]);
 ```
 
-为了确认配置起作用，我们需要向样式中添加可以验证autoprefixing功能的样式，可添加如下的代码：
+为了确认配置起作用，运行 `npm run build` 脚本命令后，查看输出样式，你可以看到如下的代码：
 
 **src/main.css**
 
@@ -48,8 +48,6 @@ const productionConfig = merge([
 ```
 
 如果你知道都需要兼容哪些浏览器，可以创建一个 [.browserslistrc](https://www.npmjs.com/package/browserslist) 文件。包括 *autoprefixer* 在内，有很多浏览器都支持。
-
-> 你可以用 [Stylelint](http://stylelint.io/) 对css进行语法检测。你可以用跟autoprefix一样的方式引用，但它需要在 *postcss-loader* 之前，配置样式如下：
 
 **.browserslistrc**
 
@@ -70,6 +68,68 @@ IE 8 # Or IE 8
 ```
 
 *autoprefixer* 可以 **移除** 不必要的规则，也可以更具需要支持的浏览器范围信息来达到兼容性的需求。
+
+## CSS语法检测
+
+你可以用 [Stylelint](http://stylelint.io/) 对css进行语法检测。用法同autoprefix一样，但它需要放在在 *autoprefixing* 之后。
+
+引入`stylelint` 依赖:
+
+```bash
+npm install stylelint --save-dev
+```
+
+在 *webapck.parts.js* 添加如下配置配置代码：
+
+```
+...
+exports.autoprefix = () => ({
+  loader: "postcss-loader",
+  options: {
+    plugins: () => [
+      require("autoprefixer")(),
+      require("stylelint")()
+    ],
+  },
+});
+```
+
+运行 `npm run build` 脚本命令，你会发现输出类似下面的错误：
+
+```
+ERROR in ./src/css/style.css (./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./src/css/style.css)
+    Module build failed (from ./node_modules/postcss-loader/src/index.js):
+    Error: No configuration provided for E:\workspace\me\webpack4-demo\src\css\style.css
+        at module.exports (E:\workspace\me\webpack4-demo\node_modules\stylelint\lib\utils\configurationError.js:8:28)
+        at searchForConfig.then.then.config (E:\workspace\me\webpack4-demo\node_modules\stylelint\lib\getConfigForFile.js:49:15)
+```
+
+错误信息提示，需要一个配置文件，所以 可以创建一个 `.stylelintrc` 文件，用来存放css书写规范信息，可以定义如下规则：
+
+```
+"rules": {
+    "at-rule-no-vendor-prefix": true,
+    "at-rule-whitelist": [
+    "import",
+    "media"
+    ],
+    "color-named": "always-where-possible",
+    "color-no-hex": true,
+    "custom-media-pattern": "^([a-z]+-?)*([a-z]+)$",
+    "custom-property-pattern": "^([a-z]+-?)*([a-z]+)$",
+    "declaration-block-no-duplicate-properties": true,
+    "font-family-name-quotes": "always-where-recommended",
+    "font-weight-notation": "numeric",
+    "function-url-quotes": "always",
+    "function-whitelist": [
+    "color"
+    ]
+}
+```
+
+再一次运行 `npm run build` 脚本命令，可以看到相关的警告信息。具体使用可参考[stylelint官方文档](https://stylelint.io/user-guide/rules/)
+
+你还可以通过`extends`选项引用一个配置依赖，如：*[stylelint-config-standard](https://github.com/stylelint/stylelint-config-standard)* 、*[stylelint-config-recommended](https://github.com/stylelint/stylelint-config-recommended)*
 
 ## 总结
 
