@@ -1,22 +1,22 @@
-# Eliminating Unused CSS
+# 清除未用到的CSS
 
-Frameworks like [Bootstrap](https://getbootstrap.com/) tend to come with a lot of CSS. Often you use only a small part of it. Typically, you bundle even the unused CSS. It's possible, however, to eliminate the portions you aren't using.
+向 [Bootstrap](https://getbootstrap.com/) 这样的样式框架，它包含许多css模块。通常你只用一小部分，但是在打包的时候却打包了所有的样式，这时你需要考虑的就是如何清除未应用的样式。
 
-[PurifyCSS](https://www.npmjs.com/package/purifycss) is a tool that can achieve this by analyzing files. It walks through your code and figures out which CSS classes are being used. Often there is enough information for it to strip unused CSS from your project. It also works with single page applications to an extent.
+[PurifyCSS](https://www.npmjs.com/package/purifycss) 这个工具可以通过分析这些样式文件，实现清除未用样式的目的。它是通过遍历样式代码，来实现找出哪些样式被应用了，但是你需要给它提供足够的信息来清除未应用的样式。
 
-[uncss](https://www.npmjs.com/package/uncss) is a good alternative to PurifyCSS. It operates through PhantomJS and performs its work differently. You can use uncss itself as a PostCSS plugin.
+[uncss](https://www.npmjs.com/package/uncss)是PurifyCSS的一个很好的替代品。它通过PhantomJS进行操作，并以不同的方式来实现清除为应用的样式。可以把uncss作为PostCSS插件使用。
 
-W> You have to be careful if you are using CSS Modules. You have to **whitelist** the related classes as discussed in [purifycss-webpack readme](https://github.com/webpack-contrib/purifycss-webpack#usage-with-css-modules).
+> 如果你使用 CSS 模块，你需要小心。你需要 **whitelist** 去建立所有选择起的联系（命名空间），在 [purifycss-webpack readme](https://github.com/webpack-contrib/purifycss-webpack#usage-with-css-modules) 有详细说明。
 
 ## Setting Up Pure.css
 
-To make the demo more realistic, let's install [Pure.css](http://purecss.io/), a small CSS framework, as well and refer to it from the project so that you can see PurifyCSS in action. These two projects aren't related in any way despite the naming.
+为了让这个demo更具有实际意义，你可以安装 [Pure.css] (http://purecss.io/)，它是一个小的css框架。引入它，然后你就可以看到PurifyCSS到底是如何工作的。尽管名字相似，但它们之间没有什么必然的联系。
 
 ```bash
 npm install purecss --save
 ```
 
-To make the project aware of Pure.css, `import` it:
+用 `import` 引入 Pure.css ：
 
 **src/index.js**
 
@@ -25,9 +25,9 @@ import "purecss";
 ...
 ```
 
-T> The `import` works because webpack will resolve against `"browser": "build/pure-min.css",` field in the *package.json* file of Pure.css due to [resolve.mainFields](https://webpack.js.org/configuration/resolve/#resolve-mainfields). Webpack will try to resolve possible `browser` and `module` fields before looking into `main`.
+> 在 *package.json* 中的Pure.css文件由于[resolve.mainFields](https://webpack.js.org/configuration/resolve/#resolve-mainfields)，会被webpack解析成`"browser": "build/pure-min.css",`这样的字段，然后import就可以成功的引入 pure.css 。在解析 `main` 之前，webpack会尽力解析 `browser` 和 `module` 字段。
 
-You should also make the demo component use a Pure.css class, so there is something to work with:
+在一个demo组件用使用 Pure.css 类选择器：
 
 **src/component.js**
 
@@ -42,11 +42,11 @@ export default (text = "Hello world") => {
 };
 ```
 
-If you run the application (`npm start`), the "Hello world" should look like a button.
+如果你运行 `npm start` 脚本命令，你将看到 "Hello world" 具有了按钮的样式。
 
-![Styled hello](images/styled-button.png)
+![Styled hello](../../images/styled-button.png)
 
-Building the application (`npm run build`) should yield output:
+运行 `npm run build` 脚本命令，你会看到这样的输出：
 
 ```bash
 Hash: 36bff4e71a3f746d46fa
@@ -60,19 +60,19 @@ index.html  220 bytes          [emitted]
 ...
 ```
 
-As you can see, the size of the CSS file grew, and this is something to fix with PurifyCSS.
+正如你所看到的，样式文件变得很大，你可以使用 PurifyCSS 去优化它。
 
-## Enabling PurifyCSS
+## 启用 PurifyCSS 功能
 
-Using PurifyCSS can lead to significant savings. In the example of the project, they purify and minify Bootstrap (140 kB) in an application using ~40% of its selectors to mere ~35 kB. That's a big difference.
+使用 PurifyCSS 可以让你的css文件变得足够小。pureCSS 和 最小的 Bootstrap（140kb）在项目中的类选择器使用率低于40%，也就是说，你如果使用Bootstrap的话，那么真正有效的样式只占35kb。所以使用PreifyCSS与否差距较大。
 
-[purifycss-webpack](https://www.npmjs.com/package/purifycss-webpack) allows to achieve similar results. You should use the `MiniCssExtractPlugin` with it for the best results. Install it and a [glob](https://www.npmjs.org/package/glob) helper first:
+[purifycss-webpack](https://www.npmjs.com/package/purifycss-webpack) 可以实现类似的效果。你可以在 `MiniCssExtractPlugin` 中使用它，从而达到最好的效果。安装 [glob](https://www.npmjs.org/package/glob) 作为辅助：
 
 ```bash
 npm install glob purifycss-webpack purify-css --save-dev
 ```
 
-You also need PurifyCSS configuration as below:
+实现 PurifyCSS 的效果，首先你需要定义一个接口：
 
 **webpack.parts.js**
 
@@ -84,7 +84,7 @@ exports.purifyCSS = ({ paths }) => ({
 });
 ```
 
-Next, the part has to be connected with the configuration. It's essential the plugin is used *after* the `MiniCssExtractPlugin`; otherwise, it doesn't work:
+下一步，合并配置。你要在 `MiniCssExtractPlugin` 之后引入purifyCSS，否则它将不工作：
 
 **webpack.config.js**
 
@@ -109,9 +109,9 @@ const productionConfig = merge([
 ]);
 ```
 
-W> The order matters. CSS extraction has to happen before purifying.
+> 样式分离（css-extract-webpack-plugin）必须在样式净化（purifycss-webpack）之前。
 
-If you execute `npm run build` now, you should see something:
+此时，执行 `npm run build` 脚本命令，你将看到下面的输出：
 
 ```bash
 Hash: 36bff4e71a3f746d46fa
@@ -125,29 +125,29 @@ index.html  220 bytes          [emitted]
 ...
 ```
 
-The size of the style has decreased noticeably. Instead of 16k, you have roughly 2k now. The difference would be even more significant for more massive CSS frameworks.
+样式文件明显减小了，从过去的16k到现在的2k。这对减小引入的css规模很有帮助。
 
-PurifyCSS supports [additional options](https://github.com/purifycss/purifycss#the-optional-options-argument) including `minify`. You can enable these through the `purifyOptions` field when instantiating the plugin. Given PurifyCSS cannot pick all of the classes you are always using, you should use `purifyOptions.whitelist` array to define selectors which it should leave in the result no matter what.
+PurifyCSS 支持的 [其他配置项](https://github.com/purifycss/purifycss#the-optional-options-argument) ，也包括 `minify` ，你可以在插件实例化时添加 `minimize: true` 配置项去启用它，默认是关闭的。 因为PurifyCSS不能处理你所用的所有类选择器，所以你可以考虑使用 `Options.whitelist` 数组定义了不管什么情况下，都应该保留的类选择器。
 
-W> Using PurifyCSS loses CSS source maps even if you have enabled them with loader specific configuration due to the way it works underneath.
+> 使用PurifyCSS将会丢弃source-maps，即使你在不同的特定功能的loader中启用了它，这是由PurifyCSS的底层工作机制决定的。
 
-### Critical Path Rendering
+### 关键路径渲染
 
-The idea of [critical path rendering](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/) takes a look at CSS performance from a different angle. Instead of optimizing for size, it optimizes for render order and emphasizes **above-the-fold** CSS. The result is achieved by rendering the page and then figuring out which rules are required to obtain the shown result.
+[critical path rendering](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/) 这篇文章从不同的角度分析了CSS的性能。它不是讲如何优化文件的大小，而是讲如何优化css文件加载的顺序 它强调了 **above-the-fold** 的 CSS。通过分析显示的页面，然后确定使用哪些规则来得到想要的显示结果。
 
-[webpack-critical](https://www.npmjs.com/package/webpack-critical) and [html-critical-webpack-plugin](https://www.npmjs.com/package/html-critical-webpack-plugin) implement the technique as a `HtmlWebpackPlugin` plugin. [isomorphic-style-loader](https://www.npmjs.com/package/isomorphic-style-loader) achieves the same using webpack and React.
+[webpack-critical](https://www.npmjs.com/package/webpack-critical) 和 [html-critical-webpack-plugin](https://www.npmjs.com/package/html-critical-webpack-plugin) 依赖于 `HtmlWebpackPlugin`插件来实现这个技术。[isomorphic-style-loader](https://www.npmjs.com/package/isomorphic-style-loader)  用webpack和React实现相似的结果。
 
-[critical-path-css-tools](https://github.com/addyosmani/critical-path-css-tools) by Addy Osmani lists other related tools.
+[critical-path-css-tools](https://github.com/addyosmani/critical-path-css-tools) 是由Addy Osmani整理的工具集。
 
-## Conclusion
+## 总结
 
-Using PurifyCSS can lead to a significant decrease in file size. It's mainly valuable for static sites that rely on a massive CSS framework. The more dynamic a site or an application becomes, the harder it becomes to analyze reliably.
+用 PurifyCSS 可以是css文件明显的变小。它的主要价值是针对静态资源站点中引入了一个体积庞大CSS框架的优化。如果是一个动态站点或应用，它分析它们将变得困难起来。
 
-To recap:
+内容回顾：
 
-* Eliminating unused CSS is possible using PurifyCSS. It performs static analysis against the source.
-* The functionality can be enabled through *purifycss-webpack*, and the plugin should be applied *after* `MiniCssExtractPlugin`.
+* PurifyCSS可以清除未使用的css。它具有分析静态资源的优势。
+* 你可以通过引入 *purifycss-webpack* 来开启这个功能。这个插件需要在 `MiniCssExtractPlugin` 之后引用。
 * At best, PurifyCSS can eliminate most, if not all, unused CSS rules.
-* Critical path rendering is another CSS technique that emphasizes rendering the above-the-fold CSS first. The idea is to render something as fast as possible instead of waiting for all CSS to load.
+* 关键路径渲染是其他一个css技术。针对above-the-fold的css，它强调首先引入的CSS。它的核心思想是渲染什么，就尽快的加载什么。
 
-In the next chapter, you'll learn to **autoprefix**. Enabling the feature makes it more convenient to develop complicated CSS setups that work with older browsers as well.
+在下一章中，你讲了解 **autoprefix** 。启用该特性使开发复杂的CSS设置变得更加方便，这些CSS设置也可用于较老的浏览器。
