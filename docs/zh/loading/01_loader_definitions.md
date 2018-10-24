@@ -1,20 +1,18 @@
-# Loader Definitions
+# Loader 的基本定义
 
-Webpack provides multiple ways to set up module loaders. Webpack 2 simplified the situation by introducing the `use` field. It can be a good idea to prefer absolute paths here as they allow you to move configuration without breaking assumptions.
+Webpack提供了灵活的配置方法来使用模块loader。Webpack2.x 引入`use`这个选项，来简化在webpack中引入loader。在这里选择绝对路径是一个好主意，因为它们允许你在不破坏预设的情况下移动配置。
 
-The other way is to set `context` field as this gives a similar effect and affects the way entry points and loaders are resolved. It doesn't have an impact on the output, though, and you still need to use an absolute path or `/` there.
+另一个方法是使用 `context` 选项，它可以通过改变入口点和loader的解析来实现相似的效果。它不影响输出，你仍然需要在这里用绝对路径或者`/` 。
 
-Assuming you set an `include` or `exclude` rule, packages loaded from *node_modules* still work as the assumption is that they have been compiled in such a way that they work out of the box. If they don't, then you have to apply techniques covered in the *Consuming Packages* chapter.
+即使你使用了 `include` 和 `exclude` 规则，但依赖仍然可以从 *node_modules* 引入并工作，这是因为它们就是这样实现的，这些依赖大多数斗志经过严格的测试的，所以基本不存在什么问题，没必要再进行一遍解析，这样只引用不解析，可以大大提高构建编译效率。这将在 *[Consuming Packages](https://lvzhenbang.github.io/webpack-book/dist/zh/techniques/06_consuming.html)* 这一章详解。
 
-T> `include`/`exclude` is handy with *node_modules* as webpack processes and traverses the installed packages by default when you import JavaScript files to your project. Therefore you need to configure it to avoid that behavior. Other file types don't suffer from this issue.
+> `include`/`exclude` 用在 *node_modules* 目录上可以极大的提高webpack的效率。因为webpack默认情况下，是需要处理和遍历引入项目中的所有JavaScript，通过使用`include`/`exclude`，你可以避免这个引入。其他类型的文件没有这个问题。
 
-## Anatomy of a Loader
+## 剖析Loader
 
-Webpack supports a large variety of formats through *loaders*. Also, it supports a couple of JavaScript module formats out of the box. The idea is the same. You always set up a loader, or loaders, and connect those with your directory structure.
+Webpack 可以通过 *loaders* 实现对多种文件格式的处理，它同样支持由JavaScript模块变化而来的很多模块格式。处理他们的思想相同。你总是能够配置一个或几个loader实现对你项目的文件的处理。
 
-{pagebreak}
-
-Consider the example below where webpack processes JavaScript through Babel:
+下面是webpack使用Babel对JavaScript的处理：
 
 **webpack.config.js**
 
@@ -45,13 +43,13 @@ module.exports = {
 };
 ```
 
-T> If you are not sure how a particular RegExp matches, consider using an online tool, such as [regex101](https://regex101.com/), [RegExr](http://regexr.com/), or [Regexper](https://regexper.com).
+> 如果你对RegExp匹配不太了解，你可以考虑使用一个在线工具，如： [regex101](https://regex101.com/)， [RegExr](http://regexr.com/)，或者[Regexper](https://regexper.com)。
 
-## Loader Evaluation Order
+## Loader 的执行顺序
 
-It's good to keep in mind that webpack's loaders are always evaluated from right to left and from bottom to top (separate definitions). The right-to-left rule is easier to remember when you think about as functions. You can read definition `use: ["style-loader", "css-loader"]` as `style(css(input))` based on this rule.
+使用loader你需要明白这一点，webpack的loader是按照从右到左，从下到上的顺序来逐个使用的。理解从右到左的规则，可以借助于函数的使用，你可以把 `use: ["style-loader", "css-loader"]` 这样的loader定义看作 `style(css(input))` 。
 
-To see the rule in action, consider the example below:
+可以通过下面的例子来理解rule的使用：
 
 ```javascript
 {
@@ -60,7 +58,7 @@ To see the rule in action, consider the example below:
 },
 ```
 
-Based on the right to left rule, the example can be split up while keeping it equivalent:
+你可以把这种从右到左的规则分开，写成这种从下到上的形式：
 
 ```javascript
 {
@@ -73,15 +71,13 @@ Based on the right to left rule, the example can be split up while keeping it eq
 },
 ```
 
-### Enforcing Order
+### 使用强制顺序
 
-Even though it would be possible to develop an arbitrary configuration using the rule above, it can be convenient to be able to force specific rules to be applied before or after regular ones. The `enforce` field can come in handy here. It can be set to either `pre` or `post` to push processing either before or after other loaders.
+即使上面的规则可以任意的配置，你也可以使用强制的方式来定义某个特定的规则的执行顺序。你可以使用 `enforce` 字段，它可以被设置为 `pre` 或 `post`，用来强调这个特定规则是在其他所有loader规则之前或之后。
 
-Linting is a good example because the build should fail before it does anything else. Using `enforce: "post"` is rarer and it would imply you want to perform a check against the built source. Performing analysis against the built source is one potential example.
+语法检测是使用`enforce`的一个好例子。这是因为构建除了语法检测这件事儿之外，应该在它没有做任何其他的事之前，就应该失败（如果入到遇到错误）。使用 `enforce: "post"` 意味着你要对所有源代码执行loader操作。
 
-{pagebreak}
-
-The basic syntax goes as below:
+因此你应该像下面这样配置：
 
 ```javascript
 {
@@ -94,11 +90,11 @@ The basic syntax goes as below:
 },
 ```
 
-It would be possible to write the same configuration without `enforce` if you chained the declaration with other loaders related to the `test` carefully. Using `enforce` removes the necessity for that and allows you to split loader execution into separate stages that are easier to compose.
+如果你小心地将声明与 `test` 相关的其他loader串联起来，那么就有可能在不使用 `enforce `的情况下实现相同的效果。使用 `enforce` 可以消除这样做的必要性，那么你就可以将loader拆分为更容易组合的部分。
 
-## Passing Parameters to a Loader
+## 向Loader传递参数
 
-There's a query format that allows passing parameters to loaders:
+有一个查询格式，允许传递参数给loader：
 
 ```javascript
 {
@@ -111,11 +107,9 @@ There's a query format that allows passing parameters to loaders:
 },
 ```
 
-This style of configuration works in entries and source imports too as webpack picks it up. The format comes in handy in certain individual cases, but often you are better off using more readable alternatives.
+webpack也接受这种entries和source引入的配置方式。这种方式在个人的使用上很方便，但建议最好还是使用可读性更好的方式。
 
-{pagebreak}
-
-It's preferable to go through `use`:
+`use` 这种方式更容易让人接受：
 
 ```javascript
 {
@@ -133,7 +127,7 @@ It's preferable to go through `use`:
 },
 ```
 
-If you wanted to use more than one loader, you could pass an array to `use` and expand from there:
+如果你需要使用不止一个loader，你可以给 `use`设置一个数组：
 
 ```javascript
 {
@@ -152,11 +146,9 @@ If you wanted to use more than one loader, you could pass an array to `use` and 
 },
 ```
 
-{pagebreak}
+## 用函数的形式配置`use`
 
-## Branching at `use` Using a Function
-
-In the book setup, you compose configuration on a higher level. Another option to achieve similar results would be to branch at `use` as webpack's loader definitions accept functions that allow you to branch depending on the environment. Consider the example below:
+你可以在一个更高的层面上组合配置。webpack 允许你使用函数的形式扩展 `use` ，来向配置中添加loader，参考例子如下：
 
 ```javascript
 {
@@ -184,11 +176,11 @@ In the book setup, you compose configuration on a higher level. Another option t
 },
 ```
 
-Carefully applied, this technique allows different means of composition.
+这种方式可以用在不同形式的组合配置中。
 
-## Inline Definitions
+## 内联的基本定义
 
-Even though configuration level loader definitions are preferable, it's possible to write loader definitions inline:
+虽然配置级别loader定义比较受欢迎，但是你也可以使用内联的loader定义：
 
 ```javascript
 // Process foo.png through url-loader and other
@@ -199,7 +191,7 @@ import "url-loader!./foo.png";
 import "!!url-loader!./bar.png";
 ```
 
-The problem with this approach is that it couples your source with webpack. Nonetheless, it's still an excellent form to know. Since configuration entries go through the same mechanism, the same forms work there as well:
+这种方法的问题在于它将源代码与webpack结合在一起。尽管如此，它仍然不失为是一种很好的使用方式。由于配置入口经过相同的机制，所以也以同样的格式在那里工作：
 
 ```javascript
 {
@@ -209,27 +201,27 @@ The problem with this approach is that it couples your source with webpack. None
 },
 ```
 
-## Alternate Ways to Match Files
+## 可使用的匹配文件方式
 
-`test` combined with `include` or `exclude` to constrain the match is the most common approach to match files. These accept the data types as listed below:
+`test` 与 `include` 或 `exclude`结合在一起形成约束匹配，这是最常见的文件匹配方法。它们接受如下所列的数据类型：
 
-* `test` - Match against a RegExp, string, function, an object, or an array of conditions like these.
-* `include` - The same.
-* `exclude` - The same, except the output is the inverse of `include`.
-* `resource: /inline/` - Match against a resource path including the query. Examples: `/path/foo.inline.js`, `/path/bar.png?inline`.
-* `issuer: /bar.js/` - Match against a resource requested from the match. Example: `/path/foo.png` would match if it was requested from `/path/bar.js`.
-* `resourcePath: /inline/` - Match against a resource path without its query. Example: `/path/foo.inline.png`.
-* `resourceQuery: /inline/` - Match against a resource based on its query. Example: `/path/foo.png?inline`.
+* `test` - RegExp, string, function, object, array。
+* `include` - 同上。
+* `exclude` - 同上，它和 `include` 的目的相反。
+* `resource: /inline/` - 匹配资源的路径。如： `/path/foo.inline.js`，`/path/bar.png?inline`。
+* `issuer: /bar.js/` - 从一个已经匹配的资源中，查找匹配。如：在 `/path/bar.js` 中的 `/path/foo.png` 的匹配。
+* `resourcePath: /inline/` - 匹配一个没有查询条件的资源路径。如： `/path/foo.inline.png`。
+* `resourceQuery: /inline/` - 匹配一个带有查询条件的资源。如： `/path/foo.png?inline`。
 
-Boolean based fields can be used to constrain these matchers further:
+下面这些布尔类型的字段可以进一步的约束匹配：
 
-* `not` - Do **not** match against a condition (see `test` for accepted values).
-* `and` - Match against an array of conditions. All must match.
-* `or` - Match against an array while any must match.
+* `not` - 匹配 `test` 可接受的值
+* `and` - 数组类型
+* `or` - 数组类型
 
-## Loading Based on `resourceQuery`
+## 使用 `resourceQuery` 选项
 
-`oneOf` field makes it possible to route webpack to a specific loader based on a resource related match:
+`oneOf` 为webpack开启了路由的功能，可以为不同的资源指定特定的loader：
 
 ```javascript
 {
@@ -247,13 +239,11 @@ Boolean based fields can be used to constrain these matchers further:
 },
 ```
 
-If you wanted to embed the context information to the filename, the rule could use `resourcePath` over `resourceQuery`.
+如果你想要将context嵌入到文件名中，你可以用 `resourcePath` 代替 `resourceQuery`。
 
-{pagebreak}
+## 使用 `issuer` 选项
 
-## Loading Based on `issuer`
-
-`issuer` can be used to control behavior based on where a resource was imported. In the example below adapted from [css-loader issue 287](https://github.com/webpack-contrib/css-loader/pull/287#issuecomment-261269199), *style-loader* is applied when webpack captures a CSS file from a JavaScript import:
+`issuer` can be used to control behavior based on where a resource was imported。下面的例子采纳了 [css-loader issue 287](https://github.com/webpack-contrib/css-loader/pull/287#issuecomment-261269199)，*style-loader* 是被用在webpack中，处理当在JavaScript中引入一个css文件的情况：
 
 ```javascript
 {
@@ -271,7 +261,7 @@ If you wanted to embed the context information to the filename, the rule could u
 },
 ```
 
-Another approach would be to mix `issuer` and `not`:
+也可以混合 `issuer` 和 `not` 使用：
 
 ```javascript
 {
@@ -291,21 +281,21 @@ Another approach would be to mix `issuer` and `not`:
 }
 ```
 
-## Understanding Loader Behavior
+## Loader的工作机制
 
-Loader behavior can be understood in greater detail by inspecting them. [loader-runner](https://www.npmjs.com/package/loader-runner) allows you to run them in isolation without webpack. Webpack uses this package internally and *Extending with Loaders* chapter covers it in detail.
+Loader的运行机制，你可以通过监视它，来了解它。[loader-runner](https://www.npmjs.com/package/loader-runner) 允许你在不使用webpack的情况下运行它们。Webpack的内部如何使用包（package），*[Extending with Loaders](https://lvzhenbang.github.io/webpack-book/dist/zh/extending/01_loaders.html)* 这章将详细介绍。
 
-[inspect-loader](https://www.npmjs.com/package/inspect-loader) allows you to inspect what's being passed between loaders. Instead of having to insert `console.log`s within *node_modules*, you can attach this loader to your configuration and inspect the flow there.
+[inspect-loader](https://www.npmjs.com/package/inspect-loader) 允许你监视loader之间是如何传递信息的，你不需要在 *node_modules* 内插入 `console.log` ，你可以将它添加到你的配置中来了解loader间的信息是如何流动的。
 
-## Conclusion
+## 总结
 
-Webpack provides multiple ways to setup loaders but sticking with `use` is enough in webpack 4. Be careful with loader ordering, as it's a common source of problems.
+虽然Webpack提供了多种方式配置loaders，但在webpack4.x中会用 `use` 就足够了。另外注意loader的顺序，它是常见问题的来源。
 
-To recap:
+内容回顾：
 
-* **Loaders** allow you determine what should happen when webpack's module resolution mechanism encounters a file.
-* A loader definition consists of **conditions** based on which to match and **actions** that should be performed when a match happens.
-* Webpack 2 introduced the `use` field. It combines the ideas of old `loader` and `loaders` fields into a single construct.
-* Webpack 4 provides multiple ways to match and alter loader behavior. You can, for example, match based on a **resource query** after a loader has been matched and route the loader to specific actions.
+* **Loaders** 允许你来决定应该发生什么，当webpack的模块解析机制遇到一个文件时。
+* 一个模块定义由两部分组成， 匹配的条件（**conditions**）和 匹配成功后应该做什么（**actions** ）。
+* Webpack 2 引入了 `use` 字段。它将 `loader` 和 `loaders` 字段放入了一个结构中。
+* Webpack 4 提供了多种匹配方式来改变loader的行为。 到loader匹配完成后，你可以用 **resource query** 根据不同的路由使用特定的loader。
 
-In the next chapter, you'll learn to load images using webpack.
+在下一章中，将详细介绍使用webpack加载图片资源。
