@@ -1,20 +1,21 @@
-# Loading Images
+# 加载 Images
 
-HTTP/1 application can be made slow by loading a lot of small assets as each request comes with an overhead. HTTP/2 helps in this regard and changes the situation somewhat drastically. Till then you are stuck with different approaches. Webpack allows a few of these.
+HTTP/1应用程序因为加载大量的小静态资源而变得运行缓慢，这是因为每个请求都会带来开销。
+HTTP/2在针对上面的情况做出了改进，并在一定程度上改变了这种情况。你曾经也会为使用那一种解决方案而感到困扰，下面Webpack允许其中的一些。
 
-Webpack can inline assets by using [url-loader](https://www.npmjs.com/package/url-loader). It emits your images as base64 strings within your JavaScript bundles. The process decreases the number of requests needed while growing the bundle size. It's enough to use *url-loader* during development. You want to consider other alternatives for the production build, though.
+Webpack 可以使用 url-loader 实现静态资源的内联。它将你的图片资源以base64格式的字符串形式打包到js中。虽然这种处理方式可以减小请求的次数，但是它增加了打包生成文件的大小。url-loader在开发模式下足够用了，但是在生产模式下你需要考虑是用其它的loader。
+Webpack提供了对内联过程的控制，并可以延迟加载到file-loader。file-loader输出图像文件并返回路径，而不是内联。这种技术适用于其他资产类型，如：字体。你将在后面的章节中看到。
 
-Webpack gives control over the inlining process and can defer loading to [file-loader](https://www.npmjs.com/package/file-loader). *file-loader* outputs image files and returns paths to them instead of inlining. This technique works with other assets types, such as fonts, as you see in the later chapters.
+## 配置 *url-loader*
 
-## Setting Up *url-loader*
 
-*url-loader* is a good starting point and it's the perfect option for development purposes, as you don't have to care about the size of the resulting bundle. It comes with a *limit* option that can be used to defer image generation to *file-loader* after an absolute limit is reached. This way you can inline small files to your JavaScript bundles while generating separate files for the bigger ones.
+从开发模式来说，url-loader是一个完美的选择，因为你不必关心结果包的大小。它有一个限制选项，可用于当图片超过限制后将图像生成交给file-loader。通过这种方式，你可以将小文件内联到JavaScript包中，而为较大的文件生成单独的文件。
 
-If you use the limit option, you need to install both *url-loader* and *file-loader* to your project. Assuming you have configured your styles correctly, webpack resolves any `url()` statements your styling contains. You can point to the image assets through your JavaScript code as well.
+如果使用limit选项，则需要将url-loader和file-loader安装到项目中。假如你已经正确配置了它们，webpack将解析你的样式中所包含的任何url()语法，也可以你通过JavaScript代码引用的图像资源。
 
-In case the `limit` option is used, *url-loader* passes possible additional options to *file-loader* making it possible to configure its behavior further.
+如果使用了limit选项，url-loader会将这个选项传递给file-loader，从而可以进一步配置它的行为。
 
-To load *.jpg* and *.png* files while inlining files below 25kB, you would have to set up a loader:
+如果 .jpg 和 .png 类型的文件小于25kB需要内联， 你可以添加这样的配置loader：
 
 ```javascript
 {
@@ -28,11 +29,11 @@ To load *.jpg* and *.png* files while inlining files below 25kB, you would have 
 },
 ```
 
-T> If you prefer to use another loader than *file-loader* as the *limit* is reached, set `fallback: "some-loader"`. Then webpack will resolve to that instead of the default.
+> 如果在达到限制时，而你喜欢使用非file-loader的loader，你可以设置调用该loader,然后webpack会执行它，而不是一定要用file-loader。
 
-## Setting Up *file-loader*
+## 配置 *file-loader*
 
-If you want to skip inlining altogether, you can use *file-loader* directly. The following setup customizes the resulting filename. By default, *file-loader* returns the MD5 hash of the file's contents with the original extension:
+如果你想直接跳过内联这个步骤，你可以直接使用file-loader。它支持自定义文件名和路径。默认情况下，file-loader返回原始的文件扩展名和文件内容的MD5哈希值，具体使用可参考下面的配置：
 
 ```javascript
 {
@@ -46,21 +47,21 @@ If you want to skip inlining altogether, you can use *file-loader* directly. The
 },
 ```
 
-T> If you want to output your images below a particular directory, set it up with `name: "./images/[hash].[ext]"`.
+> 如果你想要将图片输出到指定的目录中，可以修改 `options.name` 为 `name: "./images/[hash].[ext]"` 。
 
-W> Be careful not to apply both loaders on images at the same time! Use the `include` field for further control if *url-loader* `limit` isn't enough.
+> 注意 `file-loader` 和 `url-loader` 不能是并列的关系，要么只是用两者中其中一个，要么是嵌套关系。如果 *url-loader* 的 `limit` 的不能满足使用，可以选择使用 `include` 字段。
 
-## Integrating Images to the Project
+## 将 Images 集成到项目中
 
-The ideas above can be wrapped in a small helper that can be incorporated into the book project. To get started, install the dependencies:
+可以将上面想法的封装成一个函数，添加的配置文件中。
+
+首先添加 `file-loader` 和 `url-loader` 依赖：
 
 ```bash
 npm install file-loader url-loader --save-dev
 ```
 
-Set up a function as below:
-
-**webpack.parts.js**
+在 **webpack.parts.js** 中，添加一个如下面所示的配置函数：
 
 ```javascript
 exports.loadImages = ({ include, exclude, options } = {}) => ({
@@ -80,9 +81,7 @@ exports.loadImages = ({ include, exclude, options } = {}) => ({
 });
 ```
 
-To attach it to the configuration, adjust as follows. The configuration defaults to *url-loader* during development and uses both *url-loader* and *file-loader* in production to maintain smaller bundle sizes. *url-loader* uses *file-loader* implicitly when `limit` is set, and both have to be installed for the setup to work.
-
-**webpack.config.js**
+在 **webpack.config.js** 中，引入上面的配置函数。在开发模式下，只使用 *url-loader* ，而在生产模式下，引入 *url-loader* 和 *file-loader* 。当添加了 `limit` 选项， *url-loader* 会隐式的使用 *file-loader*，所以为了是配置起作用，你需要同时安装这两个loader。
 
 ```javascript
 const productionConfig = merge([
@@ -101,7 +100,7 @@ const developmentConfig = merge([
 ]);
 ```
 
-To test that the setup works, download an image or generate it (`convert -size 100x100 gradient:blue logo.png`) and refer to it from the project:
+为了测试配置的工作情况，下载或生成一个图片(`convert -size 100x100 gradient:blue logo.png`)，然后再项目中引用它。
 
 **src/main.css**
 
@@ -114,11 +113,11 @@ body {
 }
 ```
 
-The behavior changes depending on the `limit` you set. Below the limit, it should inline the image while above it should emit a separate asset and a path to it. The CSS lookup works because of *css-loader*. You can also try importing the image from JavaScript code and see what happens.
+具体的操作方式取决于 `limit` 的配置。如果在配置值之下，则内联这张图片，否则就生成一张图片和图片存在的路径。这个查找工作取决于 *css-loader*。你也可以在js代码中引入一张图片，然后看看发生了什么。
 
-## Loading SVGs
+## 加载 SVGs
 
-Webpack allows a [couple ways](https://github.com/webpack/webpack/issues/595) to load SVGs. However, the easiest way is through *file-loader* as follows:
+Webpack 可以使用[两种方法](https://github.com/webpack/webpack/issues/595) 加载 SVGs。然而最简单的方法是用 *file-loader* ，配置如下：
 
 ```javascript
 {
@@ -127,7 +126,7 @@ Webpack allows a [couple ways](https://github.com/webpack/webpack/issues/595) to
 },
 ```
 
-Assuming you have set up your styling correctly, you can refer to your SVG files as below. The example SVG path below is relative to the CSS file:
+如果上面的配置是正确的，你可以在css代码中引入svg，像下面这样：
 
 ```css
 .icon {
@@ -135,35 +134,35 @@ Assuming you have set up your styling correctly, you can refer to your SVG files
 }
 ```
 
-Consider also the following loaders:
+也可以考虑使用下面的loader：
 
-* [raw-loader](https://www.npmjs.com/package/raw-loader) gives access to the raw SVG content.
-* [svg-inline-loader](https://www.npmjs.com/package/svg-inline-loader) goes a step further and eliminates unnecessary markup from your SVGs.
-* [svg-sprite-loader](https://www.npmjs.com/package/svg-sprite-loader) can merge separate SVG files into a single sprite, making it potentially more efficient to load as you avoid request overhead. It supports raster images (*.jpg*, *.png*) as well.
-* [svg-url-loader](https://www.npmjs.com/package/svg-url-loader) loads SVGs as UTF-8 encoded data urls. The result is smaller and faster to parse than base64.
-* [react-svg-loader](https://www.npmjs.com/package/react-svg-loader) emits SVGs as React components meaning you could end up with code like `<Image width={50} height={50}/>` to render a SVG in your code after importing it.
+* [raw-loader](https://www.npmjs.com/package/raw-loader) 可以访问 SVG 内容。
+* [svg-inline-loader](https://www.npmjs.com/package/svg-inline-loader) 可以更进一步的实现清除SVG内的不必要的标记。
+* [svg-sprite-loader](https://www.npmjs.com/package/svg-sprite-loader) 可以将多张svg合成为一张雪碧图。它也支持 *.jpg* 和 *.png* 格式图片的处理。
+* [svg-url-loader](https://www.npmjs.com/package/svg-url-loader) 把 SVGs 用UTF-8格式编码为data-URI，这样静态资源更小，且比base64架加载更快。
+* [react-svg-loader](https://www.npmjs.com/package/react-svg-loader) 可以在React中以 `<Image width={50} height={50}/>` 格式的代码引入svg，然后渲染它。
 
-T> You can still use *url-loader* and the tips above with SVGs too.
+> 你可以仍然使用 *url-loader* ，但要注意 SVGs 的处理。
 
-## Optimizing Images
+## 优化 Images
 
-In case you want to compress your images, use [image-webpack-loader](https://www.npmjs.com/package/image-webpack-loader), [svgo-loader](https://www.npmjs.com/package/svgo-loader) (SVG specific), or [imagemin-webpack-plugin](https://www.npmjs.com/package/imagemin-webpack-plugin). This type of loader should be applied first to the data, so remember to place it as the last within `use` listing.
+你可以使用 [image-webpack-loader](https://www.npmjs.com/package/image-webpack-loader)，[svgo-loader](https://www.npmjs.com/package/svgo-loader) (SVG specific)，或 [imagemin-webpack-plugin](https://www.npmjs.com/package/imagemin-webpack-plugin) 来压缩图片。这种类型的 loader 被首先用来改变数据，所以你应该把它放在 `use` 列表的最后位置。
 
-Compression is particularly valuable for production builds as it decreases the amount of bandwidth required to download your image assets and speed up your site or application as a result.
+它在生产中很有意义，因为它可以减小请求静态资源的带宽，因此可以起到加速你的站点或应用程序的启动。
 
-## Utilizing `srcset`
+## 启用 `srcset`
 
-[resize-image-loader](https://www.npmjs.com/package/resize-image-loader) and [responsive-loader](https://www.npmjs.com/package/responsive-loader) allow you to generate `srcset` compatible collections of images for modern browsers. `srcset` gives more control to the browsers over what images to load and when resulting in higher performance.
+[resize-image-loader](https://www.npmjs.com/package/resize-image-loader) 和 [responsive-loader](https://www.npmjs.com/package/responsive-loader) 允许你生成 `srcset` 兼容现代浏览器的图片集合。`srcset` 为浏览器提供了更多的控制，可以控制加载什么图像，以及在什么情况下可以获得更高的性能
 
-## Loading Images Dynamically
+## 动态加载 Images
 
-Webpack allows you to load images dynamically based on a condition. The techniques covered in the *Code Splitting* and *Dynamic Loading* chapters are enough for this purpose. Doing this can save bandwidth and load images only when you need them or preload them while you have time.
+Webpack 允许在某个条件下动态的加载图片。这个技术包括 *Code Splitting* 和 *[Dynamic Loading](https://lvzhenbang.github.io/webpack-book/dist/zh/techniques/01_dynamic_loading.html)* 。这样做可以节省带宽，图片可以等到需要的时候在加载，或者在你有时间的时候预先加载它们。
 
-## Loading Sprites
+## 加载雪碧图（Sprites）
 
-**Spriting** technique allows you to combine multiple smaller images into a single image. It has been used for games to describe animations and it's valuable for web development as well as you avoid request overhead.
+**Spriting** 允许你将多张小图片合成一张大图。它过去常被用在游戏的动画上，在web开发上也可以用来减少请求的次数。
 
-[webpack-spritesmith](https://www.npmjs.com/package/webpack-spritesmith) converts provided images into a sprite sheet and Sass/Less/Stylus mixins. You have to set up a `SpritesmithPlugin`, point it to target images, and set the name of the generated mixin. After that, your styling can pick it up:
+[webpack-spritesmith](https://www.npmjs.com/package/webpack-spritesmith) 可以转换图片成一张雪碧图，伴随生成一个 Sass/Less/Stylus 样式文件。你可以添加 `SpritesmithPlugin` 配置，然后指定目标图片组，你也可以指定生成的mixin名称，然后你可以像下面这样引用样式：
 
 ```scss
 @import "~sprite.sass";
@@ -177,19 +176,19 @@ Webpack allows you to load images dynamically based on a condition. The techniqu
 }
 ```
 
-## Using Placeholders
+## 使用占位符
 
-[image-trace-loader](https://www.npmjs.com/package/image-trace-loader) loads images and exposes the results as `image/svg+xml` URL encoded data. It can be used in conjunction with *file-loader* and *url-loader* for showing a placeholder while the actual image is being loaded.
+[image-trace-loader](https://www.npmjs.com/package/image-trace-loader) 可以加载图片，然后暴露`image/svg+xml` 这样的URL编码数据。它可以跟 *file-loader* 和 *url-loader* 一起使用，当真正的图片加载前，使用这一个占位符。
 
-[lqip-loader](https://www.npmjs.com/package/lqip-loader) implements a similar idea. Instead of tracing, it provides a blurred image instead of a traced one.
+[lqip-loader](https://www.npmjs.com/package/lqip-loader) 实现了相似的功能。它实现的是一个模糊效果的图片，而不是一个占位图片。
 
 ## Getting Image Dimensions
 
-Sometimes getting the only reference to an image isn't enough. [image-size-loader](https://www.npmjs.com/package/image-size-loader) emits image dimensions, type, and size in addition to the reference to the image itself.
+有的时候只得到一张图片的引用是不够的。 [image-size-loader](https://www.npmjs.com/package/image-size-loader) 不仅返回图片的引用，还返回图片的 dimensions、type、size信息。
 
-## Referencing to Images
+## Images 的引用
 
-Webpack can pick up images from style sheets through `@import` and `url()` assuming *css-loader* has been configured. You can also refer to your images within the code. In this case, you have to import the files explicitly:
+如果 Webpack 配置使用了 *css-loader* ，那么它可以在样式中通过 `@import` 和 `url()` 来获取图片。你也可以在你的js代码中引入图片，这时你需要像下面例子中那样引入并使用图片：
 
 ```javascript
 import src from "./avatar.png";
@@ -198,13 +197,13 @@ import src from "./avatar.png";
 const Profile = () => <img src={src} />;
 ```
 
-If you are using React, then you use [babel-plugin-transform-react-jsx-img-import](https://www.npmjs.com/package/babel-plugin-transform-react-jsx-img-import) to generate the `require` automatically. In that case, you would end up with code:
+如果你在使用React，并且项目中引入了 [babel-plugin-transform-react-jsx-img-import](https://www.npmjs.com/package/babel-plugin-transform-react-jsx-img-import) 插件，`require` 会自动生成，在这样的情况下，你可以像下面这样引入图片：
 
 ```javascript
 const Profile = () => <img src="avatar.png" />;
 ```
 
-It's also possible to set up dynamic imports as discussed in the *Code Splitting* chapter. Here's a small example:
+你也可以配置动态引入图片，在 *[Code Splitting](https://lvzhenbang.github.io/webpack-book/dist/zh/building/03_code_splitting.html)* 这章将详细介绍。下面是个小例子：
 
 ```javascript
 const src = require(`./avatars/${avatar}`);`.
@@ -212,19 +211,19 @@ const src = require(`./avatars/${avatar}`);`.
 
 ## Images and *css-loader* Source Map Gotcha
 
-If you are using images and *css-loader* with the `sourceMap` option enabled, it's important that you set `output.publicPath` to an absolute value pointing to your development server. Otherwise, images aren't going to work. See [the relevant webpack issue](https://github.com/webpack/style-loader/issues/55) for further explanation.
+如果你正在使用图片且在 *css-loader* 中开启了 `sourceMap` 功能，这时你需要设置 `output.publicPath` 为一个指明开发服务器的绝对值。否则，图片将没有效果，可查看 [webpack issue](https://github.com/webpack/style-loader/issues/55) 去进一步了解问题。
 
-## Conclusion
+## 总结
 
-Webpack allows you to inline images within your bundles when needed. Figuring out proper inlining limits for your images requires experimentation. You have to balance between bundle sizes and the number of requests.
+Webpack 可以根据打包的需要来实现图片的内联。根据实际的需求设置内联的限制条件。你需要在构建包的大小和请求次数之间做权衡。
 
-To recap:
+内容回顾：
 
-* *url-loader* inlines the assets within JavaScript. It comes with a `limit` option that allows you to defer assets above it to *file-loader*.
-* *file-loader* emits image assets and returns paths to them to the code. It allows hashing the asset names.
-* You can find image optimization related loaders and plugins that allow you to tune their size further.
-* It's possible to generate **sprite sheets** out of smaller images to combine them into a single request.
-* Webpack allows you to load images dynamically based on a given condition.
-* If you are using source maps, you should remember to set `output.publicPath` to an absolute value for the images to show up.
+* *url-loader* 将静态资源内敛到JavaScript。它由一个 `limit` 选项可以实现将静态资源延迟传递给 *file-loader* 。
+* *file-loader* 输出图片静态资源，并返回给js代码一个路径信息。它允许内静态资源的名字中注入hash（文件内容的MD5 hash，所以每个图片都有一个唯一的hash）。
+* 你可以使用与图片优化相关的 loaders 和 plugins 来进一步调整图片的大小。
+* 将一些小图片生成一个 **sprite sheets** 来减少请求次数。
+* Webpack 允许你在某一条件下，动态的加载图片。
+* 如果你要使用source-maps，你需要设置 `output.publicPath` 为一个绝对值，这样图片才能正常展示。
 
-You'll learn to load fonts using webpack in the next chapter.
+在下一章中，你将学习使用webpack加载字体。
