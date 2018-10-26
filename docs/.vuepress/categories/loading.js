@@ -1,5 +1,5 @@
 const loadingEn = {
-    title: 'loading',
+    title: 'loading Assets',
     collapsable: true,
     children: [
         '/en/loading/01_loader_definitions',
@@ -10,7 +10,7 @@ const loadingEn = {
 };
 
 const loadingCn =  {
-    title: '加载',
+    title: '加载静态资源',
     collapsable: true,
     children: [
         '/zh/loading/01_loader_definitions',
