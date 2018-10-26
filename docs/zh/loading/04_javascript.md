@@ -241,3 +241,4 @@ Babel已经成为开发人员不可或缺的工具，因为它可以将标准与
 * 可以根据开发目标启用Babel功能。通过这种方式，你可以确保在正确的位置使用了正确的插件。
 * 除了Babel之外，webpack还支持其他解决方案，比如TypeScript或Flow。Flow可以作为Babel的补充，而TypeScript表示d对整个语言的JavaScript编译。
 
+下一步部分，将详细介绍执行构建的知识点。
