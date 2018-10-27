@@ -1,34 +1,34 @@
 # Source Maps
 
-![Source maps in Chrome](images/sourcemaps.png)
+![Source maps in Chrome](../../images/sourcemaps.png)
 
-When your source code has gone through transformations, debugging becomes a problem. When debugging in a browser, how to tell where the original code is? **Source maps** solve this problem by providing a mapping between the original and the transformed source code. In addition to source compiling to JavaScript, this works for styling as well.
+当你的源代码经过了转换时，调试就成了问题。 在浏览器中调试时，如何判断原始代码在哪里？ **source maps**通过提供原始代码和转换后的源代码之间的映射来解决此问题。 除了源代码编译JavaScript之外，这也适用于样式。
 
-One approach is to skip source maps during development and rely on browser support of language features. If you use ES2015 without any extensions and develop using a modern browser, this can work. The advantage of doing this is that you avoid all the problems related to source maps while gaining better performance.
+一种常用的方案是在开发期间跳过源映射，并依赖于浏览器对语言功能的支持。如果你使用没有任何扩展的ES2015，并使用现代浏览器进行开发。这样做的好处是可以避免与源映射相关的所有问题，同时获得更好的性能。
 
-If you are using webpack 4 and the new `mode` option, the tool will generate source maps automatically for you in `development` mode. Production usage requires attention, though.
+如果你使用webpack4.x和新的 `mode` 选项，那么，它将在`development`模式下自动为你生成源映射。 但是，生产使用需要注意。
 
-T> If you want to understand the ideas behind source maps in greater detail, [read Ryan Seddon's introduction to the topic](https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/).
+> 如果你想更详细地了解源映射背后的想法，阅读Ryan Seddon对该[主题]（https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/）的介绍。
 
-T> To see how webpack handles source maps, see [source-map-visualization](https://sokra.github.io/source-map-visualization/) by the author of the tool.
+> 要查看webpack如何处理源映射，请参阅该工具的作者的[source-map-visualization]（https://sokra.github.io/source-map-visualization/）。
 
-## Inline Source Maps and Separate Source Maps
+## 内联 Source-Maps 和 分离 Source-Maps
 
-Webpack can generate both inline or separate source map files. The inline ones are valuable during development due to better performance while the separate ones are handy for production use as it keeps the bundle size small. In this case, loading source maps is optional.
+Webpack可以生成内联或单独的源映射文件。由于更好的性能，内置的在生产过程中是有价值的，而单独的那些在生产中使用非常方便，因为它可以保持输出文件尺寸小。在这种情况下，加载源映射是可选的。
 
-It's possible you **don't** want to generate a source map for your production bundle as this makes it effortless to inspect your application. By disabling source maps, you are performing a sort of obfuscation. Whether or not you want to enable source maps for production, they are handy for staging. Skipping source maps speeds up your build as generating source maps at the best quality can be a complicated operation.
+你可能不希望为生产包生成源映射，因为这样可以轻松检查你的应用程序。 通过禁用源映射，你可以实现一定程度的干扰。 无论你是否要为生产启用源映射，它们都可以方便地进行分段。 跳过源映射会加快构建速度，因为生成最佳质量的源映射可能是一项复杂的操作。
 
-**Hidden source maps** give stack trace information only. You can connect them with a monitoring service to get traces as the application crashes allowing you to fix the problematic situations. While this isn't ideal, it's better to know about possible problems than not.
+**隐藏的源映射**提供堆栈跟踪信息。你可以将它们与监视服务连接，以便在应用程序崩溃时获取跟踪，从而允许你修复有问题的情况。虽然这不是理想的，但还是可以了解可能出现的问题。
 
-T> It's a good idea to study the documentation of the loaders you are using to see loader specific tips. For example, with TypeScript, you have to set a particular flag to make it work as you expect.
+> 研究你正在使用的loader的文档以查看loader特定提示是个好主意。 例如，使用TypeScript，你必须设置特定标志以使其按预期工作。
 
-## Enabling Source Maps
+## 启用 Source-Maps
 
-Webpack provides two ways to enable source maps. There's a `devtool` shortcut field. You can also find two plugins that give more options to tweak. The plugins are going to be discussed briefly at the end of this chapter. Beyond webpack, you also have to enable support for source maps at the browsers you are using for development.
+Webpack提供了两种启用源映射的方法。有一个 `devtool` 字段的快捷方式。你还可以找到两个插件，提供更多调整选项。插件将在本章末尾简要讨论。除了webpack之外，你还必须在用于开发的浏览器上启用对源映射的支持。
 
-### Enabling Source Maps in Webpack
+### 在Webpack中启用 Source-Maps 
 
-To get started, you can wrap the core idea within a configuration part. You can convert this to use the plugins later if you want:
+首先，你可以将核心思想包含在配置中。如果需要，你稍后可以将其转换为插件使用：
 
 **webpack.parts.js**
 
@@ -38,7 +38,7 @@ exports.generateSourceMaps = ({ type }) => ({
 });
 ```
 
-Webpack supports a wide variety of source map types. These vary based on quality and build speed. For now, you enable `source-map` for production and let webpack use the default for development. Set it up as follows:
+Webpack支持各种源映射类型。这些因质量和构建速度而异。现在，你可以在生产中启用 `source-map` ，让webpack使用默认开发。配置如下：
 
 **webpack.config.js**
 
@@ -49,11 +49,9 @@ const productionConfig = merge([
 ]);
 ```
 
-`source-map` is the slowest and highest quality option of them all, but that's fine for a production build.
+`source-map` 是所有这些中最慢和最高质量的选择，但这对于生产构建来说很好。
 
-{pagebreak}
-
-If you build the project now (`npm run build`), you should see source maps in the output:
+运行 `npm run build` 脚本命令，你将会在输出中看到source-map：
 
 ```bash
 Hash: b59445cb2b9ae4cea11b
@@ -70,37 +68,37 @@ Entrypoint main = main.js main.css main.js.map main.css.map
 ...
 ```
 
-Take a good look at those *.map* files. That's where the mapping between the generated and the source happens. During development, it writes the mapping information in the bundle.
+仔细看看那些* .map *文件。 这就是生成和源之间的映射发生的地方。 在开发期间，它将映射信息写入构建生成的包中。
 
-### Enabling Source Maps in Browsers
+### 在浏览器中启用Source-Maps
 
-To use source maps within a browser, you have to enable source maps explicitly as per browser-specific instructions:
+要在浏览器中使用源映射，必须根据不同的浏览器的说明文档启用源映射：
 
-* [Chrome](https://developer.chrome.com/devtools/docs/javascript-debugging). Sometimes source maps [will not update in Chrome inspector](https://github.com/webpack/webpack/issues/2478). For now, the temporary fix is to force the inspector to reload itself by using *alt-r*.
+* [Chrome](https://developer.chrome.com/devtools/docs/javascript-debugging)。 有时源映射不会在[Chrome检查器]（https://github.com/webpack/webpack/issues/2478）中更新。 目前，临时修复是强制检查员使用 `alt + r` 快捷键重新加载自身。
 * [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map)
 * [IE Edge](https://developer.microsoft.com/en-us/microsoft-edge/platform/documentation/f12-devtools-guide/debugger/#source-maps)
 * [Safari](https://support.apple.com/guide/safari/use-the-safari-develop-menu-sfri20948/mac)
 
-W> If you want to use breakpoints (i.e., a `debugger;` statement or ones set through the browser), the `eval`-based options won't work in Chrome!
+> 如果你想要使用断点 (如：`debugger;`), 基于 `eval` 的选项在Chrome中不起作用！
 
-## Source Map Types Supported by Webpack
+## Webpack支持的Source-Map类型
 
-Source map types supported by webpack can be split into two categories:
+webpack支持的源映射类型可以分为两类：
 
-* **Inline** source maps add the mapping data directly to the generated files.
-* **Separate** source maps emit the mapping data to separate source map files and link the source to them using a comment. Hidden source maps omit the comment on purpose.
+* **内联** 源映射将映射数据直接添加到生成的文件中。
+* **分离** 源映射将映射数据发送到单独的源映射文件，并使用注释将源链接到它们。隐藏的源映射会故意省略注释。
 
-Thanks to their speed, inline source maps are ideal for development. Given they make the bundles big, separate source maps are the preferred solution for production. Separate source maps work during development as well if the performance overhead is acceptable.
+由于速度快，内联源映射是开发的理想选择。鉴于它们使构建生成的包很大，分离的源映射是生产的首选解决方案。如果性能开销可以接受，则在开发期间分离的源映射也可以工作。
 
-## Inline Source Map Types
+## 内联的Source-Map类型
 
-Webpack provides multiple inline source map variants. Often `eval` is the starting point and [webpack issue #2145](https://github.com/webpack/webpack/issues/2145#issuecomment-294361203) recommends `cheap-module-eval-source-map` as it's a good compromise between speed and quality while working reliably in Chrome and Firefox browsers.
+Webpack提供多个内联源映射变体。通常`eval`是起点，[webpack问题＃2145]（https://github.com/webpack/webpack/issues/2145#issuecomment-294361203）推荐`cheap-module-eval-source-map`，因为它是在Chrome和Firefox浏览器中可靠地工作时，速度和质量之间的良好折衷。
 
-To get a better idea of the available options, they are listed below while providing a small example for each. The source code contains only a single `console.log('Hello world')` and `webpack.NamedModulesPlugin` is used to keep the output easier to understand. In practice, you would see a lot more code to handle the mapping.
+为了更好地了解可用选项，下面列出了它们，同时为每个选项提供了一个小例子。 源代码只包含一个`console.log（'Hello world'）`和`webpack.NamedModulesPlugin`用于保持输出更容易理解。你会发现，需要更多代码来处理映射。
 
 ### `devtool: "eval"`
 
-`eval` generates code in which each module is wrapped within an `eval` function:
+查看`eval`生成代码，其中每个模块都包含在`eval`函数中：
 
 ```javascript
 webpackJsonp([1, 2], {
@@ -112,7 +110,7 @@ webpackJsonp([1, 2], {
 
 ### `devtool: "cheap-eval-source-map"`
 
-`cheap-eval-source-map` goes a step further and it includes base64 encoded version of the code as a data url. The result contains only line data while losing column mappings.
+`cheap-eval-source-map`更进一步，它将包含base64编码版本的代码作为数据网址。结果仅包含行数据而丢失列映射。
 
 ```javascript
 webpackJsonp([1, 2], {
@@ -122,9 +120,7 @@ webpackJsonp([1, 2], {
 }, ["./src/index.js"]);
 ```
 
-{pagebreak}
-
-If you decode that base64 string, you get output containing the mapping:
+如果解码该base64字符串，则会获得包含映射的输出：
 
 ```json
 {
@@ -143,7 +139,7 @@ If you decode that base64 string, you get output containing the mapping:
 
 ### `devtool: "cheap-module-eval-source-map"`
 
-`cheap-module-eval-source-map` is the same idea, except with higher quality and lower performance:
+`cheap-module-eval-source-map` 核心思想相同，但它提供了更高的质量和更低的性能：
 
 ```javascript
 webpackJsonp([1, 2], {
@@ -153,9 +149,7 @@ webpackJsonp([1, 2], {
 }, ["./src/index.js"]);
 ```
 
-{pagebreak}
-
-Again, decoding the data reveals more:
+再次，解码数据结果显示如下：
 
 ```json
 {
@@ -172,11 +166,11 @@ Again, decoding the data reveals more:
 }
 ```
 
-In this particular case, the difference between the options is minimal.
+在这种特殊情况下，选项之间的差异很小。
 
 ### `devtool: "eval-source-map"`
 
-`eval-source-map` is the highest quality option of the inline options. It's also the slowest one as it emits the most data:
+`eval-source-map`是内联选项中最高质量的选项，但它也是最慢的，因为它输出的数据最多：
 
 ```javascript
 webpackJsonp([1, 2], {
@@ -186,9 +180,7 @@ webpackJsonp([1, 2], {
 }, ["./src/index.js"]);
 ```
 
-{pagebreak}
-
-This time around there's more mapping data available for the browser:
+这次可以为浏览器提供更多的映射数据：
 
 ```json
 {
@@ -209,19 +201,17 @@ This time around there's more mapping data available for the browser:
 }
 ```
 
-## Separate Source Map Types
+## 分离的 Source-Map 种类
 
-Webpack can also generate production usage friendly source maps. These end up in separate files ending with `.map` extension and are loaded by the browser only when required. This way your users get good performance while it's easier for you to debug the application.
+Webpack还可以生成生产模式下使用友好的源映射。它们最终以分离的文件结束，以`.map`扩展名结尾，仅在需要时由浏览器加载。这样你的用户就可以获得良好的性能，同时你可以更轻松地调试应用程序。
 
-`source-map` is a reasonable default here. Even though it takes longer to generate the source maps this way, you get the best quality. If you don't care about production source maps, you can skip the setting there and get better performance in return.
-
-{pagebreak}
+`source-map`是一个合理的默认值。即使以这种方式生成源映射需要更长的时间，你也可以获得最佳质量。如果你不关心生产模式下的源映射，则可以跳过该设置并获得更好的性能。
 
 ### `devtool: "cheap-source-map"`
 
-`cheap-source-map` is similar to the cheap options above. The result is going to miss column mappings. Also, source maps from loaders, such as *css-loader*, are not going to be used.
+`cheap-source-map`类似于上面的 `cheap` 选项。结果将丢失列映射。此外，不会使用来自loader的源映射，例如* css-loader *。
 
-Examining the `.map` file reveals the following output in this case:
+在这种情况下，检查 `.map` 文件会显示以下输出：
 
 ```json
 {
@@ -238,13 +228,11 @@ Examining the `.map` file reveals the following output in this case:
 }
 ```
 
-The source contains `//# sourceMappingURL=main.9a...18.js.map` kind of comment at its end to map to this file.
-
-{pagebreak}
+源代码在其末尾包含`//＃sourceMappingURL = main.9a ... 18.js.map`这种类型的注释，并将它映射到此文件。
 
 ### `devtool: "cheap-module-source-map"`
 
-`cheap-module-source-map` is the same as previous except source maps from loaders are simplified to a single mapping per line. It yields the following output in this case:
+`cheap-module-source-map`与之前的相同，只是来自loader的源映射被简化为每行一个映射。 在这种情况下，它会产生以下输出：
 
 ```json
 {
@@ -258,23 +246,21 @@ The source contains `//# sourceMappingURL=main.9a...18.js.map` kind of comment a
 }
 ```
 
-W> `cheap-module-source-map` is [currently broken if minification is used](https://github.com/webpack/webpack/issues/4176) and this is an excellent reason to avoid the option for now.
+> `cheap-module-source-map` 是目前解决 [代码压缩被启用引起的问题](https://github.com/webpack/webpack/issues/4176) ，这是避免这个问题出现的一个很好用的选项。
 
 ### `devtool: "hidden-source-map"`
 
-`hidden-source-map` is the same as `source-map` except it doesn't write references to the source maps to the source files. If you don't want to expose source maps to development tools directly while you wish proper stack traces, this is handy.
+`hidden-source-map`与`source-map`相同，只是它不会将对源映射的引用写入源文件 如果你不希望在希望使用正确的堆栈跟踪时直接将源映射公开给开发工具，这很方便。
 
 ### `devtool: "nosources-source-map"`
 
-`nosources-source-map` creates a source map without `sourcesContent` in it. You still get stack traces, though. The option is useful if you don't want to expose your source code to the client.
+`nosources-source-map`创建一个没有`sourcesContent`的源映射。不过，你仍然可以获得堆栈跟踪。如果你不希望将源代码公开给客户端，则该选项很有用。
 
-T> [The official documentation](https://webpack.js.org/configuration/devtool/#devtool) contains more information about `devtool` options.
-
-{pagebreak}
+> [官方文档](https://webpack.js.org/configuration/devtool/#devtool) 包含更多关于`devtool`选项的信息。
 
 ### `devtool: "source-map"`
 
-`source-map` provides the best quality with the complete result, but it's also the slowest option. The output reflects this:
+`source-map`提供最好的质量和完整的结果，但它也是编译最慢的选项配置。 输出反映了这一点：
 
 ```json
 {
@@ -301,11 +287,9 @@ T> [The official documentation](https://webpack.js.org/configuration/devtool/#de
 }
 ```
 
-{pagebreak}
+## 其他Source-Map选项
 
-## Other Source Map Options
-
-There are a couple of other options that affect source map generation:
+还有一些其他选项会影响源映射的生成：
 
 ```javascript
 {
@@ -324,11 +308,12 @@ There are a couple of other options that affect source map generation:
 }
 ```
 
-T> The [official documentation](https://webpack.js.org/configuration/output/#output-sourcemapfilename) digs into `output` specifics.
+> [官方文档](https://webpack.js.org/configuration/output/#output-sourcemapfilename) 深入研究 `输出
+` 细节。
 
-W> If you are using `UglifyJsPlugin` and still want source maps, you need to enable `sourceMap: true` for the plugin. Otherwise, the result isn't what you expect because UglifyJS will perform a further transformation of the code, breaking the mapping. The same has to be done with other plugins and loaders performing changes. *css-loader* and related loaders are a good example.
+> 如果你正在使用 `UglifyJsPlugin` 并且仍然需要源映射，则需要为插件启用 `sourceMap：true`。否则，结果不是你所期望的，因为UglifyJS将执行代码的进一步转换，从而打破映射。其他插件和loader执行更改时也必须这样做。 *css-loader*就是一个很好的例子。
 
-## `SourceMapDevToolPlugin` and `EvalSourceMapDevToolPlugin`
+## `SourceMapDevToolPlugin` 和 `EvalSourceMapDevToolPlugin`
 
 If you want more control over source map generation, it's possible to use the [SourceMapDevToolPlugin](https://webpack.js.org/plugins/source-map-dev-tool-plugin/) or `EvalSourceMapDevToolPlugin` instead. The latter is a more limited alternative, and as stated by its name, it's handy for generating `eval` based source maps.
 
@@ -338,37 +323,35 @@ Given webpack matches only `.js` and `.css` files by default for source maps, yo
 
 `EvalSourceMapDevToolPlugin` accepts only `module` and `lineToLine` options as described above. Therefore it can be considered as an alias to `devtool: "eval"` while allowing a notch more flexibility.
 
-## Changing Source Map Prefix
+## 改变Source-Map前缀
 
-You can prefix a source map option with a **pragma** character that gets injected into the source map reference. Webpack uses `#` by default that is supported by modern browsers, so you don't have to set it.
+你可以使用 **pragma** 字符为源映射选项添加前缀，该字符将注入到源映射引用中。默认情况下，Webpack使用现代浏览器支持的`＃`，因此你无需进行设置。
 
-To override this, you have to prefix your source map option with it (e.g., `@source-map`). After the change, you should see `//@` kind of reference to the source map over `//#` in your JavaScript files assuming a separate source map type was used.
+要覆盖它，你必须在其前面添加源映射选项（例如，`@ source-map`）。 在更改之后，假设使用了单独的源映射类型，你应该在JavaScript文件中看到`// @`对源映射的引用`//＃`。
 
 ## Using Dependency Source Maps
 
 Assuming you are using a package that uses inline source maps in its distribution, you can use [source-map-loader](https://www.npmjs.com/package/source-map-loader) to make webpack aware of them. Without setting it up against the package, you get minified debug output. Often you can skip this step as it's a special case.
 
-## Source Maps for Styling
+## 为样式开启 Source-Maps
 
-If you want to enable source maps for styling files, you can achieve this by enabling the `sourceMap` option. The same idea works with style loaders such as *css-loader*, *sass-loader*, and *less-loader*.
+如果要为样式文件启用源映射，可以通过启用`sourceMap`选项来实现。 同样的想法适用于样式的loader，例如* css-loader*，*sass-loader* 和 *less-loader*。
 
-The *css-loader* is [known to have issues](https://github.com/webpack-contrib/css-loader/issues/232) when you are using relative paths in imports. To overcome this problem, you should set `output.publicPath` to resolve the server url.
+当你在导入中使用相对路径时，*css-loader* 已知有这样的 [问题]（https://github.com/webpack-contrib/css-loader/issues/232）。要解决此问题，你应该设置`output.publicPath`来解析服务器URL。
 
-{pagebreak}
+## 总结
 
-## Conclusion
+源地映射在开发过程中很方便。它们提供了更好的调试应用程序的方法，因为你仍然可以检查生成的原始代码。它们甚至可以用于生产用途，并且允许你在提供客户端友好版本的应用程序时调试问题。
 
-Source maps can be convenient during development. They provide better means to debug applications as you can still examine the original code over a generated one. They can be valuable even for production usage and allow you to debug issues while serving a client-friendly version of your application.
+内容回顾：
 
-To recap:
+* **Source maps** 在开发和生产过程中都很有帮助。它们提供有关正在发生的事情的更准确信息，并使调试可能出现的问题变得更快。
+* Webpack支持各种源映射变体。它们可以根据生成位置拆分为内联和分离的源映射。由于速度的原因，内联源映射在开发过程中很方便。分离的源映射适用于生产，因为加载它们变得可选择。
+* `devtool: "source-map"` 是最高质量的选择，它在生产产模式下很有用。
+* 对于开发来说，使用 `cheap-module-eval-source-map` 是一个很好开端。
+* 如果你想在生产过程中只获得堆栈跟踪，请使用 `devtool: "hidden-source-map"`。你可以捕获输出并将其发送到第三方服务供你检查。这样你就可以捕获错误并修复它们。
+* `SourceMapDevToolPlugin` 和 `EvalSourceMapDevToolPlugin` 比 `devtool` 快捷项提供了更多的对结果控制。
+* 如果你的依赖项提供源映射，*source-map-loader* 可以派上用场。
+* 为样式设置源映射需要额外的操作。你必须为正在使用的与样式相关的所有loader都启用`sourceMap`选项。
 
-* **Source maps** can be helpful both during development and production. They provide more accurate information about what's going on and make it faster to debug possible problems.
-* Webpack supports a large variety of source map variants. They can be split into inline and separate source maps based on where they are generated. Inline source maps are handy during development due to their speed. Separate source maps work for production as then loading them becomes optional.
-* `devtool: "source-map"` is the highest quality option making it valuable for production.
-* `cheap-module-eval-source-map` is a good starting point for development.
-* If you want to get only stack traces during production, use `devtool: "hidden-source-map"`. You can capture the output and send it to a third party service for you to examine. This way you can capture errors and fix them.
-* `SourceMapDevToolPlugin` and `EvalSourceMapDevToolPlugin` provide more control over the result than the `devtool` shortcut.
-* *source-map-loader* can come in handy if your dependencies provide source maps.
-* Enabling source maps for styling requires additional effort. You have to enable `sourceMap` option per styling related loader you are using.
-
-In the next chapter, you'll learn to split bundles and separate the current one into application and vendor bundles.
+在下一章中，你将学习分离构建生成包，并将当前生成包分为应用程序和供应商两部分。
