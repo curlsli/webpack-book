@@ -2,7 +2,7 @@
 
 目前，应用程序的生产版本是单个JavaScript文件。 如果应用程序已更改，则客户端也必须下载[供应商（vendor）](https://en.wikipedia.org/wiki/Vendor)依赖内容。
 
-最好只下载更改的部分。如果供应商依赖项发生更改，则客户端应仅获取供应商依赖项。实际的应用程序代码也是如此。**构建拆分**可以使用`optimization.splitChunks.cacheGroups`来实现。在生产模式下运行时，[webpack4可以开箱即可执行一系列拆分]（https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693）但在这种情况下，我们会手动执行某些操作。
+最好只下载更改的部分。如果供应商依赖项发生更改，则客户端应仅获取供应商依赖项。实际的应用程序代码也是如此。**构建拆分**可以使用`optimization.splitChunks.cacheGroups`来实现。在生产模式下运行时，[webpack4可以开箱即可执行一系列拆分](https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693)但在这种情况下，我们会手动执行某些操作。
 
 > 要要使bundle无效，必须将哈希附加到生成的bundle中，如：*向文件名中注入hash*章节中所述。只有这样客户端才能识别请求内容是否改变，进而决定是否下载新的内容。
 
