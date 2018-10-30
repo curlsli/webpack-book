@@ -1,28 +1,28 @@
 # Web Workers
 
-[Web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) allow you to push work outside of main execution thread of JavaScript making them convenient for lengthy computations and background work.
+[Web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) 允许你将工作移到到JavaScript的主执行线程之外，这使得它们便于进行冗长的计算和后台工作。
 
-Moving data between the main thread and the worker comes with communication-related overhead. The split provides isolation that forces workers to focus on logic only as they cannot manipulate the user interface directly.
+在主线程和工作线程之间移动数据会带来与通信相关的开销。拆分提供了隔离，迫使 `web worker` 只关注逻辑，因为它们无法直接操作用户界面。
 
-The idea of workers is valuable on a more general level. [parallel-webpack](https://www.npmjs.com/package/parallel-webpack) uses [worker-farm](https://www.npmjs.com/package/worker-farm) underneath to parallelize webpack execution.
+`web worker` 的想法在一般化的层面上是有价值的。 [parallel-webpack]（https://www.npmjs.com/package/parallel-webpack）使用底层的 [worker-farm]（https://www.npmjs.com/package/worker-farm）并行化webpack执行。
 
-As discussed in the *Build Targets* chapter, webpack allows you to build your application as a worker itself. To get the idea of web workers better, you'll learn how to build a small worker using [worker-loader](https://www.npmjs.com/package/worker-loader).
+正如 *Build Targets* 章节中所讨论的，webpack允许你将应用程序构建为工作程序本身。为了更好地了解 `web worker`，你可以学习如何使用[worker-loader]（https://www.npmjs.com/package/worker-loader）构建一个微型的worker。
 
-T> Sharing data between the host and the worker may become easier in the future thanks to technologies such as [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer).
+> 由于[SharedArrayBuffer]（https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer）等技术，将来主机和worker之间的数据共享可能会变得更加容易。
 
-## Setting Up Worker Loader
+## 创建 `Worker Loader`
 
-To get started, install *worker-loader* to the project:
+首先，在项目中安装 *worker-loader* ：
 
 ```bash
 npm install worker-loader --save-dev
 ```
 
-Instead of pushing the loader definition to webpack configuration, you can use inline loader definitions to keep the demonstration minimal. See the *Loader Definitions* chapter for more information about the alternatives.
+你可以使用内联loader定义来做一个示例演示，而不是将loader序定义推送到webpack配置。有关替代方案的更多信息，请参阅 [*Loader 的基本定义*](https://lvzhenbang.github.io/webpack-book/dist/zh/loading/01_loader_definitions.html) 这章内容。
 
-## Setting Up a Worker
+## 配置一个Worker
 
-A worker has to do two things: listen to messages and respond. Between those two actions, it can perform a computation. In this case, you accept text data, append it to itself, and send the result:
+worker必须做两件事：听取消息并做出回应。在这两个动作之间，它可以执行计算。在这种情况下，你接受文本数据，将其附加到自身，然后发送结果：
 
 **src/worker.js**
 
@@ -32,9 +32,9 @@ self.onmessage = ({ data: { text } }) => {
 };
 ```
 
-## Setting Up a Host
+## 创建一个Host
 
-The host has to instantiate the worker and then communicate with it. The idea is almost the same except the host has the control:
+Host须是worker的一个实例，然后与worker通信。除了host拥有控制功能之外，其它几乎相同
 
 **src/component.js**
 
@@ -58,19 +58,19 @@ export default () => {
 };
 ```
 
-After you have these two set up, it should work. As you click the text, it should mutate the application state as the worker completes its execution. To demonstrate the asynchronous nature of workers, you could try adding delay to the answer and see what happens.
+有host和worker这两个后，`web worker` 才可以工作。当你单击文本时，它应该在worker完成其执行时,改变应用程序状态。为了演示worker的异步特性，你可以尝试在代码中添加延迟，然后查看会发生什么。
 
-T> [webworkify-webpack](https://www.npmjs.com/package/webworkify-webpack) is an alternative to *worker-loader*. The API allows you to use the worker as a regular JavaScript module as well given you avoid the `self` requirement visible in the example solution. [webpack-worker](https://www.npmjs.com/package/webpack-worker) is another option to study.
+> [webworkify-webpack]（https://www.npmjs.com/package/webworkify-webpack）是 *worker-loader* 的替代方案。 API允许你将worker用作常规JavaScript模块，同时避免在示例解决方案中看到 `self`。[webpack-worker]（https://www.npmjs.com/package/webpack-worker）是另一个研究学习的选择。
 
-## Conclusion
+## 总结
 
-The critical thing to note is that the worker cannot access the DOM. You can perform computation and queries in a worker, but it cannot manipulate the user interface directly.
+你最需要注意的是worker无法访问DOM。你可以在worker程序中执行计算和查询，但它无法直接操作用户界面。
 
-To recap:
+内容回顾：
 
-* Web workers allow you to push work out of the main thread of the browser. This separation is valuable especially if performance is an issue.
-* Web workers cannot manipulate the DOM. Instead, it's best to use them for lengthy computations and requests.
-* The isolation provided by web workers can be used for architectural benefit. It forces the programmers to stay within a specific sandbox.
-* Communicating with web workers comes with an overhead that makes them less practical. As the specification evolves, this can change in the future.
+* Web worker允许你将工作移出到浏览器的主线程之外。如果一个项目需要性能问题，这种分离是有意义的。
+* Web worker无法操纵DOM。 相反，最好将它们用于冗长的计算和请求。
+* Web worker提供的隔离可以使架构受益。它迫使程序员留在特定的沙箱中。
+* 与Web worker进行通信会产生开销，使其不太实用。随着规范的发展，这可能会在未来发生变化。
 
-You'll learn about internationalization in the next chapter.
+在下一章中，将详细的介绍如何用webpack做国际化处理。
