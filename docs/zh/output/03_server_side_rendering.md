@@ -1,26 +1,24 @@
-# Server Side Rendering
+# 服务端渲染
 
-**Server Side Rendering** (SSR) is a technique that allows you to serve an initial payload with HTML, JavaScript, CSS, and even application state. You serve a fully rendered HTML page that would make sense even without JavaScript enabled. In addition to providing potential performance benefits, this can help with Search Engine Optimization (SEO).
+**服务端渲染** (SSR) 是一种允许你使用HTML，JavaScript，CSS，甚至应用程序状态来提供初始有效负载的技术。即使没有启用JavaScript，你也可以提供完全呈现的HTML页面。除了提供潜在的性能优势外，这还有助于搜索引擎优化（SEO）。
 
-Even though the idea does not sound that unique, there is a technical cost. The approach was popularized by React. Since then frameworks encapsulating the tricky bits, such as [Next.js](https://www.npmjs.com/package/next) and [razzle](https://www.npmjs.com/package/razzle), have appeared.
+这个想法不仅听起来不那么独特，还存在技术成本。这种方法由React推广。为了解决框架封装的棘手问题，如：[Next.js]（https://www.npmjs.com/package/next）和[razzle]（https://www.npmjs.com/package/razzle）的依赖出现了。
 
-To demonstrate SSR, you can use webpack to compile a client-side build that then gets picked up by a server that renders it using React following the principle. Doing this is enough to understand how it works and also where the problems begin.
+为了演示SSR，你可以使用webpack编译客户端构建，然后由服务器接收，该服务器遵循原则使用React呈现它。这样做足以了解它是如何工作的，以及问题。
 
-T> SSR isn't the only solution to the SEO problem. **Prerendering** is an alternate technique that is easier to implement if it fits your use case. The approach won't work well with highly dynamic data. [prerender-spa-plugin](https://www.npmjs.com/package/prerender-spa-plugin) allows you to implement it with webpack.
+> SSR 不仅解决了 SEO 的问题。**Prerendering** 也是一种可选择的技术，如果它适合你的用例，实现起来更容易。这种方法不适用于高动态数据。[prerender-spa-plugin]（https://www.npmjs.com/package/prerender-spa-plugin）允许你使用webpack实现它。
 
-## Setting Up Babel with React
+## 使用React配置Babel
 
-The *Loading JavaScript* chapter covers the essentials of using Babel with webpack. There's setup that is particular to React you should perform, though. Given most of React projects rely on [JSX](https://facebook.github.io/jsx/) format, you have to enable it through Babel.
+* Loading JavaScript *章节介绍了使用Babel和webpack的基本要点。不过，你应该添加执行React特有的选项。考虑到大多数React项目依赖于[JSX]（https://facebook.github.io/jsx/）格式，你可以通过Babel启用它。
 
-{pagebreak}
-
-To get React, and particularly JSX, work with Babel, install the preset first:
+要让React，尤其是JSX与Babel一起工作，首先安装预设：
 
 ```bash
 npm install @babel/preset-react --save-dev
 ```
 
-Connect the preset with Babel configuration as follows:
+像下面这样，在babel配置中引入react预设：
 
 **.babelrc**
 
@@ -28,29 +26,23 @@ Connect the preset with Babel configuration as follows:
 {
   ...
   "presets": [
-leanpub-start-insert
     "@babel/preset-react",
-leanpub-end-insert
     ...
   ]
 }
 ```
 
-## Setting Up a React Demo
+## 创建一个React示例
 
-To make sure the project has the dependencies in place, install React and [react-dom](https://www.npmjs.com/package/react-dom). The latter package is needed to render the application to the DOM.
+要确保项目具有有相关依赖，需安装React和[react-dom]（https://www.npmjs.com/package/react-dom）。然后定义一个包来将应用程序呈现给DOM。
 
 ```bash
 npm install react react-dom --save
 ```
 
-Next, the React code needs a small entry point. If you are on the browser side, you should mount `Hello world` `div` to the document. To prove it works, clicking it should give a dialog with a "hello" message. On server-side, the React component is returned and the server can pick it up.
+接下来，React代码需要一个小入口点。如果你在浏览器端，则应将 `Hello world``div` 挂载到文档中。要证明它有效，单击它应该弹出一个带有“hello”消息的对话框。在服务器端，返回React组件，服务器可以接收它。
 
-{pagebreak}
-
-Adjust as follows:
-
-**src/ssr.js**
+修改 **src/ssr.js** 代码如下：
 
 ```javascript
 const React = require("react");
@@ -66,15 +58,13 @@ if (typeof document === "undefined") {
 }
 ```
 
-You are still missing webpack configuration to turn this file into something the server can pick up.
+你仍然缺少webpack配置来将此文件转换为服务器可以接收的内容。
 
-W> Given ES2015 style imports and CommonJS exports cannot be mixed, the entry point was written in CommonJS style.
+> 注意ES2015的import规范和CommonJS的export不能混合。入口点是用CommonJS规范编写的。
 
-{pagebreak}
+## 配置 Webpack
 
-## Configuring Webpack
-
-To keep things nice, we will define a separate configuration file. A lot of the work has been done already. Given you have to consume the same output from multiple environments, using UMD as the library target makes sense:
+为了保持友好，我们将定义一个单独的配置文件。它已经完成了很多工作。考虑到你需要在多个环境中使用相同的输出，因此使用UMD作为库目标是有意义的：
 
 **webpack.ssr.js**
 
@@ -106,32 +96,28 @@ module.exports = merge([
 ]);
 ```
 
-{pagebreak}
-
-To make it convenient to generate a build, add a helper script:
+为了方便生成构建，可以添加下面这样一个脚本：
 
 **package.json**
 
 ```json
 "scripts": {
-leanpub-start-insert
   "build:ssr": "webpack --config webpack.ssr.js",
-leanpub-end-insert
   ...
 },
 ```
 
-If you build the SSR demo (`npm run build:ssr`), you should see a new file at *./static/index.js*. The next step is to set up a server to render it.
+运行 `npm run build:ssr` 脚本命令，你应该在 *./static/index.js* 中看到一个新文件。下一步是设置服务器来呈现它。
 
-## Setting Up a Server
+## 创建一个Server
 
-To keep things clear to understand, you can set up a standalone Express server that picks up the generated bundle and renders it following the SSR principle. Install Express first:
+为了清楚地理解，你可以配置一个独立的Express服务器来获取生成的构建生成包，并按照SSR原理呈现它。首先安装Express：
 
 ```bash
 npm install express --save-dev
 ```
 
-Then, to get something running, implement a server as follows:
+然后，为了运行一些东西，按如下方式实现服务器：
 
 **server.js**
 
@@ -163,39 +149,37 @@ function renderMarkup(html) {
   </head>
   <body>
     <div id="app">${html}</div>
-    <script src="./index.js"></script>
+    <script src="./index.js"></scrip>
   </body>
 </html>`;
 }
 ```
 
-Run the server now (`node ./server.js`) and go below `http://localhost:8080`, you should see something familiar:
+运行 `node ./server.js` 脚本命令启动服务器，然后在浏览器中访问 `http://localhost:8080` ，你将看到如下的显示：
 
-![Hello world](images/hello_01.png)
+![Hello world](../../images/hello_01.png)
 
-{pagebreak}
+虽然现在可以运行React应用程序，但是使用它继续开发也不方便。如果你尝试修改代码，则不会发生任何事情。如本书前面所述，在multi-compiler模式下，运行webpack可以解决该问题。另一种选择是针对当前配置，使用 **监视模式** 运行webpack，同时也为服务器设置监视器。接下来将讲解如何实现。
 
-Even though there is a React application running now, it's difficult to develop. If you try to modify the code, nothing happens. The problem can be solved running webpack in a multi-compiler mode as earlier in this book. Another option is to run webpack in **watch mode** against the current configuration and set up a watcher for the server. You'll learn the setup next.
+> 如果你要调试输出的结果你可以设置为 `export DEBUG=express:application` 。
 
-T> If you want to debug output from the server, set `export DEBUG=express:application`.
+> 如果你按照 [*分离出一个清单*](https://lvzhenbang.github.io/webpack-book/dist/zh/optimizing/05_separating_manifest.html) 章节中的讲的那样编写manifest，则可以将对webpack生成的资产的引用自动写入服务器端模板。
 
-T> The references to the assets generated by webpack could be written automatically to the server side template if you wrote a manifest as discussed in the *Separating a Manifest* chapter.
+## 监视 SSR 的改变，然后刷新浏览器
 
-## Watching SSR Changes and Refreshing the Browser
+在终端中运行 `npm run build：ssr - --watch` 脚本，可以解决无法动态处理ssr.js变化的问题。这迫使webpack以监视模式运行。为方便起见，可以在npm脚本中实现这个想法，这对于演示示例来说已经足够了。
 
-The first portion of the problem is fast to solve. Run `npm run build:ssr -- --watch` in a terminal. That forces webpack to run in a watch mode. It would be possible to wrap this idea within an npm script for convenience, but this is enough for this demo.
+如何让服务器知道改变，以及如何将改变传递到浏览器？
 
-The remaining part is harder than what was done so far. How to make the server aware of the changes and how to communicate the changes to the browser?
+[browser-refresh]（https://www.npmjs.com/package/browser-refresh）可以派上用场，因为它解决了这两个问题。
 
-[browser-refresh](https://www.npmjs.com/package/browser-refresh) can come in handy as it solves both of the problems. Install it first:
+首先，在项目中安装这个依赖：
 
 ```bash
 npm install browser-refresh --save-dev
 ```
 
-{pagebreak}
-
-The client portion requires two small changes to the server code:
+需要对服务器代码进行两处小的修改：
 
 **server.js**
 
@@ -205,12 +189,8 @@ server(process.env.PORT || 8080);
 function server(port) {
   ...
 
-leanpub-start-delete
-  app.listen(port);
-leanpub-end-delete
-leanpub-start-insert
+  // app.listen(port);
   app.listen(port, () => process.send && process.send("online"));
-leanpub-end-insert
 }
 
 function renderMarkup(html) {
@@ -219,49 +199,45 @@ function renderMarkup(html) {
   ...
   <body>
     ...
-leanpub-start-insert
     <script src="${process.env.BROWSER_REFRESH_URL}"></script>
-leanpub-end-insert
   </body>
 </html>`;
 }
 ```
 
-The first change tells the client that the application is online and ready to go. The latter change attaches the client script to the output. *browser-refresh* manages the environment variable in question.
+第一个修改告诉客户端应用程序已联机并准备就绪。后一个修改将客户端脚本附加到输出中。 * browser-refresh *管理有问题的环境变量。
 
-Run `node_modules/.bin/browser-refresh ./server.js` in another terminal and open the browser at `http://localhost:8080` as earlier to test the setup. Remember to have webpack running in the watch mode at another terminal (`npm run build:ssr -- --watch`). If everything went right, any change you make to the demo client script (*app/ssr.js*) should show up in the browser or cause a failure at the server.
+另开一个客户端，执行 `node_modules/.bin/browser-refresh ./server.js` 脚本命令，然后再浏览器中访问 `http://localhost:8080` 。另开启一个终端，让webpack在监视模式下运行（`npm run build：ssr - --watch`）。 如果一切正常，你对演示客户端脚本（`app/ssr.js`）所做的任何更改，都将显示在浏览器中。
 
-If the server crashes, it loses the WebSocket connection. You have to force a refresh in the browser in this case. If the server was managed through webpack as well, the problem could have been avoided.
+如果服务器崩溃，则会丢失WebSocket连接。在这种情况下，你必须在浏览器中强制刷新。如果服务器也是通过webpack管理的，那么问题就可以避免。
 
-{pagebreak}
+要证明SSR有效，请查看浏览器检查器。你应该看到熟悉的东西：
 
-To prove that SSR works, check out the browser inspector. You should see something familiar there:
+![SSR output](../../images/ssr.png)
 
-![SSR output](images/ssr.png)
+在 `div` 中不仅可以挂载应用程序，你还可以在那里看到所有相关的HTML。这种特殊情况并不多，但它足以展示这种方法。
 
-Instead of a `div` where to mount an application, you can see all related HTML there. It's not much in this particular case, but it's enough to showcase the approach.
-
-T> The implementation could be refined further by implementing a production mode for the server that would skip injecting the browser refresh script at a minimum. The server could inject initial data payload into the generated HTML. Doing this would avoid queries on the client-side.
+> 可以通过为服务器实现生产模式来进一步改进，该模式将至少跳过注入浏览器刷新脚本。服务器可以将初始数据有效负载注入生成的HTML中。 这样做可以避免客户端的查询。
 
 ## Open Questions
 
-Even though the demo illustrates the basic idea of SSR, it still leaves open questions:
+尽管该示例演示了SSR的基本概念，但它仍然存在悬而未决的问题：
 
-* How to deal with styles? Node doesn't understand CSS related imports.
-* How to deal with anything other than JavaScript? If the server side is processed through webpack, this is less of an issue as you can patch it at webpack.
-* How to run the server through something else other than Node? One option would be to wrap the Node instance in a service you then run through your host environment. Ideally, the results would be cached, and you can find more specific solutions for this particular per platform.
+* 如何处理样式？ Node不理解CSS相关的导入。
+* 如何处理除JavaScript之外的任何事情？如果服务器端是通过webpack处理的，那么这不是一个问题，因为你可以在webpack上修补它。
+* 如何通过Node之外的其他东西运行服务器？一种选择是将Node实例包装在服务中，然后通过主机环境运行。理想情况下，结果将被缓存，你可以为每个平台找到更具体的解决方案。
 
-Questions like these are the reason why solutions such as Next.js or razzle exist. They have been designed to solve SSR-specific problems like these.
+像这样的问题就是Next.js或razzle等解决方案存在的原因。它们旨在解决这些特定于SSR的问题。
 
-T> Routing is a big problem of its own solved by frameworks like Next.js. Patrick Hund [discusses how to solve it with React and React Router 4](https://ebaytech.berlin/universal-web-apps-with-react-router-4-15002bb30ccb).
+> 路由是它自己解决的一个大问题，如：Next.js这样的框架。Patrick Hund在[Universal JavaScript Apps with React Router 4]（https://ebaytech.berlin/universal-web-apps-with-react-router-4-15002bb30ccb）文章中讨论了如何解决该问题。
 
-## Conclusion
+## 总结
 
-SSR comes with a technical challenge, and for this reason, specific solutions have appeared around it. Webpack is a good fit for SSR setups.
+SSR带来了技术挑战，因此围绕它出现了特定的解决方案。Webpack非常适合SSR设置。
 
-To recap:
+内容回顾：
 
-* **Server Side Rendering** can provide more for the browser to render initially. Instead of waiting for the JavaScript to load, you can display markup instantly.
-* Server Side Rendering also allows you to pass initial payload of data to the client to avoid unnecessary queries to the server.
-* Webpack can manage the client-side portion of the problem. It can be used to generate the server as well if a more integrated solution is required. Abstractions, such as Next.js, hide these details.
-* Server Side Rendering does not come without a cost, and it leads to new problems as you need better approaches for dealing with aspects, such as styling or routing. The server and the client environment differ in essential manners, so the code has to be written so that it does not rely on platform-specific features too much.
+* 服务器端渲染可以为浏览器提供更多初始化渲染。你可以立即显示标记，而不是等待JavaScript加载。
+* 服务器端渲染还允许你将初始数据的有效负载传递到客户端，以避免对服务器进行不必要的查询。
+* Webpack可以管理的客户端的部分实现。如果需要更集成的解决方案，它也可用于生成服务器，如：Next.js（它实现了这些细节）。
+* 服务器端渲染不是没有成本的，它会导致新的问题，因为你需要更好的方法来处理这方面的问题，如：样式或路由。服务器和客户端环境的基本方式不同，因此编写代码需要注意，以使其不依赖于特定平台的功能。
