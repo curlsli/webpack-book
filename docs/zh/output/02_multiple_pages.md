@@ -1,24 +1,24 @@
-# Multiple Pages
+# 构建多页面应用
 
-Even though webpack is often used for bundling single page applications, it's possible to use it with multiple separate pages as well. The idea is similar to the way you generated multiple output files in the *Targets* chapter. This time, however, you have to generate separate pages. That's achievable through `HtmlWebpackPlugin` and a bit of configuration.
+即使webpack经常用于打包单页面应用程序，也可以用它处理多个独立的页面。这个想法类似于 *构建目标* 这章中所讲的，你可以生成多个输出文件。但是这一次，你必须生成多个独立的页面。而这可以通过 `HtmlWebpackPlugin` 和一些配置来实现。
 
-## Possible Approaches
+## 可能的方法
 
-When generating multiple pages with webpack, you have a couple of possibilities:
+使用webpack生成多个页面时，你有以下几种选择：
 
-* Go through the *multi-compiler mode* and return an array of configurations. The approach would work as long as the pages are separate and there is a minimal need for sharing code across them. The benefit of this approach is that you can process it through [parallel-webpack](https://www.npmjs.com/package/parallel-webpack) to improve build performance.
-* Set up a single configuration and extract the commonalities. The way you do this can differ depending on how you chunk it up.
-* If you follow the idea of [Progressive Web Applications](https://developers.google.com/web/progressive-web-apps/) (PWA), you can end up with either an **app shell** or a **page shell** and load portions of the application as it's used.
+* 完成*multi-compiler*并返回一组配置。 只要页面是分开的，并且跨越它们共享代码的最小需求，该方法就可以工作。这种方法的好处是你可以通过[parallel-webpack]（https://www.npmjs.com/package/parallel-webpack）处理它，以提高构建性能。
+* 设置单个配置并提取共性。你执行此操作的方式可能会有所不同，具体取决于你的方式。
+* 如果你遵循[渐进式 Web 应用程序]（https://developers.google.com/web/progressive-web-apps/）（PWA）的想法，你最终可能会得到 **app shell** 或者 **page shell** 并在使用时加载应用程序的部分。
 
-In practice, you have more dimensions. For example, you have to generate i18n variants for pages. These ideas grow on top of the basic approaches.
+在实践中，你可以从更多的维度着手。例如，你必须为页面提供 i18n 支持。这些想法在基本方法之上发展。
 
-## Generating Multiple Pages
+## 生成多页面
 
-To generate multiple separate pages, they should be initialized somehow. You should also be able to return a configuration for each page, so webpack picks them up and process them through the multi-compiler mode.
+要生成多个独立的页面，应以某种方式初始化它们。你还应该能够返回每个页面的配置，因此webpack会选择它们并通过 `multi-compiler` 模式处理它们。
 
-### Abstracting Pages
+### 页面摘要
 
-To initialize a page, it should receive page title, output path, and an optional template at least. Each page should receive optional output path and a template for customization. The idea can be modeled as a configuration part:
+要初始化页面，它至少应该接收页面标题、输出路径和可选的模板。每个页面都应该接收可选的输出路径和用于自定义的模板。这个想法的建模可参考下面的配置：
 
 **webpack.parts.js**
 
@@ -43,9 +43,11 @@ exports.page = ({
 });
 ```
 
-### Integrating to Configuration
+### 集成到配置
 
-To incorporate the idea into the configuration, the way it's composed has to change. Also, a page definition is required. To get started, let's reuse the same JavaScript logic for each page for now:
+要将这个想法融入到配置中，它的组合方式必须改变。此外，还需要定义页面。
+
+首先，让我们暂时为每个页面重用相同的JavaScript逻辑：
 
 **webpack.config.js**
 
@@ -87,11 +89,11 @@ module.exports = mode => {
 };
 ```
 
-After this change you should have two pages in the application: `/` and `/another`. It should be possible to navigate to both while seeing the same output.
+在这个改变之后，在应用程序中应该有两个页面：`/`和`/ another`。应该可以在看到相同输出，并导航它们。
 
-### Injecting Different Script per Page
+### 向每个页面注入不同的脚本
 
-The question is, how to inject a different script per each page. In the current configuration, the same `entry` is shared by both. To solve the problem, you should move `entry` configuration to lower level and manage it per page. To have a script to test with, set up another entry point:
+问题是，如何为每个页面注入不同的脚本。在当前配置中，两者共享相同的`entry`。要解决此问题，你应该将 `entry` 配置移到较低的级别并按页面进行管理。要使用脚本进行测试，请设置另一个入口点：
 
 **src/another.js**
 
@@ -104,7 +106,7 @@ const demoComponent = component("Another");
 document.body.appendChild(demoComponent);
 ```
 
-The file could go to a directory of its own. Here the existing code is reused to get something to show up. Webpack configuration has to point to this file:
+该文件可以转到自己的目录。这里重用现有代码以显示某些内容。Webpack配置必须指向此文件：
 
 **webpack.config.js**
 
@@ -152,7 +154,7 @@ module.exports = mode => {
 };
 ```
 
-The tweak also requires a change at the related part so that `entry` gets included in the configuration:
+调整还需要在相关部分进行更改，以便 `entry` 包含在配置中：
 
 **webpack.parts.js**
 
@@ -177,30 +179,30 @@ exports.page = (
 });
 ```
 
-After these changes `/another` should show something familiar:
+`/another` 有相似的修改，展示效果如下：
 
 ![Another page shows up](../../images/another.png)
 
-### Pros and Cons
+### 赞成和反对观点
 
-If you build the application (`npm run build`), you should find *another/index.html*. Based on the generated code, you can make the following observations:
+如果你构建应用程序（`npm run build`），你应该找到 *another/index.html*。 根据生成的代码，你可以进行以下观察：
 
-* It's clear how to add more pages to the setup.
-* The generated assets are directly below the build root. The pages are an exception as those are handled by `HtmlWebpackPlugin`, but they still point to the assets below the root. It would be possible to add more abstraction in the form of *webpack.page.js* and manage the paths by exposing a function that accepts page configuration.
-* Records should be written separately per each page in files of their own. Currently, the configuration that writes the last wins. The above solution would allow solving this.
-* Processes like linting and cleaning run twice now. The *Targets* chapter discussed potential solutions to that problem.
+* 很清楚如何在配置中添加更多页面。
+* 生成的静态资源直接位于构建根目录下方。页面是一个除外，因为它们由`HtmlWebpackPlugin`处理，但它们仍然指向根目录下的静态资源。可以用 *webpack.page.js* 的形式添加更多抽象，并通过接受公共的页面配置函数来管理路径。
+* 记录应该按照每个页面单独写在自己的文件中。目前，写入最后一次成功的配置。上述解决方案可以解决这个问题。
+* 像linting和cleaning这样的过程现在运行两次。 *Targets* 这章详细的介绍了该问题的解决方案。
 
-The approach can be pushed in another direction by dropping the multi-compiler mode. Even though it's slower to process this kind of build, it enables code sharing and the implementation of shells. The first step towards a shell setup is to rework the configuration so that it picks up the code shared between the pages.
+通过删除multi-compiler模式，可以将方法推向另一个方向 尽管处理这种构建的速度较慢，但它可以实现代码共享和shell。实现shell配置的第一步是重新调整配置，以便它获取页面之间共享的代码。
 
-## Generating Multiple Pages While Sharing Code
+## 生成多个页面（页面间共享代码）
 
-The current configuration shares code by coincidence already due to the usage patterns. Only a small part of the code differs, and as a result, only the page manifests, and the bundles mapping to their entries differ.
+由于使用模式匹配，当前配置可以巧妙地共享代码。页面只有一小部分代码不同，它们的manifest和构建包会根据entries配置来生成。
 
-In a more complicated application, you should apply techniques covered in the *Bundle Splitting* chapter across the pages. Dropping the multi-compiler mode can be worthwhile then.
+在更复杂的应用程序中，你应该跨页面应用 [*构建拆分*](https://lvzhenbang.github.io/webpack-book/dist/zh/building/02_bundle_splitting.html) ，书中专门有一章介绍这个技术。因此，删除multi-compiler模式是值得的。
 
-### Adjusting Configuration
+### 调整配置
 
-Adjustment is needed to share code between the pages. Most of the code can remain the same. The way you expose it to webpack has to change so that it receives a single configuration object. As `HtmlWebpackPlugin` picks up all chunks by default, you have to adjust it to pick up only the chunks that are related to each page:
+需要进行调整以在页面之间共享代码。大多数代码可以保持不变，但将它暴露给webpack的方式必须改变，以便它接收单个配置对象。由于 `HtmlWebpackPlugin` 默认选择所有块，因此你必须调整它以仅选取与每个页面相关的块：
 
 **webpack.config.js**
 
@@ -214,9 +216,7 @@ module.exports = mode => {
       entry: {
         app: PATHS.app,
       },
-leanpub-start-insert
       chunks: ["app", "manifest", "vendors~app"],
-leanpub-end-insert
     }),
     parts.page({
       title: "Another demo",
@@ -224,26 +224,20 @@ leanpub-end-insert
       entry: {
         another: path.join(PATHS.app, "another.js"),
       },
-leanpub-start-insert
       chunks: ["another", "manifest", "vendors~app"],
-leanpub-end-insert
     }),
   ];
   const config =
     mode === "production" ? productionConfig : developmentConfig;
 
-leanpub-start-delete
-  return pages.map(page =>
-    merge(commonConfig, config, page, { mode })
-  );
-leanpub-end-delete
-leanpub-start-insert
+  // return pages.map(page =>
+  //   merge(commonConfig, config, page, { mode })
+  // )
   return merge([commonConfig, config, { mode }].concat(pages));
-leanpub-end-insert
 };
 ```
 
-The page-specific configuration requires a small tweak as well:
+指定页面的配置也需要做一些小的调整：
 
 **webpack.parts.js**
 
@@ -256,51 +250,47 @@ exports.page = (
     ),
     title,
     entry,
-leanpub-start-insert
     chunks,
-leanpub-end-insert
   } = {}
 ) => ({
   entry,
   plugins: [
     new HtmlWebpackPlugin({
-leanpub-start-insert
       chunks,
-leanpub-end-insert
       ...
     }),
   ],
 });
 ```
 
-If you generate a build (`npm run build`), you should notice that something is different compared to the first multiple page build. Instead of two manifest files, there's only one. Because of the new setup, the manifest contains references to all of the bundles that were generated. In turn, the entry specific files point to different parts of the manifest and the manifest runs different code depending on the entry. Multiple separate manifests are not therefore needed.
+运行 `npm run build` 脚本命令，你应该注意到与第一个多页构建相比有些不同。不是原来的两个manifest文件，只有一个。由于新的配置，manifest包含对生成的所有包的引用。反过来，特定的entries文件指向manifest的不同部分，manifest根据entry的不同而运行不同的代码。因此不需要多个单独的manifest。
 
-### Pros and Cons
+### 赞成和反对观点
 
-Compared to the earlier approach, something was gained, but also lost:
+与之前的方法相比，获得了一些东西，但也丢失了一些：
 
-* Given the configuration isn't in the multi-compiler form anymore, processing can be slower.
-* Plugins such as `CleanWebpackPlugin` don't work without additional consideration now.
-* Instead of multiple manifests, only one remains. The result is not a problem, though, as the entries use it differently based on their setup.
+* 鉴于配置不再是multi-compiler形式，编译处理可能会更慢。
+* 如果不做额外的考虑，如 `CleanWebpackPlugin` 之类的插件就无法运行。
+* manifest不是多个，只剩下一个。但结果不是问题，因为entry会根据其设置使用它不同。
 
-## Progressive Web Applications
+## 渐进式 Web 应用程序
 
-If you push the idea further by combining it with code splitting and smart routing, you'll end up with the idea of Progressive Web Applications (PWA). [webpack-pwa](https://github.com/webpack/webpack-pwa) example illustrates how to implement the approach using webpack either through an app shell or a page shell.
+如果通过将其与代码拆分和智能路由相结合来进一步推动这一想法，你将最终实现渐进式Web应用程序（PWA）的理念。[webpack-pwa]（https://github.com/webpack/webpack-pwa）示例说明了如何通过app shell或页面shell使用webpack实现该方法。
 
-App shell is loaded initially, and it manages the whole application including its routing. Page shells are more granular, and more are loaded as the application is used. The total size of the application is larger in this case. Conversely, you can load initial content faster.
+App shell在初始化的时候加载，它管理整个应用程序，包括其路由。页面shell更精细，并且在使用应用程序时会加载更多内容。在这种情况下，应用程序的总大小更大。相反，你可以更快地加载初始内容。
 
-PWA combines well with plugins like [offline-plugin](https://www.npmjs.com/package/offline-plugin) and [sw-precache-webpack-plugin](https://www.npmjs.com/package/sw-precache-webpack-plugin). Using [Service Workers](https://developer.mozilla.org/en/docs/Web/API/Service_Worker_API) and improves the offline experience.
+PWA与[offline-plugin]（https://www.npmjs.com/package/offline-plugin）和[sw-precache-webpack-plugin]等插件完美结合（https://www.npmjs.com/package/sw-precache-webpack-plugin）。使用[Service Worker]（https://developer.mozilla.org/en/docs/Web/API/Service_Worker_API）并改善离线体验。
 
-T> [Twitter](https://developers.google.com/web/showcase/2017/twitter) and [Tinder](https://medium.com/@addyosmani/a-tinder-progressive-web-app-performance-case-study-78919d98ece0) case studies illustrate how the PWA approach can improve platforms.
+> [Twitter](https://developers.google.com/web/showcase/2017/twitter) 和 [Tinder](https://medium.com/@addyosmani/a-tinder-progressive-web-app-performance-case-study-78919d98ece0) 案例研究说明了PWA方法如何提升用户体验。
 
-## Conclusion
+## 总结
 
-Webpack allows you to manage multiple page setups. The PWA approach allows the application to be loaded as it's used and webpack allows implementing it.
+Webpack允许你管理多个页面设置。PWA方法允许应用程序在使用时加载，webpack允许实现它。
 
-To recap:
+内容回顾：
 
-* Webpack can be used to generate separate pages either through its multi-compiler mode or by including all the page configuration into one.
-* The multi-compiler configuration can run in parallel using external solutions, but it's harder to apply techniques such as bundle splitting against it.
-* A multi-page setup can lead to a **Progressive Web Application**. In this case, you use various webpack techniques to come up with an application that is fast to load and that fetches functionality as required. Both two flavors of this technique have their own merits.
+* Webpack可用于通过multi-cpmpiler模式生成单独的页面，也可以将所有页面配置包含在一个页面中。
+* multi-compiler配置可以使用外部解决方案并行运行，但是应用构建拆分等技术会更加困难。
+* 多页面设置可以修改为 **渐进式Web应用程序**。在这种情况下，你可以使用各种webpack技术来提供快速加载并根据需要获取功能的应用程序。这种技术的两种风格都有其自身的优点。
 
-You'll learn to implement *Server Side Rendering* in the next chapter.
+在下一章中，将详细的介绍如何实现服务端渲染（SSR）。
