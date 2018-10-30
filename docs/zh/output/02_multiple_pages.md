@@ -6,9 +6,9 @@
 
 使用webpack生成多个页面时，你有以下几种选择：
 
-* 完成*multi-compiler*并返回一组配置。 只要页面是分开的，并且跨越它们共享代码的最小需求，该方法就可以工作。这种方法的好处是你可以通过[parallel-webpack]（https://www.npmjs.com/package/parallel-webpack）处理它，以提高构建性能。
+* 完成*multi-compiler*并返回一组配置。 只要页面是分开的，并且跨越它们共享代码的最小需求，该方法就可以工作。这种方法的好处是你可以通过[parallel-webpack] (https://www.npmjs.com/package/parallel-webpack)处理它，以提高构建性能。
 * 设置单个配置并提取共性。你执行此操作的方式可能会有所不同，具体取决于你的方式。
-* 如果你遵循[渐进式 Web 应用程序]（https://developers.google.com/web/progressive-web-apps/）（PWA）的想法，你最终可能会得到 **app shell** 或者 **page shell** 并在使用时加载应用程序的部分。
+* 如果你遵循[渐进式 Web 应用程序] (https://developers.google.com/web/progressive-web-apps/)（PWA）的想法，你最终可能会得到 **app shell** 或者 **page shell** 并在使用时加载应用程序的部分。
 
 在实践中，你可以从更多的维度着手。例如，你必须为页面提供 i18n 支持。这些想法在基本方法之上发展。
 
