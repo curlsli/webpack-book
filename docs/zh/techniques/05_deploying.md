@@ -27,11 +27,11 @@ npm install gh-pages --save-dev
 },
 ```
 
-要使静态资源路径在 `GitHub Pages` 上运行，必须调整 `output.publicPath` 字段。否则，静态资源路径最终指向根，除非你直接在域根(例如`survivaljs.com`)之后托管，否则这不起作用。
+要使静态资源路径在 `GitHub Pages` 上运行，必须调整 `output.publicPath` 字段。否则，静态资源路径最终指向根，除非你直接在域根(例如`survivaljs.com`)之上托管，否则这不起作用。
 
 例如，`publicPath` 控制你访问 `index.html` 时看到结果的url。如果你在CDN上托管静态资源，这里就是需要调整的地方。
 
-在这种情况下，将其设置为指向GitHub项目就足够了，如下所示：
+在这种情况下，为其设置为指向GitHub项目就足够了，如下所示：
 
 **webpack.config.js**
 
@@ -51,20 +51,20 @@ const productionConfig = merge([
 ]);
 ```
 
-运行 `npm run build` 脚本命令后，执行 `npm run deploy` 命令，你应该从 `GitHub Pages`上托管的 `build/` 目录中获取你的应用程序。然后在浏览器中，访问 `https://<name>.github.io/<project>` ，并查看结果。
+运行 `npm run build` 脚本命令，然后执行 `npm run deploy` 命令。`GitHub Pages` 将托管你本地 `build/` 目录中的代码。然后在浏览器中，访问 `https://<name>.github.io/<project>` ，你查看并验证结果。
 
 > 如果你需要更精细的控制，请使用 `gh-pages` 提供的Node API。但通常情况下，它提供的默认命令行工具足以满足基本目的。
 
-> `GitHub Pages` 允许你选择部署的分支。即使对于不需要打包的最小站点来说，它也可以使用`master` 分支。你还可以指向 `master` 分支中的 `./docs` 目录下方并维护你的站点。
+> `GitHub Pages` 允许你选择部署的分支。即使对于不需要打包的最小站点来说，它也可以使用`master` 分支。你还可以指顶 `master` 分支中的 `./docs` 目录中托管你的内容，并维护你的站点。
 
 ### 将旧版本存档管理
 
-`gh-pages` 为存档目的提供`add`选项。 这个想法如下：
+`gh-pages` 为了实现存档目的，提供 `add` 选项。 这个想法如下：
 
 1. 将旧版本的站点复制到临时目录中，并从中删除 `archive` 目录。 你可以根据需要命名存档目录。
 2. 清理并构建项目。
 3. 复制以下旧版本 `build/archive/<version>`
-4. 设置脚本以通过Node调用* gh-pages *，如下所示，并捕获回调中可能的错误：
+4. 设置脚本，然后通过Node调用 `gh-pages` ，并捕获回调中可能的错误，如下所示：
 
 ```javascript
 ghpages.publish(path.join(__dirname, "build"), { add: true }, cb);
