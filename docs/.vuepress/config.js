@@ -22,7 +22,7 @@ module.exports = {
             description: 'webpack SruriveJS'
         }
     },
-    base: '/webpack-book/dist/',
+    base: '/webpack-book/',
     dest: './dist',
     theme: 'vue',
     themeConfig: {
