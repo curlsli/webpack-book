@@ -51,7 +51,7 @@ const productionConfig = merge([
 ]);
 ```
 
-运行 `npm run build` 脚本命令，然后执行 `npm run deploy` 命令。`GitHub Pages` 将托管你本地 `build/` 目录中的代码。然后在浏览器中，访问 `https://<name>.github.io/<project>` ，你查看并验证结果。
+运行 `npm run build` 脚本命令，然后执行 `npm run deploy` 命令。`GitHub Pages` 将托管你本地 `build/` 目录中的代码。然后在浏览器中，访问 `https://<name>.github.io/<project>` ，你可以查看并验证结果。
 
 > 如果你需要更精细的控制，请使用 `gh-pages` 提供的Node API。但通常情况下，它提供的默认命令行工具足以满足基本目的。
 
