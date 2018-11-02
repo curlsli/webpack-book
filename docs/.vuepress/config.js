@@ -24,7 +24,7 @@ module.exports = {
     },
     base: '/webpack-book/',
     dest: './dist',
-    theme: 'vue',
+    // theme: 'vue',
     themeConfig: {
         repo: 'lvzhenbang/webpack-book',
         docsBranch: 'dev',

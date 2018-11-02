@@ -1,10 +1,10 @@
-# Consuming Packages
+# 使用包(依赖)
 
-Sometimes packages have not been packaged the way you expect, and you have to tweak the way webpack interprets them. Webpack provides multiple ways to achieve this.
+有时包没有按照你期望的方式打包，你必须调整webpack解释它们的方式。Webpack提供了多种方法来实现这一目标。
 
 ## `resolve.alias`
 
-Sometimes packages do not follow the standard rules and their *package.json* contains a faulty `main` field. It can be missing altogether. `resolve.alias` is the field to use here as in the example below:
+有时包不符合标准规则，它们的 `package.json` 包含一个错误的 `main` 字段。它可能完全丢失，在这里使用 `resolve.alias` 字段，如下例所示：
 
 ```javascript
 {
@@ -19,11 +19,11 @@ Sometimes packages do not follow the standard rules and their *package.json* con
 },
 ```
 
-The idea is that if webpack resolver matches `demo` in the beginning, it resolves from the target. You can constrain the process to an exact name by using a pattern like `demo$`.
+它的意思是，如果webpack解析器解析目标，从匹配 `demo` 开始。你可以使用类似 `demo $`  的模式，将它约束为确切的名称。
 
-Light React alternatives, such as [Preact](https://www.npmjs.com/package/preact), [react-lite](https://www.npmjs.com/package/react-lite), or [Inferno](https://www.npmjs.com/package/inferno), offer smaller size while trading off functionality like `propTypes` and synthetic event handling. Replacing React with a lighter alternative can save a significant amount of space, but you should test well if you do this.
+轻量级的React替代品，如[Preact](https://www.npmjs.com/package/preact)，[react-lite](https://www.npmjs.com/package/react-lite)，或[ Inferno](https://www.npmjs.com/package/inferno)提供更小的尺寸，同时权衡诸如"propTypes"和合成事件处理之类的功能。用更轻的替代品替换React可以节省大量空间。
 
-If you are using *react-lite*, configure it as below:
+如果你正在用 `react-lite`，你可以像下面这样配置它：
 
 ```javascript
 {
@@ -37,11 +37,11 @@ If you are using *react-lite*, configure it as below:
 },
 ```
 
-T> The same technique works with loaders too. You can use `resolveLoader.alias` similarly. You can use the method to adapt a RequireJS project to work with webpack.
+> 同样的技术也适用于loader，可以使用类似地 `resolveLoader.alias` 字段。你可以在webpack中，使用这种方法构建RequireJS项目。
 
 ## `resolve.extensions`
 
-By default, webpack will resolve only against `.js` and `.json` files while importing without an extension, to tune this to include JSX files, adjust as below:
+默认情况下，webpack在没有扩展名的情况下，只会解析`.js`，`.json`文件，和JSX文件，配置如下：
 
 ```javascript
 {
@@ -53,7 +53,7 @@ By default, webpack will resolve only against `.js` and `.json` files while impo
 
 ## `resolve.modules`
 
-The module resolution process can be altered by changing where webpack looks for modules. By default, it will look only within the *node_modules* directory. If you want to override packages there, you could tell webpack to look into other directories first:
+可以通过更改webpack查找模块的位置，来更改模块解析过程。默认情况下，它仅在 `node_modules` 目录中查找。如果你想覆盖那里的包，你可以做如下配置：
 
 ```javascript
 {
@@ -63,20 +63,20 @@ The module resolution process can be altered by changing where webpack looks for
 },
 ```
 
-After the change, webpack will try to look into the *my_modules* directory first. The method can be applicable in large projects where you want to customize behavior.
+更改后，webpack将首先尝试查看 `my_modules` 目录。该方法适用于需要自定义行为的大型项目。
 
 ## `resolve.plugins`
 
-Webpack allows you to customize the module resolution behavior using the `resolve.plugins` field. Consider the following plugin examples:
+Webpack允许你使用 `resolve.plugins` 字段自定义模块的解析行为。具体可参考下插件的使用：
 
-* [directory-named-webpack-plugin](https://www.npmjs.com/package/directory-named-webpack-plugin) maps imports made against directories to files matching the directory name. For example, it would map `import foo from "./foo";` to `import foo from "./foo/foo.js";`. The pattern is popular with React and using the plugin will allow you to simplify your code. [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) achieves the same behavior through Babel.
-* [webpack-resolve-short-path-plugin](https://www.npmjs.com/package/webpack-resolve-short-path-plugin) was designed to avoid deeply nested imports like `import foo from "../../../foo";` by adding support for tilde (`~`) syntax. `import foo from "~foo"` would resolve against the project root if the plugin is used.
+* [directory-named-webpack-plugin](https://www.npmjs.com/package/directory-named-webpack-plugin)建立目录的导入与目录名匹配的文件的映射关系。例如，它会将 `import foo from './foo';` 映射到 `import foo from './foo/foo.js';`。该模式在React中很受欢迎，使用该插件可以简化代码。[babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver)通过Babel实现了相同的行为。
+* [webpack-resolve-short-path-plugin](https://www.npmjs.com/package/webpack-resolve-short-path-plugin)旨在避免深度嵌套的导入，如 `import foo from '../../../foo';` 通过添加对tilde(`~`)语法的支持。如果使用插件，`import from "~foo"` 将解析项目根目录。
 
-## Consuming Packages Outside of Webpack
+## 使用webpack之外的包
 
-Browser dependencies, like jQuery, are often served through publicly available Content Delivery Networks (CDN). CDNs allow you to push the problem of loading popular packages elsewhere. If a package has been already loaded from a CDN and it's in the user cache, there is no need to load it.
+常见的浏览器依赖(如jQuery)通过公共可用的CDN提供。CDN允许你在其他地方加载流行软件包。 如果已经从CDN加载了一个包并且它在用户缓存中，则无需加载它。
 
-To use this technique, you should first mark the dependency in question as an external:
+要项目中使用此技术，你应首先将所引用的依赖标记为外部：
 
 ```javascript
 externals: {
@@ -84,26 +84,24 @@ externals: {
 },
 ```
 
-You still have to point to a CDN and ideally provide a local fallback, so there is something to load if the CDN does not work for the client:
+你仍然需要在使用的页面添加指向CDN的引用，并且提供理想情况下的本地回退。因此如果CDN不适用于客户端，则需要加载：
 
 ```html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script>
-    window.jQuery || document.write('<script src="js/jquery-3.1.1.min.js"><\/script>')
-</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></scrip>
+<scrip>
+    window.jQuery || document.write('<script src="js/jquery-3.1.1.min.js"><\/scrip>')
+</scrip>
 ```
 
-T> [html-webpack-cdn-plugin](https://www.npmjs.com/package/html-webpack-cdn-plugin) is one option if you are using `HtmlWebpackPlugin` and want to inject a `script` tag automatically.
+> [html-webpack-cdn-plugin](https://www.npmjs.com/package/html-webpack-cdn-plugin) 如果你使用 `HtmlWebpackPlugin` 并想要自动注入 `script` 标签，这是一个选择。
 
-## Dealing with Globals
+## 处理 Globals
 
-Sometimes modules depend on globals. `$` provided by jQuery is a good example. Webpack offers a few ways that allow you to handle them.
+有时模块依赖于全局变量。jQuery提供的 `$` 就是一个很好的例子。Webpack提供了一些允许你处理它们的方法。
 
-{pagebreak}
+### 注入 Globals
 
-### Injecting Globals
-
-[imports-loader](https://www.npmjs.com/package/imports-loader) allows you to inject globals as below:
+[imports-loader](https://www.npmjs.com/package/imports-loader) 允许你像下面这样注入全局变量：
 
 ```javascript
 {
@@ -120,9 +118,9 @@ Sometimes modules depend on globals. `$` provided by jQuery is a good example. W
 },
 ```
 
-### Resolving Globals
+### 解析 Globals
 
-Webpack's `ProvidePlugin` allows webpack to resolve globals as it encounters them:
+Webpack的 `ProvidePlugin` 允许webpack在遇到全局变量时解析它们：
 
 ```javascript
 {
@@ -134,11 +132,9 @@ Webpack's `ProvidePlugin` allows webpack to resolve globals as it encounters the
 },
 ```
 
-{pagebreak}
+### 暴露 Globals 给浏览器
 
-### Exposing Globals to the Browser
-
-Sometimes you have to expose packages to third-party scripts. [expose-loader](https://www.npmjs.com/package/expose-loader) allows this as follows:
+有时你必须将包公开给第三方脚本。[expose-loader](https://www.npmjs.com/package/expose-loader) 允许你像下面这样做：
 
 ```javascript
 {
@@ -147,7 +143,7 @@ Sometimes you have to expose packages to third-party scripts. [expose-loader](ht
 },
 ```
 
-With the small extra tweak, the technique can be used to expose React performance utilities to the browser through `React.Perf` global. You have to insert the following code to your application entry point for this to work:
+通过小范围的调整，该技术可通过 `React.Perf` 将React性能方面的功能部件公开给浏览器。你必须将以下代码插入到应用程序入口点才能使其正常工作：
 
 ```javascript
 if (process.env.NODE_ENV !== "production") {
@@ -155,17 +151,15 @@ if (process.env.NODE_ENV !== "production") {
 }
 ```
 
-T> It can be a good idea to install [React Developer Tools](https://github.com/facebook/react-devtools) to Chrome for even more information as it allows you to inspect *props* and *state* of your application.
+> [React Developer Tools](https://github.com/facebook/react-devtools) 可以让Chrome获取更多信息，因为它允许你检查应用程序的 `props` 和 `state` 。
 
-T> [script-loader](https://www.npmjs.com/package/script-loader) allows you to execute scripts in a global context. You have to do this if the scripts you are using rely on a global registration setup.
+> [script-loader](https://www.npmjs.com/package/script-loader) 允许你在全局上下文中执行脚本。如果你使用的脚本依赖于全局注册设置，则必须执行此操作。
 
-{pagebreak}
+## 移除未使用的模块
 
-## Removing Unused Modules
+尽管包可以很好地开箱即用，但它们有时会为你的项目带来太多代码。[Moment.js](https://www.npmjs.com/package/moment) 是一个很受欢迎的例子。默认情况下，它会将本地数据带到项目中。
 
-Even though packages can work well out of the box, they bring too much code to your project sometimes. [Moment.js](https://www.npmjs.com/package/moment) is a popular example. It brings locale data to your project by default.
-
-The easiest method to disable that behavior is to use `IgnorePlugin` to ignore locales:
+禁用该行为的最简单方法是使用 `IgnorePlugin` 忽略语言环境：
 
 ```javascript
 {
@@ -173,9 +167,9 @@ The easiest method to disable that behavior is to use `IgnorePlugin` to ignore l
 },
 ```
 
-T> You can use the same mechanism to work around problematic dependencies. Example: `new webpack.IgnorePlugin(/^(buffertools)$/)`.
+> 你可以使用相同的机制来解决有问题的依赖项。如： `new webpack.IgnorePlugin(/^(buffertools)$/)`.
 
-To bring specific locales to your project, you should use `ContextReplacementPlugin`:
+要将特定的部分引入项目，你应该使用 `ContextReplacementPlugin`:
 
 ```javascript
 {
@@ -188,13 +182,11 @@ To bring specific locales to your project, you should use `ContextReplacementPlu
 },
 ```
 
-T> There's a [Stack Overflow question](https://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack/25426019) that covers these ideas in detail. See also [Ivan Akulov's explanation of `ContextReplacementPlugin`](https://iamakulov.com/notes/webpack-contextreplacementplugin/).
+> 有一个 [Stack Overflow question](https://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack/25426019) 详细介绍了这些知识点。你也可以参考 [Ivan Akulov's explanation of `ContextReplacementPlugin`](https://iamakulov.com/notes/webpack-contextreplacementplugin/)。
 
-{pagebreak}
+## 管理预构建的依赖包
 
-## Managing Pre-built Dependencies
-
-It's possible webpack gives the following warning with certain dependencies:
+webpack可能会给出某些依赖项的警告，如下所示：
 
 ```bash
 WARNING in ../~/jasmine-promises/dist/jasmine-promises.js
@@ -203,9 +195,9 @@ Critical dependencies:
  @ ../~/jasmine-promises/dist/jasmine-promises.js 1:113-120
 ```
 
-The warning can happen if a package points at a pre-built (i.e., minified and already processed) file. Webpack detects this case and warns against it.
+如果包指向预构建(如：最小化和已经处理)的文件，则可能发生警告。Webpack检测到这种情况并发出警告。
 
-The warning can be eliminated by aliasing the package to a source version as discussed above. Given sometimes the source is not available, another option is to tell webpack to skip parsing the files through `module.noParse`. It accepts either a RegExp or an array of RegExps and can be configured as below:
+如上所述，可以通过将包别名化为源版本来消除警告。考虑到有时源不可用，另一个选择是告诉webpack跳过通过 `module.noParse` 解析文件。它接受RegExp或RegExps数组，配置如下：
 
 ```javascript
 {
@@ -215,31 +207,29 @@ The warning can be eliminated by aliasing the package to a source version as dis
 },
 ```
 
-W> Take care when disabling warnings as it can hide underlying issues. Consider alternatives first. There's a [webpack issue](https://github.com/webpack/webpack/issues/1617) that discusses the problem in detail.
+> Take care when disabling warnings as it can hide underlying issues. Consider alternatives first. There's a [webpack issue](https://github.com/webpack/webpack/issues/1617) that discusses the problem in detail.
 
-{pagebreak}
+## 管理Symbolic链接
 
-## Managing Symbolic Links
+Symbolic链接或symlinks，是一种操作系统级功能，允许你通过文件系统指向其他文件而无需复制它们。你可以使用 `npm link` 为正在开发的包创建全局的symbolic链接，然后使用 `npm unlink` 删除链接。
 
-Symbolic links, or symlinks, are an operating system level feature that allows you to point to other files through a file system without copying them. You can use `npm link` to create global symlinks for packages under development and then use `npm unlink` to remove the links.
+Webpack将Symbolic 链接解析为 Node 的完整路径。 问题是，如果你不知道这个情况，这种行为会让你感到惊讶，特别是如果你依赖webpack处理。可以解决webpack问题[＃1643](https://github.com/webpack/webpack/issues/1643)和[＃985](https://github.com/webpack/webpack/issues/985)中讨论的行为。Webpack核心行为将来可能会有所改进，使这些变通方法变得不必要。
 
-Webpack resolves symlinks to their full path as Node does. The problem is that if you are unaware of this fact, the behavior can surprise you especially if you rely on webpack processing. It's possible to work around the behavior as discussed in webpack issues [#1643](https://github.com/webpack/webpack/issues/1643) and [#985](https://github.com/webpack/webpack/issues/985). Webpack core behavior may improve in the future to make these workarounds unnecessary.
+> 你可以通过将 `resolve.symlinks` 设置为 `false` 来禁用webpack的symbolic链接处理。
 
-T> You can disable webpack's symlink handling by setting `resolve.symlinks` as `false`.
+## 深入了解包
 
-## Getting Insights on Packages
+为了获得更多信息，npm为基本查询提供了`npm info <package>`命令。你可以使用它来检查与包关联的元数据（metadata），同时确定版本相关信息。 请考虑以下工具：
 
-To get more information, npm provides `npm info <package>` command for basic queries. You can use it to check the metadata associated with packages while figuring out version related information. Consider the following tools as well:
+* [package-config-checker](https://www.npmjs.com/package/package-config-checker) 更进一步。 它允许你更好地了解项目的哪些软件包最近更新，并提供了深入了解依赖项的方法。例如，它显示了哪些包可以使用与下载大小等相关信息。
+* [slow-deps](https://www.npmjs.com/package/slow-deps) 可以提示项目的哪些依赖项安装是最慢的。
+* [weigh](https://www.npmjs.com/package/weigh) 当用于以不同方式（未压缩，缩小，压缩）的浏览器提供包时，可以使用它来计算包的大致大小。
 
-* [package-config-checker](https://www.npmjs.com/package/package-config-checker) goes a step further. It allows you to understand better which packages of your project have updated recently and it provides means to get insight into your dependencies. It can reveal which packages could use download size related improvements for example.
-* [slow-deps](https://www.npmjs.com/package/slow-deps) can reveal which dependencies of a project are the slowest to install.
-* [weigh](https://www.npmjs.com/package/weigh) can be used figure out the approximate size of a package when it's served to a browser in different ways (uncompressed, minified, gzipped).
+## 总结
 
-## Conclusion
+Webpack可以毫无问题地使用大多数npm软件包。但有时候，使用webpack的解析机制需要额外的配置辅助。
 
-Webpack can consume most npm packages without a problem. Sometimes, though, patching is required using webpack's resolution mechanism.
+内容回顾：
 
-To recap:
-
-* Use webpack's module resolution to your benefit. Sometimes you can work around issues by tweaking resolution. Often it's a good idea to try to push improvements upstream to the projects themselves, though.
-* Webpack allows you to patch resolved modules. Given specific dependencies expect globals, you can inject them. You can also expose modules as globals as this is necessary for certain development tooling to work.
+* 使用webpack的模块解析对你的开发有帮助。有时你可以通过调整解析来解决某些问题。不过，尝试将改进流（upstream）推到项目本身通常是个好主意。
+* Webpack允许你修补已解析的模块。给出特定的依赖关系需要全局变量，你可以通过注入处理它们。你还可以将模块公开为全局变量，因为这对于某些开发工具来说是必需的。

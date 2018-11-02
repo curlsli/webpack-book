@@ -8,8 +8,6 @@ You can find packages that rely on this behavior. React is perhaps the most know
 
 Webpack 4 sets `process.env.NODE_ENV` based on the given mode. It's good to know the technique and how it works, though.
 
-{pagebreak}
-
 ## The Basic Idea of `DefinePlugin`
 
 To understand the idea of `DefinePlugin` better, consider the example below:
@@ -44,8 +42,6 @@ if ("foobar" === "bar") {
 }
 ```
 
-{pagebreak}
-
 Further analysis shows that `"foobar" === "bar"` equals `false` so a minifier gives the following:
 
 ```javascript
@@ -77,8 +73,6 @@ if (foo === "bar") {
 
 Elimination is the core idea of `DefinePlugin` and it allows toggling. A minifier performs analysis and toggles entire portions of the code.
 
-{pagebreak}
-
 ## Setting `process.env.NODE_ENV`
 
 As before, encapsulate this idea to a function. Due to the way webpack replaces the free variable, you should push it through `JSON.stringify`. You end up with a string like `'"demo"'` and then webpack inserts that into the slots it finds:
@@ -109,8 +103,6 @@ const commonConfig = merge([
 ]);
 ```
 
-{pagebreak}
-
 Finally, add something to replace:
 
 **src/component.js**
@@ -126,15 +118,13 @@ export default (text = HELLO) => {
 
 If you run the application, you should see a new message on the button.
 
-T> [webpack-conditional-loader](https://www.npmjs.com/package/webpack-conditional-loader) performs something similar based on code comments. It can be used to eliminate entire blocks of code.
+> [webpack-conditional-loader](https://www.npmjs.com/package/webpack-conditional-loader) performs something similar based on code comments. It can be used to eliminate entire blocks of code.
 
-T> `webpack.EnvironmentPlugin(["NODE_ENV"])` is a shortcut that allows you to refer to environment variables. It uses `DefinePlugin` underneath, and you can achieve the same effect by passing `process.env.NODE_ENV`.
+> `webpack.EnvironmentPlugin(["NODE_ENV"])` is a shortcut that allows you to refer to environment variables. It uses `DefinePlugin` underneath, and you can achieve the same effect by passing `process.env.NODE_ENV`.
 
 ## Replacing Free Variables Through Babel
 
 [babel-plugin-transform-inline-environment-variables](https://www.npmjs.com/package/babel-plugin-transform-inline-environment-variables) can be used to achieve the same effect. [babel-plugin-transform-define](https://www.npmjs.com/package/babel-plugin-transform-define) and [babel-plugin-minify-replace](https://www.npmjs.com/package/babel-plugin-minify-replace) are other alternatives for Babel.
-
-{pagebreak}
 
 ## Choosing Which Module to Use
 
@@ -160,9 +150,7 @@ if (process.env.NODE_ENV === "production") {
 
 Webpack can pick the right code based on the `DefinePlugin` declaration and this code. You have to use CommonJS module definition style here as ES2015 `import`s don't allow dynamic behavior by design.
 
-T> A related technique, **aliasing**, is discussed in the *Consuming Packages* chapter.
-
-{pagebreak}
+> A related technique, **aliasing**, is discussed in the *Consuming Packages* chapter.
 
 ## Conclusion
 
