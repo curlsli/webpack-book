@@ -1,30 +1,26 @@
-# Minifying
+# 压缩
 
-Since webpack 4, the production output gets minified using UglifyJS by default. That said, it's good to understand the technique and further possibilities.
+从webpack 4开始，默认情况下使用UglifyJS压缩生产输出。也就是说，了解技术和进一步的可能性是很好的。
 
-## Minifying JavaScript
+## 压缩js
 
-The point of **minification** is to convert the code into a smaller form. Safe **transformations** do this without losing any meaning by rewriting code. Good examples of this include renaming variables or even removing entire blocks of code based on the fact that they are unreachable (`if (false)`).
+`压缩`的目的是将代码转换为更小的形式。安全地`转换`通过重写代码而不会失去任何意义。这方面的好例子包括重命名变量，甚至根据它们无法访问的事实删除整个代码块（`if（false）`）。
 
-Unsafe transformations can break code as they can lose something implicit the underlying code relies upon. For example, Angular 1 expects specific function parameter naming when using modules. Rewriting the parameters breaks code unless you take precautions against it in this case.
+不安全的转换可能会破坏代码，因为它们可能会丢失底层代码所依赖的隐含内容。例如，Angular1.x在使用模块时需要特定的函数参数命名。除非在这种情况下采取预防措施，否则重写参数会破坏代码。
 
-### Modifying JavaScript Minification Process
+### 修改JavaScript压缩过程
 
-In webpack 4, minification process is controlled through two configuration fields: `optimization.minimize` flag to toggle it and `optimization.minimizer` array to configure the process.
+在webpack 4中，通过两个配置字段控制压缩过程：`optimization.minimize`标志以切换它和`optimization.minimizer`数组来配置压缩过程。
 
-To tune the defaults, we'll attach [uglifyjs-webpack-plugin](https://www.npmjs.com/package/uglifyjs-webpack-plugin) to the project so that it's possible to tune it.
+为了调整默认值，我们将[uglifyjs-webpack-plugin](https://www.npmjs.com/package/uglifyjs-webpack-plugin)附加到项目中，以便可以对其进行调整。
 
-To get started, include the plugin to the project:
+首先，在项目中，安装 `uglifyjs-webpack-plugin` 依赖：
 
 ```bash
 npm install uglifyjs-webpack-plugin --save-dev
 ```
 
-{pagebreak}
-
-To attach it to the configuration, define a part for it first:
-
-**webpack.parts.js**
+然后，在 `webpack.parts.js` 中定义一个函数：
 
 ```javascript
 const UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
@@ -36,9 +32,7 @@ exports.minifyJavaScript = () => ({
 });
 ```
 
-Hook it up to the configuration:
-
-**webpack.config.js**
+紧接着，在 `webpack.config.js` 中引入上面定义的函数：
 
 ```javascript
 const productionConfig = merge([
@@ -48,63 +42,57 @@ const productionConfig = merge([
 ]);
 ```
 
-If you execute `npm run build` now, you should see result close to the same as before. The outcome may be a slightly better as you are likely using a newer version of UglifyJS this way.
+运行 `npm run build` 脚本命令，你应该看到与之前相同的结果。结果可能略好一些，因为你可能会以这种方式使用较新版本的UglifyJS。
 
-T> Source maps are disabled by default. You can enable them through the `sourceMap` flag. You should check *uglifyjs-webpack-plugin* for more options.
+> 默认情况下禁用源映射。你可以通过 `sourceMap` 选项启用它们。你应该查看 `uglifyjs-webpack-plugin` 官方文档以获取更多选项。
 
-T> To strip `console.log` calls from the resulting source, set `uglifyOptions.compress.drop_console` to `true` as [discussed on Stack Overflow](https://stackoverflow.com/questions/49101152/webpack-v4-remove-console-logs-with-webpack-uglify).
+> 要从结果源中删除 `console.log` 调用，请将 `uglifyOptions.compress.drop_console` 设置为 `true` 。在[Stack Overflow](https://stackoverflow.com/questions/49101152/webpack-v4-remove-console-logs-with-webpack-uglify) 中有详细讨论。
 
-{pagebreak}
+## 压缩JavaScript的其它方法
 
-## Other Ways to Minify JavaScript
+虽然默认值和 `uglifyjs-webpack-plugin` 都适用于此demo，但你可以考虑其他的方案：
 
-Although the defaults and *uglifyjs-webpack-plugin* works for this use case, there are more options you can consider:
+* [babel-minify-webpack-plugin](https://www.npmjs.com/package/babel-minify-webpack-plugin) 依赖于 [babel-preset-minify](https://www.npmjs.com/package/babel-preset-minify) 它是由Babel团队开发的。但它比UglifyJS要慢。
+* [webpack-closure-compiler](https://www.npmjs.com/package/webpack-closure-compiler)时并行运行，并且有时比 `babel-minify-webpack-plugin` 的结果更小。 [closure-webpack-plugin](https://www.npmjs.com/package/closure-webpack-plugin) 是另一个选择。
+* [butternut-webpack-plugin](https://www.npmjs.com/package/butternut-webpack-plugin) 使用Rich Harris开发的 [butternut](https://www.npmjs.com/package/butternut) 实现压缩。
 
-* [babel-minify-webpack-plugin](https://www.npmjs.com/package/babel-minify-webpack-plugin) relies on [babel-preset-minify](https://www.npmjs.com/package/babel-preset-minify) underneath and it has been developed by the Babel team. It's slower than UglifyJS, though.
-* [webpack-closure-compiler](https://www.npmjs.com/package/webpack-closure-compiler) runs parallel and gives even smaller result than *babel-minify-webpack-plugin* at times. [closure-webpack-plugin](https://www.npmjs.com/package/closure-webpack-plugin) is another option.
-* [butternut-webpack-plugin](https://www.npmjs.com/package/butternut-webpack-plugin) uses Rich Harris' experimental [butternut](https://www.npmjs.com/package/butternut) minifier underneath.
+## 加快JavaScript执行速度
 
-## Speeding Up JavaScript Execution
+特定的解决方案允许你预处理代码，以便它运行得更快。它们补充了缩小技术，可以分为“范围提升”，“预评估”和“改进解析”。这些技术有时可能会增加整体包大小，同时允许更快的执行速度。
 
-Specific solutions allow you to preprocess code so that it will run faster. They complement the minification technique and can be split into **scope hoisting**, **pre-evaluation**, and **improving parsing**. It's possible these techniques grow overall bundle size sometimes while allowing faster execution.
+### 提升作用域
 
-### Scope Hoisting
+从webpack4.x开始，它默认在生产模式下应用作用域提升。它将所有模块提升到单个作用域，而不是为每个模块编写单独的闭包。这样做会减慢构建速度，但会为你提供执行速度更快的构建包。[阅读有关作用域提升的更多信息]（https://medium.com/webpack/brief-introduction-to-scope-hoisting-in-webpack-8435084c171f）在webpack博客上。
 
-Since webpack 4, it applies scope hoisting in production mode by default. It hoists all modules to a single scope instead of writing a separate closure for each. Doing this slows down the build but gives you bundles that are faster to execute. [Read more about scope hoisting](https://medium.com/webpack/brief-introduction-to-scope-hoisting-in-webpack-8435084c171f) at the webpack blog.
-
-T>  Pass `--display-optimization-bailout` flag to webpack to gain debugging information related to hoisting results.
+>  将 `--display-optimization-bailout` 标志传递给webpack，以获取与提升结果相关的调试信息。
 
 ### Pre-evaluation
 
-[prepack-webpack-plugin](https://www.npmjs.com/package/prepack-webpack-plugin) uses [Prepack](https://prepack.io/), a partial JavaScript evaluator. It rewrites computations that can be done compile-time and therefore speeds up code execution. See also [val-loader](https://www.npmjs.com/package/val-loader) and [babel-plugin-preval](https://www.npmjs.com/package/babel-plugin-preval) for alternative solutions.
+[prepack-webpack-plugin](https://www.npmjs.com/package/prepack-webpack-plugin) 使用了 [Prepack](https://prepack.io/)，它是一个部分JavaScript计算器。它重写了可以在编译时完成的计算，从而加快了代码执行速度。另请参阅[val-loader](https://www.npmjs.com/package/val-loader) 和 [babel-plugin-preval](https://www.npmjs.com/package/babel-plugin-preval )替代解决方案。
 
-### Improving Parsing
+### 改进parseing
 
-[optimize-js-plugin](https://www.npmjs.com/package/optimize-js-plugin) complements the other solutions by wrapping eager functions, and it enhances the way your JavaScript code gets parsed initially. The plugin relies on [optimize-js](https://github.com/nolanlawson/optimize-js) by Nolan Lawson.
+[optimize-js-plugin](https://www.npmjs.com/package/optimize-js-plugin)通过包装eager函数来补充其他解决方案，并且它增强了最初解析JavaScript代码的方式。该插件依赖于Nolan Lawson的[optimize-js](https://github.com/nolanlawson/optimize-js)。
 
-## Minifying HTML
+## 压缩 HTML
 
-If you consume HTML templates through your code using [html-loader](https://www.npmjs.com/package/html-loader), you can preprocess it through [posthtml](https://www.npmjs.com/package/posthtml) with [posthtml-loader](https://www.npmjs.com/package/posthtml-loader). You can use [posthtml-minifier](https://www.npmjs.com/package/posthtml-minifier) to minify your HTML through it.
+如果你使用[html-loader](https://www.npmjs.com/package/html-loader)来处理项目中使用的HTML模板，则可以通过[posthtml](https://www.npmjs.com/package/posthtml)与[posthtml-loader](https://www.npmjs.com/package/posthtml-loader)对其进行预处理。你可以使用[posthtml-minifier](https://www.npmjs.com/package/posthtml-minifier)通过它缩小HTML。
 
-## Minifying CSS
+## 压缩 CSS
 
-[clean-css-loader](https://www.npmjs.com/package/clean-css-loader) allows you to use a popular CSS minifier [clean-css](https://www.npmjs.com/package/clean-css).
+[clean-css-loader](https://www.npmjs.com/package/clean-css-loader) 允许你使用流行的CSS压缩工具 [clean-css](https://www.npmjs.com/package/clean-css)。
 
-[optimize-css-assets-webpack-plugin](https://www.npmjs.com/package/optimize-css-assets-webpack-plugin) is a plugin based option that applies a chosen minifier on CSS assets. Using `MiniCssExtractPlugin` can lead to duplicated CSS given it only merges text chunks. `OptimizeCSSAssetsPlugin` avoids this problem by operating on the generated result and thus can lead to a better result.
+[optimize-css-assets-webpack-plugin](https://www.npmjs.com/package/optimize-css-assets-webpack-plugin) 是一个基于插件的方案，它将用minifier来处理CSS静态资源。使用 `MiniCssExtractPlugin` 会导致结果包含重复的CSS，因为它只是合并文本块。 `OptimizeCSSAssetsPlugin` 通过对生成的结果进一步的处理来避免这个问题，从而可以产生更好的结果。
 
-### Setting Up CSS Minification
+### 配置 CSS 压缩
 
-Out of the available solutions, `OptimizeCSSAssetsPlugin` composes the best. To attach it to the setup, install it and [cssnano](http://cssnano.co/) first:
+在可用的解决方案中，`OptimizeCSSAssetsPlugin` 是最佳的选择。要使用它，首先安装 [cssnano](http://cssnano.co/) 依赖：
 
 ```bash
 npm install optimize-css-assets-webpack-plugin cssnano --save-dev
 ```
 
-{pagebreak}
-
-Like for JavaScript, you can wrap the idea in a configuration part:
-
-**webpack.parts.js**
+然后，在 `webpack.parts.js` 中定义下面这样一个函数：
 
 ```javascript
 const OptimizeCSSAssetsPlugin = require(
@@ -123,13 +111,9 @@ exports.minifyCSS = ({ options }) => ({
 });
 ```
 
-W> If you use `--json` output with webpack as discussed in the *Build Analysis* chapter, you should set `canPrint: false` for the plugin.
+> 如果你向webpack传入`--json` 参数，它在 `构建分析` 这章中有详细的介绍。你应该为插件设置 `canPrint：false`。
 
-{pagebreak}
-
-Then, connect with the main configuration:
-
-**webpack.config.js**
+然后，在 `webpack.config.js` 中引入上面定义的函数：
 
 ```javascript
 const productionConfig = merge([
@@ -149,7 +133,7 @@ const productionConfig = merge([
 ]);
 ```
 
-If you build the project now (`npm run build`), you should notice that CSS has become smaller as it's missing comments:
+运行 `npm run build` 脚本命令，然后查看输出，你应该注意到CSS已经变小了，因为它缺少了注释：
 
 ```bash
 Hash: f51ecf99e0da4db99834
@@ -167,20 +151,22 @@ vendors~main.css   1.32 KiB       1  [emitted]  vendors~main
 ...
 ```
 
-T> [compression-webpack-plugin](https://www.npmjs.com/package/compression-webpack-plugin) allows you to push the problem of generating compressed files to webpack to potentially save processing time on the server.
+> [compression-webpack-plugin](https://www.npmjs.com/package/compression-webpack-plugin) 允许你将生成压缩文件的问题推送到webpack，从而可能节省在服务器上的处理时间。
 
-## Minifying Images
+## 压缩 Images
 
-Image size can be reduced by using [img-loader](https://www.npmjs.com/package/img-loader), [imagemin-webpack](https://www.npmjs.com/package/imagemin-webpack), and [imagemin-webpack-plugin](https://www.npmjs.com/package/imagemin-webpack-plugin). The packages use image optimizers underneath.
+图片的大小的压缩，你可以使用 [img-loader](https://www.npmjs.com/package/img-loader)，[imagemin-webpack](https://www.npmjs.com/package/imagemin-webpack)，和 [imagemin-webpack-plugin](https://www.npmjs.com/package/imagemin-webpack-plugin)。这些包使用底层的图片优化工具。
 
-It can be a good idea to use *cache-loader* and *thread-loader* with these as discussed in the *Performance* chapter given they can be substantial operations.
+使用 `cache-loader` 和 `thread-loader` 这些loader可能是一个好主意，正如 [`性能`](https://lvzhenbang.github.io/webpack-book/zh/optimizing/07_performance.html) 这章所述，因为它们做了一些实质性的操作。
 
-## Conclusion
+## 总结
 
-Minification is the most comfortable step you can take to make your build smaller. To recap:
+为了使你的构建更小，压缩是你可以采取的最最合适的操作。 
 
-* **Minification** process analyzes your source code and turns it into a smaller form with the same meaning if you use safe transformations. Specific unsafe transformations allow you to reach even smaller results while potentially breaking code that relies, for example, on exact parameter naming.
-* Webpack performs minification in production mode using UglifyJS by default. Other solutions, such as *babel-minify-webpack-plugin*, provide similar functionality with costs of their own.
-* Besides JavaScript, it's possible to minify other assets, such as CSS, HTML, and images, too. Minifying these requires specific technologies that have to be applied through loaders and plugins of their own.
+内容回顾：
 
-You'll learn to apply tree shaking against code in the next chapter.
+* 如果使用安全转换，`压缩`过程会分析你的源代码，并将其转换为具有相同含义的较小形式。特定的不安全转换允许你达到更小的结果，同时可能破坏依赖于精确参数命名的代码。
+* Webpack默认使用UglifyJS在生产模式下执行压缩。其他解决方案，例如`babel-minify-webpack-plugin`，提供与其自身成本相似的功能。
+* 除了JavaScript之外，还可以压缩其他静态资源，例如CSS，HTML和图像。压缩它们需要特定的技术支持，这些技术必须通过自己的loader和插件来使用。
+
+在下一章中，将详细的介绍如何对构建结果执行tree-shaking。
