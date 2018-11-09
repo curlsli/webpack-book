@@ -1,28 +1,28 @@
 # 在文件名中添加hash
 
-Even though the generated build works the file names it uses is problematic. It doesn't allow to leverage client level cache efficiently as there's no way tell whether or not a file has changed. Cache invalidation can be achieved by including a hash to the filenames.
+虽然构建可以工作，但是它生成的文件名也是有问题的。它不允许有效利用客户端级别的缓存，因为无法判断文件是否已更改。可以通过在文件名中包含哈希来实现缓存失效。
 
-## Placeholders
+## 占位符
 
-Webpack provides **placeholders** for this purpose. These strings are used to attach specific information to webpack output. The most valuable ones are:
+Webpack为此提供`占位符`。这些字符串用于将特定信息附加到webpack输出。可选的值如下：
 
-* `[id]` - Returns the chunk id.
-* `[path]` - Returns the file path.
-* `[name]` - Returns the file name.
-* `[ext]` - Returns the extension. `[ext]` works for most available fields. `MiniCssExtractPlugin` is a notable exception to this rule.
-* `[hash]` - Returns the build hash. If any portion of the build changes, this changes as well.
-* `[chunkhash]` - Returns an entry chunk-specific hash. Each `entry` defined in the configuration receives a hash of its own. If any portion of the entry changes, the hash will change as well. `[chunkhash]` is more granular than `[hash]` by definition.
-* `[contenthash]` - Returns a hash generated based on content.
+* `[id]` - 返回模块id。
+* `[path]` - 返回文件路径。
+* `[name]` - 返回文件名。
+* `[ext]` - 返回扩展名。 `[ext]` 是非常有用的字段。 `MiniCssExtractPlugin` 也使用这个字段。
+* `[hash]` - 返回构建生成的hash。如果构建的任何部分发生变化，这也会发生变化。
+* `[chunkhash]` - 返回入口指定模块的hash。每个 `entry` 在配置中定义的接收自己的哈希。 如果`entry`的任何部分发生变化，则哈希值也会变化。根据定义，`[chunkhash]`比`[hash]`更精细。
+* `[contenthash]` - 返回基于内容生成的哈希。
 
-It's preferable to use particularly `hash` and `chunkhash` only for production purposes as hashing doesn't do much good during development.
+`hash` 和 `chunkhash` 通常仅用于生产目的，因为hash在开发过程中没有太大作用。
 
-T> It's possible to slice `hash` and `chunkhash` using specific syntax: `[chunkhash:4]`. Instead of a hash like `8c4cbfdb91ff93f3f3c5` this would yield `8c4c`.
+> 可以使用特定语法对 `hash` 和 `chunkhash` 进行切片：`[chunkhash：4]`。而不是像`8c4cbfdb91ff93f3f3c5` 这样的切片生成 `8c4c`。
 
-T> There are more options available, and you can even modify the hashing and digest type as discussed at [loader-utils](https://www.npmjs.com/package/loader-utils#interpolatename) documentation.
+> 有更多可用选项，你甚至可以修改hash和摘要类型，如[loader-utils](https://www.npmjs.com/package/loader-utils#interpolatename)文档中所述。
 
-### Example Placeholders
+### 占位符demo
 
-Assume you have the following configuration:
+你可以像下面这样修改配置代码：
 
 ```javascript
 {
@@ -33,22 +33,20 @@ Assume you have the following configuration:
 },
 ```
 
-Webpack would generate filenames like these based on it:
+webpack将生成如下的文件名：
 
 ```bash
 main.d587bbd6e38337f5accd.js
 vendor.dc746a5db4ed650296e1.js
 ```
 
-If the file contents related to a chunk are different, the hash changes as well, thus the cache gets invalidated. More accurately, the browser sends a new request for the new file. If only `main` bundle gets updated, only that file needs to be requested again.
+如果与模块相关的文件内容不同，则hash也会改变，因此缓存变得无效。更准确地说，浏览器发送新文件的新请求。如果只更新 `main` 包，则只需要再次请求该文件。
 
-The same result can be achieved by generating static filenames and invalidating the cache through a querystring (i.e., `main.js?d587bbd6e38337f5accd`). The part behind the question mark invalidates the cache. According to [Steve Souders](http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/), attaching the hash to the filename is the most performant option.
+通过生成静态文件名和查询字符串（例如：`main.js?d587bbd6e38337f5accd`）使缓存无效，可以实现相同的结果。问号背后的部分使缓存无效。根据[Steve Souders](http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/)，将哈希值附加到文件名是最高性能的选项。
 
-{pagebreak}
+## 配置 Hashing
 
-## Setting Up Hashing
-
-The build needs tweaking to generate proper hashes. Images and fonts should receive `hash` while chunks should use `chunkhash` in their names to invalidate them correctly:
+构建需要调整以生成合适的哈希。图片和字体应该接收 `hash`，而块应该在模块名中使用 `chunkhash` 来正确地使它们无效：
 
 **webpack.config.js**
 
@@ -72,13 +70,11 @@ const productionConfig = merge([
 ]);
 ```
 
-W> `[hash]` is defined differently for *file-loader* than for the rest of webpack. It's calculated based on file **content**. See [file-loader documentation](https://www.npmjs.com/package/file-loader#placeholders) for further information.
+> 通过 `file-loader` 定义 `[hash]` 与webpack的其它部分不同。它是根据文件内容计算的。 详细信息可参考 [file-loader](https://www.npmjs.com/package/file-loader#placeholders) 文档。
 
-If you used `chunkhash` for the extracted CSS as well, this would lead to problems as the code points to the CSS through JavaScript bringing it to the same entry. That means if the application code or CSS changed, it would invalidate both.
+如果你对提取的CSS也使用 `chunkhash` 这会导致问题，因为代码通过JavaScript将CSS指向同一个`entry`。这意味着如果应用程序代码或CSS发生了变化，它将使两者无效。
 
-{pagebreak}
-
-Therefore, instead of `chunkhash`, you can use `contenthash` that is generated based on the extracted content:
+因此，你可以使用基于提取的内容而生成的 `contenthash` 而不是 `chunkhash`：
 
 **webpack.parts.js**
 
@@ -94,9 +90,9 @@ exports.extractCSS = ({ include, exclude, use }) => {
 };
 ```
 
-W> The hashes have been sliced to make the output fit better in the book. In practice, you can skip slicing them.
+> hash的切片使得输出更适合。在实践中，你可以跳过切片。
 
-If you generate a build now (`npm run build`), you should see something:
+运行 `npm run build` 脚本命令，你将看到下面的输出内容：
 
 ```bash
 Hash: fb67c5fd35454da1d6ff
@@ -117,18 +113,18 @@ Entrypoint main = vendors~main.d2f1.js ...
 ...
 ```
 
-The files have neat hashes now. To prove that it works for styling, you could try altering *src/main.css* and see what happens to the hashes when you rebuild.
+文件现在有统一的哈希。为了使它适用于样式，你可以尝试改变 `src/main.css` 并查看重新构建时哈希会发生什么变化。
 
-There's one problem, though. If you change the application code, it invalidates the vendor file as well! Solving this requires extracting a **manifest**, but before that, you can improve the way the production build handles module IDs.
+但是有一个问题，如果更改应用程序代码，它也会使 `vendor` 文件无效！解决这个问题需要提取 `manifest`，但在此之前，你可以改进生产构建处理模块ID的方式。
 
-## Conclusion
+## 总结
 
-Including hashes related to the file contents to their names allows to invalidate them on the client side. If a hash has changed, the client is forced to download the asset again.
+将与文件内容相关的哈希包括在其文件名中，这允许在客户端使它们无效。如果哈希值已更改，则会强制客户端再次下载该静态资源。
 
-To recap:
+内容回顾：
 
-* Webpack's **placeholders** allow you to shape filenames and enable you to include hashes to them.
-* The most valuable placeholders are `[name]`, `[chunkhash]`, and `[ext]`. A chunk hash is derived based on the entry in which the asset belongs.
-* If you are using `MiniCssExtractPlugin`, you should use `[contenthash]`. This way the generated assets get invalidated only if their content changes.
+* Webpack 的 `占位符` 允许你定义文件名，并在它们中注入hash。
+* 最常用的占位符是 `[name]`、`[chunkhash]` 和 `[ext]`。基于静态资源所属的 `entry` 生成块hash。
+* 如果你正在使用 `MiniCssExtractPlugin`，你应该使用 `[contenthash]` 。这样只有在内容发生更改时，生成的静态文件才会失效。
 
-Even though the project generates hashes now, the output isn't flawless. The problem is that if the application changes, it invalidates the vendor bundle as well. The next chapter digs deeper into the topic and shows you how to extract a **manifest** to resolve the issue.
+即使现在项目产生hash，输出也不完美。问题是如果应用程序发生更改，它也会使 `vendor` 包无效。下一章[分离的manifest](https://lvzhenbang.github.io/webpack-book/zh/optimizing/05_separating_manifest.html)将深入探讨该主题，并向你展示如何提取 `manifest` 以解决问题。
