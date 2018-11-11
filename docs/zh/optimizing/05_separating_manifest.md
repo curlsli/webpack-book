@@ -1,12 +1,12 @@
-# Separating a Manifest
+# 分离的 manifest
 
-When webpack writes bundles, it maintains a **manifest** as well. You can find it in the generated *vendor* bundle in this project. The manifest describes what files webpack should load. It's possible to extract it and start loading the files of the project faster instead of having to wait for the *vendor* bundle to be loaded.
+当webpack写入bundle时，它也会维护 `manifest`。你可以在此项目中找到生成的 `vendor` 包。webpack应加载的 `manifest` 中的文件。可以更快地提取并开始加载文件，而不必等待加载 `vendor ` 包。
 
-If the hashes webpack generates change, then the manifest changes as well. As a result, the contents of the vendor bundle change, and become invalidated. The problem can be eliminated by extracting the manifest to a file of its own or by writing it inline to the *index.html* of the project.
+如何webpack生成的hash改变，`mnifest` 也将改变。因此，`vendor` 包的内容也将改变，并变得无效。可以通过将其提取到自己的文件中，或通过将其内联写入项目的 `index.html` 来解决该问题。
 
-## Extracting a Manifest
+## 提取Manifest
 
-Most of the work was done already when `extractBundles` was set up in the *Bundle Splitting* chapter. To extract the manifest, define `optimization.runtimeChunk` as follows:
+当 `extractBundles` 选项被添加，webpack就做了许多的工作，这些工作在 [`构建拆分`](https://lvzhenbang.github.io/webpack-book/zh/building/02_bundle_splitting.html) 这章做了详细的介绍。为了提取mnifest，可以像下面这样配置 `optimization.runtimeChunk` ：
 
 **webpack.config.js**
 
@@ -27,9 +27,9 @@ const productionConfig = merge([
 ]);
 ```
 
-The name `manifest` is used by convention. You can use any other name, and it will still work.
+模块的名字通常用 `manifest` 。当然，你也可以自定义名字。
 
-If you build the project now (`npm run build`), you should see something:
+运行 `npm run build` 脚本命令，你将看到下面的输出：
 
 ```bash
 Hash: 2e1c61341de0fd7e0e5c
@@ -52,26 +52,26 @@ vendors~main.3af5.js.map    235 KiB       2  [emitted]  vendors~main
 ...
 ```
 
-This change gave a separate file that contains the manifest. In the output above it has been marked with `manifest` chunk name. Because the setup is using `HtmlWebpackPlugin`, there is no need to worry about loading the manifest ourselves as the plugin adds a reference to *index.html*.
+这样的改变，给你了一个分离的 `manifest` 文件，模块的名字是 `manifest` 。因为使用了 `HtmlWebpackPlugin` ，没有必要担心加载 `manifest` ，插件会添加 `manifest` 的引用到 `index.html` 。
 
-Plugins, such as [inline-manifest-webpack-plugin](https://www.npmjs.com/package/inline-manifest-webpack-plugin) and [html-webpack-inline-chunk-plugin](https://www.npmjs.com/package/html-webpack-inline-chunk-plugin), [assets-webpack-plugin](https://www.npmjs.com/package/assets-webpack-plugin), work with `HtmlWebpackPlugin` and allow you to write the manifest within *index.html* to avoid a request.
+如：[inline-manifest-webpack-plugin](https://www.npmjs.com/package/inline-manifest-webpack-plugin) 和 [html-webpack-inline-chunk-plugin](https://www.npmjs.com/package/html-webpack-inline-chunk-plugin) 。 [assets-webpack-plugin](https://www.npmjs.com/package/assets-webpack-plugin) 和 `HtmlWebpackPlugin` 一起使用，允许你将 `manifest` 写入 `index.html` ，来减少一次请求。
 
-Try adjusting *src/index.js* and see how the hashes change. This time around it should **not** invalidate the vendor bundle, and only the manifest and app bundle names should become different.
+尝试改变 `src/index.js` ，然后看看hash如何改变。`vendor` 包将变得无效，`manifest` 和 `app` 包的名字将随之改变。
 
-T> To get a better idea of the manifest contents, run the build in development mode or pass `none` to mode through configuration. You should see something familiar there.
+> 要更好地了解 `manifest` 内容，请在开发模式下运行构建，或通过配置将 `none` 传递给模式。你应该看到相似的东西。
 
-T> To integrate with asset pipelines, you can consider using plugins like [chunk-manifest-webpack-plugin](https://www.npmjs.com/package/chunk-manifest-webpack-plugin), [webpack-manifest-plugin](https://www.npmjs.com/package/webpack-manifest-plugin), [webpack-assets-manifest](https://www.npmjs.com/package/webpack-assets-manifest), or [webpack-rails-manifest-plugin](https://www.npmjs.com/package/webpack-rails-manifest-plugin). These solutions emit JSON that maps the original asset path to the new one.
 
-T> The build can be improved further by loading popular dependencies, such as React, through a CDN. That would decrease the size of the vendor bundle even further while adding an external dependency on the project. The idea is that if the user has hit the CDN earlier, caching can kick in like here.
+> 为了使用asset管道，你可以使用 [chunk-manifest-webpack-plugin](https://www.npmjs.com/package/chunk-manifest-webpack-plugin)， [webpack-manifest-plugin](https://www.npmjs.com/package/webpack-manifest-plugin)， [webpack-assets-manifest](https://www.npmjs.com/package/webpack-assets-manifest)，或 [webpack-rails-manifest-plugin](https://www.npmjs.com/package/webpack-rails-manifest-plugin) 插件。这些解决方案使用JSON形式的将原始静态资源路径映射到新静态资源路径。
 
-## Using Records
+> 通过CDN加载流行的依赖项（如React）可以进一步改进构建。这将进一步减少 `vendor` 包的大小，同时增加对项目的外部依赖性。 它的想法是如果用户较早的触发CDN，缓存可以像这里一样启动。
 
-As mentioned in the *Bundle Splitting* chapter, plugins such as `AggressiveSplittingPlugin` use **records** to implement caching. The approaches discussed above are still valid, but records go one step further.
+## 使用Records
 
-Records are used for storing module IDs across separate builds. The problem is that you need to save this file. If you build locally, one option is to include it in your version control.
+正如构建查分章节中介绍的那样， `AggressiveSplittingPlugin` 插件可以使用 `records` 实现缓存。这些方法仍然有效，但 `record` 更进了一步。
 
-To generate a *records.json* file, adjust the configuration as follows:
+ `record` 记录构建分离生成的模块ID。问题是你需要保存此文件。如果你在本地构建，则可以选择将其包含在版本控制中。
 
+像下面这样调整配置，会生成一个 `records.json` 文件：
 **webpack.config.js**
 
 ```javascript
@@ -84,25 +84,23 @@ const productionConfig = merge([
 ]);
 ```
 
-If you build the project (`npm run build`), you should see a new file, *records.json*, at the project root. The next time webpack builds, it picks up the information and rewrites the file if it has changed.
+运行`npm run build` 脚本命令，你将在项目的根目录下看到一个 `records.json` 文件。如果下一次构建中有模块的改变，webpack将重写 `records.json` 文件。
 
-Records are particularly valuable if you have a complicated setup with code splitting and want to make sure the split parts gain correct caching behavior. The biggest problem is maintaining the record file.
+如果你遇到拆分问题，并希望确保拆分部分获得正确的缓存行为，那么 `record` 会特别有用。最大的问题是维护 `record` 文件。
 
-T> `recordsInputPath` and `recordsOutputPath` give more granular control over input and output, but often setting only `recordsPath` is enough.
+> `recordsInputPath` 和 `recordsOutputPath` 对输入和输出进行更精细的控制，但通常只设置 `recordsPath` 就足够了。
 
-W> If you change the way webpack handles module IDs (i.e., remove `HashedModuleIdsPlugin`), possible existing records are still taken into account! If you want to use the new module ID scheme, you have to delete your records file as well.
+> 如果更改Web模块处理模块ID的方式（即删除`HashedModuleIdsPlugin`），仍需考虑可能的`record`！如果要使用新模块ID方案，那么必须删除 `record.json` 文件。
 
-{pagebreak}
+## 总结
 
-## Conclusion
+The project has basic caching behavior now. If you try to modify `index.js` or `component.js`, the vendor bundle should remain the same.
 
-The project has basic caching behavior now. If you try to modify *index.js* or *component.js*, the vendor bundle should remain the same.
+内容回顾：
 
-To recap:
+* Webpack 通过维护 `manifest` ，来控制应用程序加载所需要的信息。
+* 如果 `manifest` , 那么它所包含的包将失效。
+* 有些插件允许你将 `mainfest` 注入到 `index.html` 中。也可以提取模块信息到一个JSON文件中。JSON文件这种方式在SSR中很方便。
+* `Records` 记录构建生成的模块ID。缺点是，你必须跟踪 `record.json` 文件。
 
-* Webpack maintains a **manifest** containing information needed to run the application.
-* If the manifest changes, the change invalidates the containing bundle.
-* Certain plugins allow you to write the manifest to the generated *index.html*. It's also possible to extract the information to a JSON file. The JSON comes in handy with *Server Side Rendering*.
-* **Records** allow you to store module IDs across builds. As a downside, you have to track the records file.
-
-You'll learn to analyze the build in the next chapter as it's essential for understanding and improving your build.
+在下一章中，你将学习如何分析构建，因为它对于理解和改进构建至关重要。
