@@ -1,10 +1,10 @@
-# Build Analysis
+# 构建分析
 
-Analyzing build statistics is a good step towards understanding webpack better. Visualizing webpack output helps you to understand the composition of your bundles.
+分析构建统计信息是更好地理解webpack的一个重要步骤。可视化webpack输出，将帮助你了解构建包的组成。
 
-## Configuring Webpack
+## 配置Webpack
 
-To get suitable output, you need to do a couple of tweaks to the configuration. At a minimum, you should set the `--json` flag and pipe the output to a file as follows:
+要获得合适的输出，你需要对配置进行一些调整。至少应该设置 `--json` 标志并将输出传递给文件，如下所示：
 
 **package.json**
 
@@ -15,20 +15,20 @@ To get suitable output, you need to do a couple of tweaks to the configuration. 
 },
 ```
 
-The above is the basic setup you need, regardless of your webpack configuration. Execute `npm run build:stats` now. After a while you should find *stats.json* at your project root. This file can be pushed through a variety of tools to understand better what's going on.
+以上是你需要的基本设置，无论你的webpack配置如何。现在执行 `npm run build：stats` 脚本命令，等待一段时间，你应该在你的项目根目录找到 `stats.json` 。可以通过各种工具读取此文件，以便更好地了解构建发生的事情。
 
-You can also consider using the following flags:
+当然，你可以考虑使用以下参数：
 
-* `--profile` to capture timing-related information. The setting is optional but good to set.
-* `--progress` to show how long webpack spent in different stages of the build.
+* `--profile` 捕获与时间相关的信息。该参数是可选的，但它是好用的。
+* `--progress` 显示webpack在构建的不同阶段花了多长时间。
 
-T> To understand why webpack includes a specific module to the build while processing, use [whybundled](https://www.npmjs.com/package/whybundled) or [webpack-why](https://www.npmjs.com/package/webpack-why). `--display-reasons` flag gives more information as well. Example: `npm run build -- --display-reasons`.
+> 要理解webpack在处理时为什么包含用于构建的特定模块。可使用 [whybundled](https://www.npmjs.com/package/whybundled) 或 [webpack-why](https://www.npmjs.com/package/webpack-why) 插件。 `--display-reasons` 参数可以提供更多的信息。如：`npm run build -- --display-reasons` 。
 
-W> Given you piggyback on the production target in the current setup; this process cleans the build directory! If you want to avoid that, set up a separate destination where you don't clean.
+> 鉴于你在当前配置中使用生产模式，这个过程需要清理构建目录！如果要避免这种情况，请设置一个不清理的单独目标。
 
 ### Node API
 
-Stats can be captured through Node. Since stats can contain errors, so it's a good idea to handle that case separately:
+可以通过Node捕获统计信息。由于统计信息可能包含错误，因此分开处理该情况是个好主意：
 
 ```javascript
 const webpack = require("webpack");
@@ -47,25 +47,23 @@ webpack(config, (err, stats) => {
 });
 ```
 
-This technique can be valuable if you want to do further processing on stats although often the other solutions are enough.
+如果你正在寻找有关统计数据的进一步处理，此技术可能很有用。
 
-T> If you want JSON output from `stats`, use `stats.toJson()`. To get *verbose* output, use `stats.toJson("verbose")`. It follows all stat options webpack supports.
+> 如果你想要一个 `stats` 的JSON输出，使用 `stats.toJson()` 。为了获得 `verbose` 输出，可使用 `stats.toJson("verbose")`。它遵循webpack支持的所有 `stat` 选项。
 
-T> To mimic the `--json` flag, use `console.log(JSON.stringify(stats.toJson(), null, 2));`. The output is formatted to be readable.
+> 为了模仿 `--json` 参数，使用 `console.log(JSON.stringify(stats.toJson(), null, 2));`。输出的格式是可读的。
 
-### `StatsWebpackPlugin` and `WebpackStatsPlugin`
+### `StatsWebpackPlugin` 和 `WebpackStatsPlugin`
 
-If you want to manage stats through a plugin, check out [stats-webpack-plugin](https://www.npmjs.com/package/stats-webpack-plugin). It gives you a bit more control over the output. You can use it to exclude specific dependencies from the output.
+如果你想要使用一个插件来管理状态输出，可考虑 [stats-webpack-plugin](https://www.npmjs.com/package/stats-webpack-plugin) 。它使你可以更多地控制输出。你可以使用它从输出中排除特定的依赖项。
 
-[webpack-stats-plugin](https://www.npmjs.com/package/webpack-stats-plugin) is another option. It allows you to transform the data before outputting it.
+[webpack-stats-plugin](https://www.npmjs.com/package/webpack-stats-plugin) 是其他一个选择。它允许你在输出数据之前转换数据。
 
-## Enabling a Performance Budget
+## 启用webpack的性能预算策略
 
-Webpack allows you to define a **performance budget**. The idea is that it gives your build size constraint which it has to follow. The feature is disabled by default and the calculation includes extracted chunks to entry calculation. If a budget isn't met and it has been configured to emit an error, it would terminate the entire build.
+Webpack 允许你定义一个 **performance budget**。这个想法是它给出了你必须遵循的构建大小约束。默认情况下会提取该功能，并包含用于输入计算的块。如果它有问题，它将终止整个构建。
 
-{pagebreak}
-
-To integrate the feature into the project, adjust the configuration:
+要将该功能集成到项目中，可参考如下配置：
 
 **webpack.config.js**
 
@@ -82,7 +80,7 @@ const productionConfig = merge([
 ]);
 ```
 
-In practice, you want to maintain lower limits. The current ones are enough for this demonstration. If you build now (`npm run build`), you should see a warning:
+在实践中，你希望保持下限。目前这些足以进行此演示。如果运行 `npm run build` 脚本命令，你将看到一个警告输出：
 
 ```bash
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (48.8 KiB). This can impact web performance.
@@ -96,63 +94,57 @@ Entrypoints:
       main.d5d711b1.css
 ```
 
-You can increase the limit or remove the configuration to get rid of the warning. An attractive option would be to replace React with a lighter alternative as discussed in the *Consuming Packages* chapter.
+你可以增加限制或删除配置以消除警告。一个有吸引力的选择是用 [*使用包*](https://lvzhenbang.github.io/webpack-book/zh/techniques/06_consuming.html) 章节中讨论的使用轻量级的React。
 
-{pagebreak}
+## 可用的分析工具
 
-## Available Analysis Tools
+即使查看文件本身也可以让你了解正在发生的事情。请参考以下内容。
 
-Even though having a look at the file itself gives you an idea of what's going on, often it's preferable to use a particular tool for that. Consider the following.
+### 官方分析工具
 
-### The Official Analyse Tool
+![官方分析工具](../../images/analyse.png)
 
-![The Official Analyse Tool](images/analyse.png)
+[官方分析工具](https://github.com/webpack/analyse) 为你提供建议，并了解应用程序的依赖关系图。它也可以在本地运行。
 
-[The official analyse tool](https://github.com/webpack/analyse) gives you recommendations and a good idea of your application's dependency graph. It can be run locally as well.
+### Webpack可视化工具
 
-{pagebreak}
+![Webpack可视化工具](../../images/webpack-visualizer.png)
 
-### Webpack Visualizer
-
-![Webpack Visualizer](images/webpack-visualizer.png)
-
-[Webpack Visualizer](https://chrisbateman.github.io/webpack-visualizer/) provides a pie chart showing your bundle composition allowing to understand which dependencies contribute to the size of the overall result.
+[Webpack可视化工具](https://chrisbateman.github.io/webpack-visualizer/) 提供一个饼图，显示构建输出的组成。
 
 ### `DuplicatePackageCheckerPlugin`
 
-[duplicate-package-checker-webpack-plugin](https://www.npmjs.com/package/duplicate-package-checker-webpack-plugin) warns you if it finds single package multiple times in your build. This situation can be hard to spot otherwise.
+如果在你的构建中多次找到单个包，[duplicate-package-checker-webpack-plugin](https://www.npmjs.com/package/duplicate-package-checker-webpack-plugin) 会发出警告。否则这种情况很难发现。
 
-### Webpack Chart
+### Webpack图表
 
-![Webpack Chart](images/webpack-chart.png)
+![Webpack图表](../../images/webpack-chart.png)
 
-[Webpack Chart](https://alexkuz.github.io/webpack-chart/) is another similar visualization.
+[Webpack图表](https://alexkuz.github.io/webpack-chart/) 另一个类似的可视化工具。
 
 ### webpack-unused
 
-[webpack-unused](https://www.npmjs.com/package/webpack-unused) prints out unused files and can be used to understand which assets are no longer used and can be removed from the project.
+[webpack-unused](https://www.npmjs.com/package/webpack-unused) 打印出未使用的文件，这些文件不再使用，可以从项目中删除。
 
 ### Stellar Webpack
 
-![Stellar Webpack](images/stellar-webpack.jpg)
+![Stellar Webpack](../../images/stellar-webpack.jpg)
 
-[Stellar Webpack](https://alexkuz.github.io/stellar-webpack/) gives a universe based visualization and allows you to examine your application in a 3D form.
+[Stellar Webpack](https://alexkuz.github.io/stellar-webpack/) 提供基于Universe的可视化，并允许你以3D形式检查应用程序。
 
 ### webpack-bundle-tracker
 
-[webpack-bundle-tracker](https://www.npmjs.com/package/webpack-bundle-tracker) can capture data while webpack is compiling. It uses JSON for this purpose.
+[webpack-bundle-tracker](https://www.npmjs.com/package/webpack-bundle-tracker) 可以在webpack编译时捕获数据。它使用JSON来实现此目的。
 
 ### webpack-bundle-analyzer
 
-![webpack-bundle-analyzer](images/webpack-bundle-analyzer.jpg)
+![webpack-bundle-analyzer](../../images/webpack-bundle-analyzer.jpg)
 
-[webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) provides a zoomable treemap.
-
-{pagebreak}
+[webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) 提供可缩放的树图。
 
 ### webpack-bundle-size-analyzer
 
-[webpack-bundle-size-analyzer](https://www.npmjs.com/package/webpack-bundle-size-analyzer) gives a text based composition.
+[webpack-bundle-size-analyzer](https://www.npmjs.com/package/webpack-bundle-size-analyzer) 提供了基于文本的组合。
 
 ```bash
 $ webpack-bundle-size-analyzer stats.json
@@ -167,7 +159,7 @@ css-loader: 1.47 KB (1.17%)
 
 ### inspectpack
 
-[inspectpack](https://www.npmjs.com/package/inspectpack) can be used for figuring out specific places of code to improve. The example below performs duplication analysis:
+[inspectpack](https://www.npmjs.com/package/inspectpack) 可用于确定要修改的特定代码位置。以下示例执行重复分析：
 
 ```bash
 $ inspectpack --action=duplicates --bundle=bundle.js
@@ -183,61 +175,55 @@ $ inspectpack --action=duplicates --bundle=bundle.js
     * Pct of Bundle Size:  15 %
 ```
 
-{pagebreak}
-
 ### Jarvis
 
-[Jarvis](https://www.npmjs.com/package/webpack-jarvis) is a user interface that has been designed to show all information relevant to your webpack build. For example, it shows the amount of treeshakeable modules in the project and how well your assets perform against different connection types.
+[Jarvis](https://www.npmjs.com/package/webpack-jarvis) 是一个用户界面，旨在显示与你的webpack构建相关的所有信息。例如，它显示了如何处理不同的连接类型。
 
 ### webpack-runtime-analyzer
 
-[webpack-runtime-analyzer](https://www.npmjs.com/package/webpack-runtime-analyzer) gives real-time analysis over webpack bundles. You can see bundle composition in multiple formats through the user interface, bundle sizes, and module details. It combines features of many tools above into a single one.
+[webpack-runtime-analyzer](https://www.npmjs.com/package/webpack-runtime-analyzer) 提供webpack包的实时分析。你可以通过用户界面，包大小和模块详细信息查看多个图层。它将许多工具的功能组合到一个工具中。
 
 ### Webpack Monitor
 
-[Webpack Monitor](http://webpackmonitor.com/) is another similar tool with an emphasis on a clear user interface. It's able to provide recommendations on what to improve the build.
+[Webpack Monitor](http://webpackmonitor.com/) 是一个专注于清晰的用户界面的工具。可以就如何改进构建提出建议。
 
 ### webpack-deps-tree
 
-[webpack-deps-tree](https://restrry.github.io/webpack-deps-tree/static/) displays webpack module graph. Using it you can understand how modules of your bundles are related to each other.
-
-{pagebreak}
+[webpack-deps-tree](https://restrry.github.io/webpack-deps-tree/static/) 显示webpack模块图。使用它，你可以了解构建包的模块是如何相互关联的。
 
 ## Duplication Analysis
 
-In addition to inspectpack, there are other tools for figuring out duplicates:
+除了检查包之外，还有其他工具可用于计算重复项：
 
-* [bundle-duplicates-plugin](https://www.npmjs.com/package/bundle-duplicates-plugin) operates on a function level.
-* [find-duplicate-dependencies](https://www.npmjs.com/package/find-duplicate-dependencies) achieves the same on an npm package level.
-* [depcheck](https://www.npmjs.com/package/depcheck) goes further and warns if there are redundant dependencies or dependencies missing from the project.
-* [bundle-buddy](https://www.npmjs.com/package/bundle-buddy) can find duplicates across bundles while providing a user interface to tune webpack code splitting behavior. [bundle-buddy-webpack-plugin](https://www.npmjs.com/package/bundle-buddy-webpack-plugin) makes it simpler to use.
+* [bundle-duplicates-plugin](https://www.npmjs.com/package/bundle-duplicates-plugin) 在函数级别上的使用。
+* [find-duplicate-dependencies](https://www.npmjs.com/package/find-duplicate-dependencies) 在npm包级别上实现相似功能。
+* 如果项目中缺少冗余依赖项或依赖项，[depcheck](https://www.npmjs.com/package/depcheck) 会进一步发出警告。
+* [bundle-buddy](https://www.npmjs.com/package/bundle-buddy) 可以在包中找到重复项，同时提供用户界面来调整webpack代码拆分行为。[bundle-buddy-webpack-plugin](https://www.npmjs.com/package/bundle-buddy-webpack-plugin) 使它更加容易于使用。
 
-## Independent Tools
+## 独立工具
 
-In addition to tools that work with webpack output, there are a couple that are webpack agnostic and worth a mention.
+除了使用webpack输出的工具之外，还有一些与webpack无关的工具值得一提。
 
 ### source-map-explorer
 
-[source-map-explorer](https://www.npmjs.com/package/source-map-explorer) is a tool independent of webpack. It allows you to get insight into your build by using source maps. It gives a treemap based visualization showing what code contributes to the result.
+[source-map-explorer](https://www.npmjs.com/package/source-map-explorer) 是一个独立于webpack的工具。它允许你使用映射深入了解你的构建。它提供了基于映射的可视化。
 
 ### madge
 
-![madge](images/madge.png)
+![madge](../../images/madge.png)
 
-[madge](https://www.npmjs.com/package/madge) is another independent tool that can output a graph based on module input. The graph output allows you to understand the dependencies of your project in greater detail.
+[madge](https://www.npmjs.com/package/madge) 是另一个独立的工具，可以输出基于模块输入的图形。图形输出允许你更详细地了解项目的依赖关系。
 
-{pagebreak}
+## 总结
 
-## Conclusion
+当你优化构建输出的大小时，这些工具是非常宝贵的。官方工具具有最多的功能，但即使是基本的可视化也可以揭示问题点。你可以使用与旧项目相关的技术来了解它们的组成。
 
-When you are optimizing the size of your bundle output, these tools are invaluable. The official tool has the most functionality, but even a rudimentary visualization can reveal problem spots. You can use the same technique with old projects to understand their composition.
+内容回顾：
 
-To recap:
+* Webpack允许你提取一个包含有关构建信息的JSON文件。数据可以包括构建组成和时间。
+* 可以使用各种工具分析生成的数据。例如：构建组合。
+* `**Performance budget**`允许你设置构建大小的限制。维持预算可以使开发人员注意到生成的构建包的大小。
+* 了解构建包是理解如何优化整体规模、加载内容和时间的关键。 因此，它可以揭示更重要的问题，例如：冗余数据。
+* 你可以使用不依赖于Webpack的第三方工具，它们对分析构建任然有价值。
 
-* Webpack allows you to extract a JSON file containing information about the build. The data can include the build composition and timing.
-* The generated data can be analyzed using various tools that give insight into aspects such as the bundle composition.
-* **Performance budget** allows you to set limits to the build size. Maintaining a budget can keep developers more conscious of the size of the generated bundles.
-* Understanding the bundles is the key to insights on how to optimize the overall size, what to load and when. It can also reveal more significant issues, such as redundant data.
-* You can find third-party tools that don't depend on webpack but are still valuable for analysis.
-
-You'll learn to tune webpack performance in the next chapter.
+在下一章中，将详细的介绍[webpack的性能](https://lvzhenbang.github.io/webpack-book/zh/optimizing/07_performance.html)。

@@ -2,7 +2,7 @@
 
 当webpack写入bundle时，它也会维护 `manifest`。你可以在此项目中找到生成的 `vendor` 包。webpack应加载的 `manifest` 中的文件。可以更快地提取并开始加载文件，而不必等待加载 `vendor ` 包。
 
-如何webpack生成的hash改变，`mnifest` 也将改变。因此，`vendor` 包的内容也将改变，并变得无效。可以通过将其提取到自己的文件中，或通过将其内联写入项目的 `index.html` 来解决该问题。
+如何webpack生成的hash改变，`manifest` 也将改变。因此，`vendor` 包的内容也将改变，并变得无效。可以通过将其提取到自己的文件中，或通过将其内联写入项目的 `index.html` 来解决该问题。
 
 ## 提取Manifest
 
