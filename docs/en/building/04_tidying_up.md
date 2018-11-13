@@ -16,8 +16,6 @@ Install the [clean-webpack-plugin](https://www.npmjs.com/package/clean-webpack-p
 npm install clean-webpack-plugin --save-dev
 ```
 
-{pagebreak}
-
 Next, you need to define a function to wrap the basic idea. You could use the plugin directly, but this feels like something that could be used across projects, so it makes sense to push it to the library:
 
 **webpack.parts.js**
@@ -55,8 +53,6 @@ leanpub-end-insert
 
 After this change, the `build` directory should remain nice and tidy while building. You can verify this by building the project and making sure no old files remained in the output directory.
 
-{pagebreak}
-
 ## Attaching a Revision to the Build
 
 Attaching information related to the current build revision to the build files themselves can be used for debugging. [webpack.BannerPlugin](https://webpack.js.org/plugins/banner-plugin/) allows you to achieve this. It can be used in combination with [git-revision-webpack-plugin](https://www.npmjs.com/package/git-revision-webpack-plugin) to generate a small comment at the beginning of the generated files.
@@ -87,8 +83,6 @@ exports.attachRevision = () => ({
 });
 ```
 
-{pagebreak}
-
 And connect it to the main configuration:
 
 **webpack.config.js**
@@ -106,9 +100,9 @@ If you build the project (`npm run build`), you should notice the built files co
 
 The output can be customized further by adjusting the banner. You can also pass revision information to the application using `webpack.DefinePlugin`. This technique is discussed in detail in the *Environment Variables* chapter.
 
-W> [The plugin is broken in production mode in webpack 4](https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/222)!
+> [The plugin is broken in production mode in webpack 4](https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/222)!
 
-W> The code expects you run it within a Git repository! Otherwise, you get a `fatal: Not a git repository (or any of the parent directories): .git` error. If you are not using Git, you can replace the banner with other data.
+> The code expects you run it within a Git repository! Otherwise, you get a `fatal: Not a git repository (or any of the parent directories): .git` error. If you are not using Git, you can replace the banner with other data.
 
 ## Copying Files
 

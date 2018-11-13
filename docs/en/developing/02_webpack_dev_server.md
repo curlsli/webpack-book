@@ -32,8 +32,6 @@ npm install webpack-dev-server --save-dev
 
 As before, this command generates a command below the `npm bin` directory, and you could run *webpack-dev-server* from there. After running the WDS, you have a development server running at `http://localhost:8080`. Automatic browser refresh is in place now, although at a fundamental level.
 
-{pagebreak}
-
 ## Attaching WDS to the Project
 
 To integrate WDS to the project, define an npm script for launching it. To follow npm conventions, call it as *start* like below:
@@ -49,7 +47,7 @@ leanpub-end-insert
 },
 ```
 
-T> WDS picks up configuration like webpack itself. The same rules apply.
+> WDS picks up configuration like webpack itself. The same rules apply.
 
 If you execute either *npm run start* or *npm start* now, you should see something in the terminal:
 
@@ -69,23 +67,19 @@ Entrypoint main [big] = main.js
 ...
 ```
 
-{pagebreak}
-
 The server is running, and if you open `http://localhost:8080/` at your browser, you should see something familiar:
 
 ![Hello world](../../images/hello_01.png)
 
 If you try modifying the code, you should see the output in your terminal. The browser should also perform a hard refresh on change.
 
-T> WDS tries to run in another port in case the default one is being used. The terminal output tells you where it ends up running. You can debug the situation with a command like `netstat -na | grep 8080`. If something is running on the port 8080, it should display a message on Unix.
+> WDS tries to run in another port in case the default one is being used. The terminal output tells you where it ends up running. You can debug the situation with a command like `netstat -na | grep 8080`. If something is running on the port 8080, it should display a message on Unix.
 
-T> In addition to `production` and `development`, there's a third mode, `none`, which disables everything and is close to the behavior you had in versions before webpack 4.
+> In addition to `production` and `development`, there's a third mode, `none`, which disables everything and is close to the behavior you had in versions before webpack 4.
 
 ## Configuring WDS Through Webpack Configuration
 
 WDS functionality can be customized through the `devServer` field in the webpack configuration. You can set most of these options through the CLI as well, but managing them through webpack is a decent approach.
-
-{pagebreak}
 
 Enable additional functionality as below:
 
@@ -118,9 +112,9 @@ leanpub-end-insert
 
 After this change, you can configure the server host and port options through environment parameters (example: `PORT=3000 npm start`).
 
-T> [dotenv](https://www.npmjs.com/package/dotenv) allows you to define environment variables through a *.env* file. *dotenv* allows you to control the host and port setting of the setup quickly.
+> [dotenv](https://www.npmjs.com/package/dotenv) allows you to define environment variables through a *.env* file. *dotenv* allows you to control the host and port setting of the setup quickly.
 
-T> Enable `devServer.historyApiFallback` if you are using HTML5 History API based routing.
+> Enable `devServer.historyApiFallback` if you are using HTML5 History API based routing.
 
 ## Enabling Error Overlay
 
@@ -144,7 +138,7 @@ Run the server now (`npm start`) and break the code to see an overlay in the bro
 
 ![Error overlay](../../images/error-overlay.png)
 
-T> If you want even better output, consider [error-overlay-webpack-plugin](https://www.npmjs.com/package/error-overlay-webpack-plugin) as it shows the origin of the error better.
+> If you want even better output, consider [error-overlay-webpack-plugin](https://www.npmjs.com/package/error-overlay-webpack-plugin) as it shows the origin of the error better.
 
 W> WDS overlay does *not* capture runtime errors of the application.
 
@@ -157,8 +151,6 @@ Hot Module Replacement is one of those features that set webpack apart. Implemen
 It's possible to customize host and port settings through the environment in the setup (i.e., `export PORT=3000` on Unix or `SET PORT=3000` on Windows). The default settings are enough on most platforms.
 
 To access your server, you need to figure out the ip of your machine. On Unix, this can be achieved using `ifconfig | grep inet`. On Windows, `ipconfig` can be utilized. An npm package, such as [node-ip](https://www.npmjs.com/package/node-ip) come in handy as well. Especially on Windows, you need to set your `HOST` to match your ip to make it accessible.
-
-{pagebreak}
 
 ## Making It Faster to Develop Configuration
 
@@ -176,8 +168,6 @@ To get it to work, you have to install it first through `npm install nodemon --s
 ```
 
 It's possible WDS [will support the functionality](https://github.com/webpack/webpack-cli/issues/15) itself in the future. If you want to make it reload itself on change, you should implement this workaround for now.
-
-{pagebreak}
 
 ## Polling Instead of Watching Files
 
@@ -211,8 +201,6 @@ module.exports = {
 
 The setup is more resource intensive than the default, but it's worth trying out.
 
-{pagebreak}
-
 ## Alternate Ways to Use *webpack-dev-server*
 
 You could have passed the WDS options through a terminal. It's clearer to manage the options within webpack configuration as that helps to keep *package.json* nice and tidy. It's also easier to understand what's going on as you don't need to dig out the answers from the webpack source.
@@ -235,7 +223,7 @@ WDS provides functionality beyond what was covered above. There are a couple of 
 * `devServer.proxy` - If you are using multiple servers, you have to proxy WDS to them. The proxy setting accepts an object of proxy mappings (e.g., `{ "/api": "http://localhost:3000/api" }`) that resolve matching queries to another server. Proxy settings are disabled by default.
 * `devServer.headers` - Attach custom headers to your requests here.
 
-T> [The official documentation](https://webpack.js.org/configuration/dev-server/) covers more options.
+> [The official documentation](https://webpack.js.org/configuration/dev-server/) covers more options.
 
 ## Development Plugins
 
@@ -246,8 +234,6 @@ The webpack plugin ecosystem is diverse, and there are a lot of plugins that can
 * [react-dev-utils](https://www.npmjs.com/package/react-dev-utils) contains webpack utilities developed for [Create React App](https://www.npmjs.com/package/create-react-app). Despite its name, they can find use beyond React. If you want only webpack message formatting, consider [webpack-format-messages](https://www.npmjs.com/package/webpack-format-messages).
 * [start-server-webpack-plugin](https://www.npmjs.com/package/start-server-webpack-plugin) is able to start your server after webpack build completes.
 
-{pagebreak}
-
 ## Output Plugins
 
 There are also plugins that make the webpack output easier to notice and understand:
@@ -257,8 +243,6 @@ There are also plugins that make the webpack output easier to notice and underst
 * [nyan-progress-webpack-plugin](https://www.npmjs.com/package/nyan-progress-webpack-plugin) can be used to get tidier output during the build process. Take care if you are using Continuous Integration (CI) systems like Travis as they can clobber the output. Webpack provides `ProgressPlugin` for the same purpose. No nyan there, though.
 * [friendly-errors-webpack-plugin](https://www.npmjs.com/package/friendly-errors-webpack-plugin) improves on error reporting of webpack. It captures common errors and displays them in a friendlier manner.
 * [webpack-dashboard](https://www.npmjs.com/package/webpack-dashboard) gives an entire terminal based dashboard over the standard webpack output. If you prefer clear visual output, this one comes in handy.
-
-{pagebreak}
 
 ## Conclusion
 

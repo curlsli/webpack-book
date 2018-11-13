@@ -12,8 +12,6 @@ T> SSR isn't the only solution to the SEO problem. **Prerendering** is an altern
 
 The *Loading JavaScript* chapter covers the essentials of using Babel with webpack. There's setup that is particular to React you should perform, though. Given most of React projects rely on [JSX](https://facebook.github.io/jsx/) format, you have to enable it through Babel.
 
-{pagebreak}
-
 To get React, and particularly JSX, work with Babel, install the preset first:
 
 ```bash
@@ -46,8 +44,6 @@ npm install react react-dom --save
 
 Next, the React code needs a small entry point. If you are on the browser side, you should mount `Hello world` `div` to the document. To prove it works, clicking it should give a dialog with a "hello" message. On server-side, the React component is returned and the server can pick it up.
 
-{pagebreak}
-
 Adjust as follows:
 
 **src/ssr.js**
@@ -68,9 +64,7 @@ if (typeof document === "undefined") {
 
 You are still missing webpack configuration to turn this file into something the server can pick up.
 
-W> Given ES2015 style imports and CommonJS exports cannot be mixed, the entry point was written in CommonJS style.
-
-{pagebreak}
+> Given ES2015 style imports and CommonJS exports cannot be mixed, the entry point was written in CommonJS style.
 
 ## Configuring Webpack
 

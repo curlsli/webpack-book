@@ -16,8 +16,6 @@ To make the demo more realistic, let's install [Pure.css](http://purecss.io/), a
 npm install purecss --save
 ```
 
-{pagebreak}
-
 To make the project aware of Pure.css, `import` it:
 
 **src/index.js**
@@ -29,7 +27,7 @@ leanpub-end-insert
 ...
 ```
 
-T> The `import` works because webpack will resolve against `"browser": "build/pure-min.css",` field in the *package.json* file of Pure.css due to [resolve.mainFields](https://webpack.js.org/configuration/resolve/#resolve-mainfields). Webpack will try to resolve possible `browser` and `module` fields before looking into `main`.
+> The `import` works because webpack will resolve against `"browser": "build/pure-min.css",` field in the *package.json* file of Pure.css due to [resolve.mainFields](https://webpack.js.org/configuration/resolve/#resolve-mainfields). Webpack will try to resolve possible `browser` and `module` fields before looking into `main`.
 
 You should also make the demo component use a Pure.css class, so there is something to work with:
 
@@ -71,8 +69,6 @@ As you can see, the size of the CSS file grew, and this is something to fix with
 ## Enabling PurifyCSS
 
 Using PurifyCSS can lead to significant savings. In the example of the project, they purify and minify Bootstrap (140 kB) in an application using ~40% of its selectors to mere ~35 kB. That's a big difference.
-
-{pagebreak}
 
 [purifycss-webpack](https://www.npmjs.com/package/purifycss-webpack) allows to achieve similar results. You should use the `MiniCssExtractPlugin` with it for the best results. Install it and a [glob](https://www.npmjs.org/package/glob) helper first:
 
@@ -144,8 +140,6 @@ The size of the style has decreased noticeably. Instead of 16k, you have roughly
 PurifyCSS supports [additional options](https://github.com/purifycss/purifycss#the-optional-options-argument) including `minify`. You can enable these through the `purifyOptions` field when instantiating the plugin. Given PurifyCSS cannot pick all of the classes you are always using, you should use `purifyOptions.whitelist` array to define selectors which it should leave in the result no matter what.
 
 W> Using PurifyCSS loses CSS source maps even if you have enabled them with loader specific configuration due to the way it works underneath.
-
-{pagebreak}
 
 ### Critical Path Rendering
 

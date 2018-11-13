@@ -4,9 +4,7 @@ Before getting started, make sure you are using a recent version of [Node](http:
 
 It's possible to get a more controlled environment by using a solution such as [Docker](https://www.docker.com/), [Vagrant](https://www.vagrantup.com/) or [nvm](https://www.npmjs.com/package/nvm). Vagrant comes with a performance penalty as it relies on a virtual machine. Vagrant is valuable in a team: each developer can have the same environment that is usually close to production.
 
-T> The completed configuration is available at [GitHub](https://github.com/survivejs-demos/webpack-demo).
-
-{pagebreak}
+> The completed configuration is available at [GitHub](https://github.com/survivejs-demos/webpack-demo).
 
 ## Setting Up the Project
 
@@ -20,11 +18,11 @@ npm init -y # -y generates *package.json*, skip for more control
 
 You can tweak the generated *package.json* manually to make further changes to it even though a part of the operations modify the file automatically for you. The official documentation explains [package.json options](https://docs.npmjs.com/files/package.json) in more detail.
 
-T> You can set those `npm init` defaults at *~/.npmrc*.
+> You can set those `npm init` defaults at *~/.npmrc*.
 
-T> This is an excellent chance to set up version control using [Git](https://git-scm.com/). You can create a commit per step and tag per chapter, so it's easier to move back and forth if you want.
+> This is an excellent chance to set up version control using [Git](https://git-scm.com/). You can create a commit per step and tag per chapter, so it's easier to move back and forth if you want.
 
-T> The book examples have been formatted using [Prettier](https://www.npmjs.com/package/prettier) with `"trailingComma": "es5",` and `"printWidth": 68` options enabled to make the diffs clean and fit the page.
+> The book examples have been formatted using [Prettier](https://www.npmjs.com/package/prettier) with `"trailingComma": "es5",` and `"printWidth": 68` options enabled to make the diffs clean and fit the page.
 
 ## Installing Webpack
 
@@ -38,9 +36,9 @@ npm install webpack webpack-cli --save-dev # -D to type less
 
 You should see webpack at your *package.json* `devDependencies` section after this. In addition to installing the package locally below the *node_modules* directory, npm also generates an entry for the executable.
 
-T> You can use `--save` and `--save-dev` to separate application and development dependencies. The former installs and writes to *package.json* `dependencies` field whereas the latter writes to `devDependencies` instead.
+> You can use `--save` and `--save-dev` to separate application and development dependencies. The former installs and writes to *package.json* `dependencies` field whereas the latter writes to `devDependencies` instead.
 
-T> [webpack-cli](https://www.npmjs.com/package/webpack-cli) comes with additional functionality including `init` and `migrate` commands that allow you to create new webpack configuration fast and update from an older version to a newer one.
+> [webpack-cli](https://www.npmjs.com/package/webpack-cli) comes with additional functionality including `init` and `migrate` commands that allow you to create new webpack configuration fast and update from an older version to a newer one.
 
 ## Executing Webpack
 
@@ -69,9 +67,7 @@ To get a quick idea of webpack output, we should fix both:
 2. Execute `node_modules/.bin/webpack --mode development`. Webpack will discover the source file by Node convention.
 3. Examine *dist/main.js*. You should see webpack bootstrap code that begins executing the code. Below the bootstrap, you should find something familiar.
 
-T> Try also `--mode production` and compare the output.
-
-{pagebreak}
+> Try also `--mode production` and compare the output.
 
 ## Setting Up Assets
 
@@ -140,7 +136,7 @@ Now that the configuration is done, you should try the following:
 
 ![Hello world](../../images/hello_01.png)
 
-T> **Trailing commas** are used in the book examples on purpose as it gives cleaner diffs for the code examples.
+> **Trailing commas** are used in the book examples on purpose as it gives cleaner diffs for the code examples.
 
 ## Examining the Output
 
@@ -178,11 +174,9 @@ The output tells a lot:
 
 Examine the output below the `dist/` directory. If you look closely, you can see the same IDs within the source.
 
-T> In addition to a configuration object, webpack accepts an array of configurations. You can also return a `Promise` and eventually `resolve` to a configuration for example.
+> In addition to a configuration object, webpack accepts an array of configurations. You can also return a `Promise` and eventually `resolve` to a configuration for example.
 
-T> If you want a light alternative to *html-webpack-plugin*, see [mini-html-webpack-plugin](https://www.npmjs.com/package/mini-html-webpack-plugin). It does less but it's also simpler to understand.
-
-{pagebreak}
+> If you want a light alternative to *html-webpack-plugin*, see [mini-html-webpack-plugin](https://www.npmjs.com/package/mini-html-webpack-plugin). It does less but it's also simpler to understand.
 
 ## Adding a Build Shortcut
 
@@ -200,11 +194,9 @@ Run `npm run build` to see the same output as before. npm adds *node_modules/.bi
 
 You can execute this kind of scripts through *npm run* and you can use *npm run* anywhere within your project. If you run the command as is, it gives you the listing of available scripts.
 
-T> There are shortcuts like *npm start* and *npm test*. You can run these directly without *npm run* although that works too. For those in a hurry, you can use *npm t* to run your tests.
+> There are shortcuts like *npm start* and *npm test*. You can run these directly without *npm run* although that works too. For those in a hurry, you can use *npm t* to run your tests.
 
-T> To go one step further, set up system level aliases using the `alias` command in your terminal configuration. You could map `nrb` to `npm run build` for instance.
-
-{pagebreak}
+> To go one step further, set up system level aliases using the `alias` command in your terminal configuration. You could map `nrb` to `npm run build` for instance.
 
 ## `HtmlWebpackPlugin` Extensions
 
@@ -219,8 +211,6 @@ There are also specific plugins that extend `HtmlWebpackPlugin`'s functionality:
 * [preload-webpack-plugin](https://www.npmjs.com/package/preload-webpack-plugin) enables `rel=preload` capabilities for scripts and helps with lazy loading, and it combines well with techniques discussed in the *Building* part of this book.
 * [webpack-cdn-plugin](https://www.npmjs.com/package/webpack-cdn-plugin) allows you to specify which dependencies to load through a Content Delivery Network (CDN). This common technique is used for speeding up loading of popular libraries.
 * [dynamic-cdn-webpack-plugin](https://www.npmjs.com/package/dynamic-cdn-webpack-plugin) achieves a similar result.
-
-{pagebreak}
 
 ## Conclusion
 

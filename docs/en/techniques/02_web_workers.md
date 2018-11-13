@@ -8,7 +8,7 @@ The idea of workers is valuable on a more general level. [parallel-webpack](http
 
 As discussed in the *Build Targets* chapter, webpack allows you to build your application as a worker itself. To get the idea of web workers better, you'll learn how to build a small worker using [worker-loader](https://www.npmjs.com/package/worker-loader).
 
-T> Sharing data between the host and the worker may become easier in the future thanks to technologies such as [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer).
+> Sharing data between the host and the worker may become easier in the future thanks to technologies such as [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer).
 
 ## Setting Up Worker Loader
 
@@ -60,7 +60,7 @@ export default () => {
 
 After you have these two set up, it should work. As you click the text, it should mutate the application state as the worker completes its execution. To demonstrate the asynchronous nature of workers, you could try adding delay to the answer and see what happens.
 
-T> [webworkify-webpack](https://www.npmjs.com/package/webworkify-webpack) is an alternative to *worker-loader*. The API allows you to use the worker as a regular JavaScript module as well given you avoid the `self` requirement visible in the example solution. [webpack-worker](https://www.npmjs.com/package/webpack-worker) is another option to study.
+> [webworkify-webpack](https://www.npmjs.com/package/webworkify-webpack) is an alternative to *worker-loader*. The API allows you to use the worker as a regular JavaScript module as well given you avoid the `self` requirement visible in the example solution. [webpack-worker](https://www.npmjs.com/package/webpack-worker) is another option to study.
 
 ## Conclusion
 

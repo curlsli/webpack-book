@@ -4,7 +4,7 @@ As you have seen so far, loaders are one of the building blocks of webpack. If y
 
 You'll learn to develop a couple of small loaders next. But before that, it's good to understand how to debug them in isolation.
 
-T> If you want a good starting point for a standalone loader or plugin project, consider using [webpack-defaults](https://github.com/webpack-contrib/webpack-defaults). It provides an opinionated starting point that comes with linting, testing, and other goodies.
+> If you want a good starting point for a standalone loader or plugin project, consider using [webpack-defaults](https://github.com/webpack-contrib/webpack-defaults). It provides an opinionated starting point that comes with linting, testing, and other goodies.
 
 ## Debugging Loaders with *loader-runner*
 
@@ -13,8 +13,6 @@ T> If you want a good starting point for a standalone loader or plugin project, 
 ```bash
 npm install loader-runner --save-dev
 ```
-
-{pagebreak}
 
 To have something to test with, set up a loader that returns twice what's passed to it:
 
@@ -51,8 +49,6 @@ runLoaders(
 );
 ```
 
-{pagebreak}
-
 If you run the script now (`node run-loader.js`), you should see output:
 
 ```javascript
@@ -65,17 +61,15 @@ If you run the script now (`node run-loader.js`), you should see output:
 
 The output tells the `result` of the processing, the resource that was processed as a buffer, and other meta information. The data is enough to develop more complicated loaders.
 
-T> If you want to capture the output to a file, use either `fs.writeFileSync("./output.txt", result.result)` or its asynchronous version as discussed in [Node documentation](https://nodejs.org/api/fs.html).
+> If you want to capture the output to a file, use either `fs.writeFileSync("./output.txt", result.result)` or its asynchronous version as discussed in [Node documentation](https://nodejs.org/api/fs.html).
 
-T> It's possible to refer to loaders installed to the local project by name instead of resolving a full path to them. Example: `loaders: ["raw-loader"]`.
+> It's possible to refer to loaders installed to the local project by name instead of resolving a full path to them. Example: `loaders: ["raw-loader"]`.
 
 ## Implementing an Asynchronous Loader
 
 Even though you can implement a lot of loaders using the synchronous interface, there are times when an asynchronous calculation is required. Wrapping a third party package as a loader can force you to this.
 
 The example above can be adapted to asynchronous form by using webpack specific API through `this.async()`. Webpack sets this, and the function returns a callback following Node conventions (error first, result second).
-
-{pagebreak}
 
 Tweak as follows:
 
@@ -94,7 +88,7 @@ module.exports = function(input) {
 
 W> Given webpack injects its API through `this`, the shorter function form (`() => ...`) cannot be used here.
 
-T> If you want to pass a source map to webpack, give it as the third parameter of the callback.
+> If you want to pass a source map to webpack, give it as the third parameter of the callback.
 
 Running the demo script (`node run-loader.js`) again should give the same result as before. To raise an error during execution, try the following:
 
@@ -110,8 +104,6 @@ module.exports = function(input) {
 
 The result should contain `Error: Demo error` with a stack trace showing where the error originates.
 
-{pagebreak}
-
 ## Returning Only Output
 
 Loaders can be used to output code alone. You could have an implementation as below:
@@ -126,9 +118,7 @@ module.exports = function() {
 
 But what's the point? You can pass to loaders through webpack entries. Instead of pointing to pre-existing files as you would in a majority of the cases, you could give to a loader that generates code dynamically.
 
-T> If you want to return `Buffer` output, set `module.exports.raw = true`. The flag overrides the default behavior which expects a string is returned.
-
-{pagebreak}
+> If you want to return `Buffer` output, set `module.exports.raw = true`. The flag overrides the default behavior which expects a string is returned.
 
 ## Writing Files
 
@@ -250,8 +240,6 @@ leanpub-end-insert
 };
 ```
 
-{pagebreak}
-
 After running (`node ./run-loader.js`), you should see something:
 
 ```javascript
@@ -264,7 +252,7 @@ After running (`node ./run-loader.js`), you should see something:
 
 You can see that the result matches what the loader should have returned. You can try to pass more options to the loader or use query parameters to see what happens with different combinations.
 
-T> It's a good idea to validate options and rather fail hard than silently if the options aren't what you expect. [schema-utils](https://www.npmjs.com/package/schema-utils) has been designed for this purpose.
+> It's a good idea to validate options and rather fail hard than silently if the options aren't what you expect. [schema-utils](https://www.npmjs.com/package/schema-utils) has been designed for this purpose.
 
 ## Connecting Custom Loaders with Webpack
 
@@ -277,8 +265,6 @@ leanpub-start-insert
 import "!../loaders/demo-loader?name=foo!./main.css";
 leanpub-end-insert
 ```
-
-{pagebreak}
 
 Given the definition is verbose, the loader can be aliased as below:
 
@@ -324,8 +310,6 @@ W> Although using *loader-runner* can be convenient for developing and testing l
 
 Webpack evaluates loaders in two phases: pitching and evaluating. If you are used to web event semantics, these map to capturing and bubbling. The idea is that webpack allows you to intercept execution during the pitching (capturing) phase. It goes through the loaders left to right first and executes them from right to left after that.
 
-{pagebreak}
-
 A pitch loader allows you shape the request and even terminate it. Set it up:
 
 **loaders/pitch-loader.js**
@@ -368,8 +352,6 @@ leanpub-end-insert
   (err, result) => (err ? console.error(err) : console.log(result))
 );
 ```
-
-{pagebreak}
 
 If you run (`node ./run-loader.js`) now, the pitch loader should log intermediate data and intercept the execution:
 
@@ -421,9 +403,7 @@ module.exports.pitch = function() {
 
 A pitch loader can be used to attach metadata to the input to use later. In this example, a cache was constructed during the pitching stage, and it was accessed during normal execution.
 
-T> The [official documentation](https://webpack.js.org/api/loaders/) covers the loader API in detail. You can see all fields available through `this` there.
-
-{pagebreak}
+> The [official documentation](https://webpack.js.org/api/loaders/) covers the loader API in detail. You can see all fields available through `this` there.
 
 ## Conclusion
 

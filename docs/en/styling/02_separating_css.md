@@ -54,9 +54,7 @@ exports.extractCSS = ({ include, exclude, use = [] }) => {
 
 That `[name]` placeholder uses the name of the entry where the CSS is referred. Placeholders and hashing are discussed in detail in the *Adding Hashes to Filenames* chapter.
 
-T> If you wanted to output the resulting file to a specific directory, you could do it by passing a path. Example: `filename: "styles/[name].css"`.
-
-{pagebreak}
+> If you wanted to output the resulting file to a specific directory, you could do it by passing a path. Example: `filename: "styles/[name].css"`.
 
 ### Connecting with Configuration
 
@@ -93,9 +91,7 @@ leanpub-end-insert
 
 Using this setup, you can still benefit from the HMR during development. For a production build, it's possible to generate a separate CSS, though. `HtmlWebpackPlugin` picks it up automatically and injects it into `index.html`.
 
-T> If you are using *CSS Modules*, remember to tweak `use` accordingly as discussed in the *Loading Styles* chapter. You can maintain separate setups for standard CSS and CSS Modules so that they get loaded through discrete logic.
-
-{pagebreak}
+> If you are using *CSS Modules*, remember to tweak `use` accordingly as discussed in the *Loading Styles* chapter. You can maintain separate setups for standard CSS and CSS Modules so that they get loaded through discrete logic.
 
 After running `npm run build`, you should see output similar to the following:
 
@@ -118,9 +114,7 @@ Entrypoint main = main.js main.css
 
 Now styling has been pushed to a separate CSS file. Thus, the JavaScript bundle has become slightly smaller. You also avoid the FOUC problem. The browser doesn't have to wait for JavaScript to load to get styling information. Instead, it can process the CSS separately, avoiding the flash.
 
-T> If you are getting `Module build failed: CssSyntaxError:` or `Module build failed: Unknown word` error, make sure your `common` configuration doesn't have a CSS-related section set up.
-
-{pagebreak}
+> If you are getting `Module build failed: CssSyntaxError:` or `Module build failed: Unknown word` error, make sure your `common` configuration doesn't have a CSS-related section set up.
 
 ## Managing Styles Outside of JavaScript
 
@@ -150,7 +144,7 @@ As a result, you should get both *style.css* and *style.js*. The latter file con
 
 If you want strict control over the ordering, you can set up a single CSS entry and then use `@import` to bring the rest to the project through it. Another option would be to set up a JavaScript entry and go through `import` to get the same effect.
 
-T> [css-entry-webpack-plugin](https://www.npmjs.com/package/css-entry-webpack-plugin) has been designed to help with this usage pattern. The plugin can extract a CSS bundle from entry without MCEP.
+> [css-entry-webpack-plugin](https://www.npmjs.com/package/css-entry-webpack-plugin) has been designed to help with this usage pattern. The plugin can extract a CSS bundle from entry without MCEP.
 
 ## Conclusion
 

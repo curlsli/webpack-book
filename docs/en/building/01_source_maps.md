@@ -8,9 +8,9 @@ One approach is to skip source maps during development and rely on browser suppo
 
 If you are using webpack 4 and the new `mode` option, the tool will generate source maps automatically for you in `development` mode. Production usage requires attention, though.
 
-T> If you want to understand the ideas behind source maps in greater detail, [read Ryan Seddon's introduction to the topic](https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/).
+> If you want to understand the ideas behind source maps in greater detail, [read Ryan Seddon's introduction to the topic](https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/).
 
-T> To see how webpack handles source maps, see [source-map-visualization](https://sokra.github.io/source-map-visualization/) by the author of the tool.
+> To see how webpack handles source maps, see [source-map-visualization](https://sokra.github.io/source-map-visualization/) by the author of the tool.
 
 ## Inline Source Maps and Separate Source Maps
 
@@ -20,7 +20,7 @@ It's possible you **don't** want to generate a source map for your production bu
 
 **Hidden source maps** give stack trace information only. You can connect them with a monitoring service to get traces as the application crashes allowing you to fix the problematic situations. While this isn't ideal, it's better to know about possible problems than not.
 
-T> It's a good idea to study the documentation of the loaders you are using to see loader specific tips. For example, with TypeScript, you have to set a particular flag to make it work as you expect.
+> It's a good idea to study the documentation of the loaders you are using to see loader specific tips. For example, with TypeScript, you have to set a particular flag to make it work as you expect.
 
 ## Enabling Source Maps
 
@@ -52,8 +52,6 @@ leanpub-end-insert
 ```
 
 `source-map` is the slowest and highest quality option of them all, but that's fine for a production build.
-
-{pagebreak}
 
 If you build the project now (`npm run build`), you should see source maps in the output:
 
@@ -124,8 +122,6 @@ webpackJsonp([1, 2], {
 }, ["./src/index.js"]);
 ```
 
-{pagebreak}
-
 If you decode that base64 string, you get output containing the mapping:
 
 ```json
@@ -154,8 +150,6 @@ webpackJsonp([1, 2], {
   }
 }, ["./src/index.js"]);
 ```
-
-{pagebreak}
 
 Again, decoding the data reveals more:
 
@@ -188,8 +182,6 @@ webpackJsonp([1, 2], {
 }, ["./src/index.js"]);
 ```
 
-{pagebreak}
-
 This time around there's more mapping data available for the browser:
 
 ```json
@@ -217,8 +209,6 @@ Webpack can also generate production usage friendly source maps. These end up in
 
 `source-map` is a reasonable default here. Even though it takes longer to generate the source maps this way, you get the best quality. If you don't care about production source maps, you can skip the setting there and get better performance in return.
 
-{pagebreak}
-
 ### `devtool: "cheap-source-map"`
 
 `cheap-source-map` is similar to the cheap options above. The result is going to miss column mappings. Also, source maps from loaders, such as *css-loader*, are not going to be used.
@@ -241,8 +231,6 @@ Examining the `.map` file reveals the following output in this case:
 ```
 
 The source contains `//# sourceMappingURL=main.9a...18.js.map` kind of comment at its end to map to this file.
-
-{pagebreak}
 
 ### `devtool: "cheap-module-source-map"`
 
@@ -270,9 +258,7 @@ W> `cheap-module-source-map` is [currently broken if minification is used](https
 
 `nosources-source-map` creates a source map without `sourcesContent` in it. You still get stack traces, though. The option is useful if you don't want to expose your source code to the client.
 
-T> [The official documentation](https://webpack.js.org/configuration/devtool/#devtool) contains more information about `devtool` options.
-
-{pagebreak}
+> [The official documentation](https://webpack.js.org/configuration/devtool/#devtool) contains more information about `devtool` options.
 
 ### `devtool: "source-map"`
 
@@ -303,8 +289,6 @@ T> [The official documentation](https://webpack.js.org/configuration/devtool/#de
 }
 ```
 
-{pagebreak}
-
 ## Other Source Map Options
 
 There are a couple of other options that affect source map generation:
@@ -326,7 +310,7 @@ There are a couple of other options that affect source map generation:
 }
 ```
 
-T> The [official documentation](https://webpack.js.org/configuration/output/#output-sourcemapfilename) digs into `output` specifics.
+> The [official documentation](https://webpack.js.org/configuration/output/#output-sourcemapfilename) digs into `output` specifics.
 
 W> If you are using `UglifyJsPlugin` and still want source maps, you need to enable `sourceMap: true` for the plugin. Otherwise, the result isn't what you expect because UglifyJS will perform a further transformation of the code, breaking the mapping. The same has to be done with other plugins and loaders performing changes. *css-loader* and related loaders are a good example.
 
@@ -355,8 +339,6 @@ Assuming you are using a package that uses inline source maps in its distributio
 If you want to enable source maps for styling files, you can achieve this by enabling the `sourceMap` option. The same idea works with style loaders such as *css-loader*, *sass-loader*, and *less-loader*.
 
 The *css-loader* is [known to have issues](https://github.com/webpack-contrib/css-loader/issues/232) when you are using relative paths in imports. To overcome this problem, you should set `output.publicPath` to resolve the server url.
-
-{pagebreak}
 
 ## Conclusion
 

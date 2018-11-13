@@ -28,7 +28,7 @@ To load *.jpg* and *.png* files while inlining files below 25kB, you would have 
 },
 ```
 
-T> If you prefer to use another loader than *file-loader* as the *limit* is reached, set `fallback: "some-loader"`. Then webpack will resolve to that instead of the default.
+> If you prefer to use another loader than *file-loader* as the *limit* is reached, set `fallback: "some-loader"`. Then webpack will resolve to that instead of the default.
 
 ## Setting Up *file-loader*
 
@@ -46,7 +46,7 @@ If you want to skip inlining altogether, you can use *file-loader* directly. The
 },
 ```
 
-T> If you want to output your images below a particular directory, set it up with `name: "./images/[hash].[ext]"`.
+> If you want to output your images below a particular directory, set it up with `name: "./images/[hash].[ext]"`.
 
 W> Be careful not to apply both loaders on images at the same time! Use the `include` field for further control if *url-loader* `limit` isn't enough.
 
@@ -149,7 +149,7 @@ Consider also the following loaders:
 * [svg-url-loader](https://www.npmjs.com/package/svg-url-loader) loads SVGs as UTF-8 encoded data urls. The result is smaller and faster to parse than base64.
 * [react-svg-loader](https://www.npmjs.com/package/react-svg-loader) emits SVGs as React components meaning you could end up with code like `<Image width={50} height={50}/>` to render a SVG in your code after importing it.
 
-T> You can still use *url-loader* and the tips above with SVGs too.
+> You can still use *url-loader* and the tips above with SVGs too.
 
 ## Optimizing Images
 

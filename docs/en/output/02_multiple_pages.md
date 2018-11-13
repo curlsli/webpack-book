@@ -43,8 +43,6 @@ exports.page = ({
 });
 ```
 
-{pagebreak}
-
 ### Integrating to Configuration
 
 To incorporate the idea into the configuration, the way it's composed has to change. Also, a page definition is required. To get started, let's reuse the same JavaScript logic for each page for now:
@@ -113,8 +111,6 @@ const demoComponent = component("Another");
 
 document.body.appendChild(demoComponent);
 ```
-
-{pagebreak}
 
 The file could go to a directory of its own. Here the existing code is reused to get something to show up. Webpack configuration has to point to this file:
 
@@ -198,8 +194,6 @@ leanpub-end-insert
   ],
 });
 ```
-
-{pagebreak}
 
 After these changes `/another` should show something familiar:
 

@@ -4,7 +4,7 @@ Currently, the production version of the application is a single JavaScript file
 
 It would be better to download only the changed portion. If the vendor dependencies change, then the client should fetch only the vendor dependencies. The same goes for actual application code. **Bundle splitting** can be achieved using `optimization.splitChunks.cacheGroups`. When running in production mode, [webpack 4 can perform a series of splits out of the box](https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693) but in this case, we'll do something manually.
 
-T> To invalidate the bundles correctly, you have to attach hashes to the generated bundles as discussed in the *Adding Hashes to Filenames* chapter.
+> To invalidate the bundles correctly, you have to attach hashes to the generated bundles as discussed in the *Adding Hashes to Filenames* chapter.
 
 ## The Idea of Bundle Splitting
 
@@ -107,8 +107,6 @@ Now the bundles look the way they should. The image below illustrates the curren
 
 ![Main and vendor bundles after applying configuration](../../images/bundle_02.png)
 
-{pagebreak}
-
 ## Controlling Bundle Splitting
 
 The configuration above can be rewritten with an explicit test against *node_modules* as below:
@@ -142,8 +140,6 @@ Following this format gives you more control over the splitting process if you d
 
 Webpack provides more control over the generated chunks by two plugins: `AggressiveSplittingPlugin` and `AggressiveMergingPlugin`. The former allows you to emit more and smaller bundles. The behavior is handy with HTTP/2 due to the way the new standard works.
 
-{pagebreak}
-
 Here's the basic idea of aggressive splitting:
 
 ```javascript
@@ -176,7 +172,7 @@ It's possible to get good caching behavior with these plugins if a webpack **rec
 
 `webpack.optimize` contains `LimitChunkCountPlugin` and `MinChunkSizePlugin` which give further control over chunk size.
 
-T> Tobias Koppers discusses [aggressive merging in detail at the official blog of webpack](https://medium.com/webpack/webpack-http-2-7083ec3f3ce6).
+> Tobias Koppers discusses [aggressive merging in detail at the official blog of webpack](https://medium.com/webpack/webpack-http-2-7083ec3f3ce6).
 
 ## Chunk Types in Webpack
 

@@ -15,7 +15,7 @@ The *webworker* target wraps your application as a [web worker](https://develope
 * You cannot use webpack's hashing features when the *webworker* target is used.
 * You cannot manipulate the DOM from a web worker. If you wrapped the book project as a worker, it would not display anything.
 
-T> Web workers and their usage are discussed in detail in the *Web Workers* chapter.
+> Web workers and their usage are discussed in detail in the *Web Workers* chapter.
 
 ## Node Targets
 
@@ -32,8 +32,6 @@ There are desktop shells, such as [NW.js](https://nwjs.io/) (previously *node-we
 * `electron-renderer` - Targets Electron renderer process.
 
 [electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate) is a good starting point if you want hot loading webpack setup for Electron and React based development. Using [the official quick start for Electron](https://github.com/electron/electron-quick-start) is one way.
-
-{pagebreak}
 
 ## Conclusion
 

@@ -16,9 +16,9 @@ Webpack provides **placeholders** for this purpose. These strings are used to at
 
 It's preferable to use particularly `hash` and `chunkhash` only for production purposes as hashing doesn't do much good during development.
 
-T> It's possible to slice `hash` and `chunkhash` using specific syntax: `[chunkhash:4]`. Instead of a hash like `8c4cbfdb91ff93f3f3c5` this would yield `8c4c`.
+> It's possible to slice `hash` and `chunkhash` using specific syntax: `[chunkhash:4]`. Instead of a hash like `8c4cbfdb91ff93f3f3c5` this would yield `8c4c`.
 
-T> There are more options available, and you can even modify the hashing and digest type as discussed at [loader-utils](https://www.npmjs.com/package/loader-utils#interpolatename) documentation.
+> There are more options available, and you can even modify the hashing and digest type as discussed at [loader-utils](https://www.npmjs.com/package/loader-utils#interpolatename) documentation.
 
 ### Example Placeholders
 
@@ -43,8 +43,6 @@ vendor.dc746a5db4ed650296e1.js
 If the file contents related to a chunk are different, the hash changes as well, thus the cache gets invalidated. More accurately, the browser sends a new request for the new file. If only `main` bundle gets updated, only that file needs to be requested again.
 
 The same result can be achieved by generating static filenames and invalidating the cache through a querystring (i.e., `main.js?d587bbd6e38337f5accd`). The part behind the question mark invalidates the cache. According to [Steve Souders](http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/), attaching the hash to the filename is the most performant option.
-
-{pagebreak}
 
 ## Setting Up Hashing
 
@@ -81,8 +79,6 @@ leanpub-end-insert
 W> `[hash]` is defined differently for *file-loader* than for the rest of webpack. It's calculated based on file **content**. See [file-loader documentation](https://www.npmjs.com/package/file-loader#placeholders) for further information.
 
 If you used `chunkhash` for the extracted CSS as well, this would lead to problems as the code points to the CSS through JavaScript bringing it to the same entry. That means if the application code or CSS changed, it would invalidate both.
-
-{pagebreak}
 
 Therefore, instead of `chunkhash`, you can use `contenthash` that is generated based on the extracted content:
 

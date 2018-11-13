@@ -6,13 +6,11 @@ The other way is to set `context` field as this gives a similar effect and affec
 
 Assuming you set an `include` or `exclude` rule, packages loaded from *node_modules* still work as the assumption is that they have been compiled in such a way that they work out of the box. If they don't, then you have to apply techniques covered in the *Consuming Packages* chapter.
 
-T> `include`/`exclude` is handy with *node_modules* as webpack processes and traverses the installed packages by default when you import JavaScript files to your project. Therefore you need to configure it to avoid that behavior. Other file types don't suffer from this issue.
+> `include`/`exclude` is handy with *node_modules* as webpack processes and traverses the installed packages by default when you import JavaScript files to your project. Therefore you need to configure it to avoid that behavior. Other file types don't suffer from this issue.
 
 ## Anatomy of a Loader
 
 Webpack supports a large variety of formats through *loaders*. Also, it supports a couple of JavaScript module formats out of the box. The idea is the same. You always set up a loader, or loaders, and connect those with your directory structure.
-
-{pagebreak}
 
 Consider the example below where webpack processes JavaScript through Babel:
 
@@ -45,7 +43,7 @@ module.exports = {
 };
 ```
 
-T> If you are not sure how a particular RegExp matches, consider using an online tool, such as [regex101](https://regex101.com/), [RegExr](http://regexr.com/), or [Regexper](https://regexper.com).
+> If you are not sure how a particular RegExp matches, consider using an online tool, such as [regex101](https://regex101.com/), [RegExr](http://regexr.com/), or [Regexper](https://regexper.com).
 
 ## Loader Evaluation Order
 
@@ -79,8 +77,6 @@ Even though it would be possible to develop an arbitrary configuration using the
 
 Linting is a good example because the build should fail before it does anything else. Using `enforce: "post"` is rarer and it would imply you want to perform a check against the built source. Performing analysis against the built source is one potential example.
 
-{pagebreak}
-
 The basic syntax goes as below:
 
 ```javascript
@@ -112,8 +108,6 @@ There's a query format that allows passing parameters to loaders:
 ```
 
 This style of configuration works in entries and source imports too as webpack picks it up. The format comes in handy in certain individual cases, but often you are better off using more readable alternatives.
-
-{pagebreak}
 
 It's preferable to go through `use`:
 
@@ -151,8 +145,6 @@ If you wanted to use more than one loader, you could pass an array to `use` and 
   ],
 },
 ```
-
-{pagebreak}
 
 ## Branching at `use` Using a Function
 
@@ -248,8 +240,6 @@ Boolean based fields can be used to constrain these matchers further:
 ```
 
 If you wanted to embed the context information to the filename, the rule could use `resourcePath` over `resourceQuery`.
-
-{pagebreak}
 
 ## Loading Based on `issuer`
 

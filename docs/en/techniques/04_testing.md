@@ -22,8 +22,6 @@ To get started, include Mocha and *mocha-loader* to your project:
 npm install mocha mocha-loader --save-dev
 ```
 
-{pagebreak}
-
 ### Setting Up Code to Test
 
 To have something to test, set up a function:
@@ -74,7 +72,7 @@ Demo
 
 Mocha also provides a watch mode which you can activate through `npm run test:mocha -- --watch`. It runs the test suite as you modify the code.
 
-T> `--grep <pattern>` can be used for constraining the behavior if you want to focus only on a particular set of tests.
+> `--grep <pattern>` can be used for constraining the behavior if you want to focus only on a particular set of tests.
 
 ### Configuring Webpack
 
@@ -119,7 +117,7 @@ module.exports = merge([
 ]);
 ```
 
-T> See the *Composing Configuration* chapter for the full `devServer` setup. The page setup is explained in the *Multiple Pages* chapter.
+> See the *Composing Configuration* chapter for the full `devServer` setup. The page setup is explained in the *Multiple Pages* chapter.
 
 Add a helper script to make it convenient to run:
 
@@ -133,7 +131,7 @@ Add a helper script to make it convenient to run:
 },
 ```
 
-T> If you want to understand what `--hot` does better, see the *Hot Module Replacement* appendix.
+> If you want to understand what `--hot` does better, see the *Hot Module Replacement* appendix.
 
 If you execute the server now and navigate to `http://localhost:8080/`, you should see the test:
 
@@ -159,8 +157,6 @@ To get started, install Karma, Mocha, *karma-mocha* reporter, and *karma-webpack
 ```bash
 npm install karma mocha karma-mocha karma-webpack --save-dev
 ```
-
-{pagebreak}
 
 Like webpack, Karma relies on a configuration convention as well. Set up a file as follows to make it pick up the tests:
 
@@ -189,8 +185,6 @@ module.exports = config => {
 ```
 
 W> The setup generates a bundle per each test. If you have a large number of tests and want to improve performance, set up `require.context` as for Mocha above. See [karma-webpack issue 23](https://github.com/webpack-contrib/karma-webpack/issues/23) for more details.
-
-{pagebreak}
 
 Add an npm shortcut:
 
@@ -222,9 +216,7 @@ Chrome 61...): Executed 1 of 1 SUCCESS (0.003 secs / 0 secs)
 
 Given running tests this way can become annoying, it's a good idea to configure alternative ways. Using PhantomJS is one option.
 
-T> You can point Karma to specific browsers through the `browsers` field. Example: `browsers: ['Chrome']`.
-
-{pagebreak}
+> You can point Karma to specific browsers through the `browsers` field. Example: `browsers: ['Chrome']`.
 
 ### Running Tests Through PhantomJS
 
@@ -288,11 +280,9 @@ If you execute `npm run test:karma:watch` now, you should see watch behavior.
 
 To know how much of the code the tests cover, it can be a good idea to generate coverage reports. Doing this requires code-level instrumentation. Also, the added information has to be reported and can be done through HTML and LCOV reports.
 
-T> LCOV integrates well with visualization services. You can send coverage information to an external service through a continuous integration environment and track the status in one place.
+> LCOV integrates well with visualization services. You can send coverage information to an external service through a continuous integration environment and track the status in one place.
 
 [isparta](https://www.npmjs.com/package/isparta) is a popular, ES2015 compatible code coverage tool. Connecting it with Karma requires configuration. Most importantly the code has to be instrumented through [babel-plugin-istanbul](https://www.npmjs.com/package/babel-plugin-istanbul). Doing this requires a small amount of webpack configuration as well due to the setup. [karma-coverage](https://www.npmjs.com/package/karma-coverage) is required for the reporting portion of the problem.
-
-{pagebreak}
 
 Install the dependencies first:
 
@@ -338,7 +328,7 @@ leanpub-end-insert
 };
 ```
 
-T> If you want to understand the `env` idea, see the *Loading JavaScript* chapter.
+> If you want to understand the `env` idea, see the *Loading JavaScript* chapter.
 
 On Karma side, reporting has to be set up, and Karma configuration has to be connected with webpack. *karma-webpack* provides two fields for this purpose: `webpack` and `webpackMiddleware`. You should use the former in this case to make sure the code gets processed through Babel.
 
@@ -367,7 +357,7 @@ leanpub-end-insert
 };
 ```
 
-T> If you want to emit the reports to specific directories below `dir`, set `subdir` per each report.
+> If you want to emit the reports to specific directories below `dir`, set `subdir` per each report.
 
 If you execute karma now (`npm run test:karma`), you should see a new directory below *build* containing coverage reports. The HTML report can be examined through the browser.
 
@@ -409,7 +399,7 @@ Given generating coverage reports comes with a performance overhead, enabling th
 
 Porting a webpack setup to Jest requires more effort especially if you rely on webpack specific features. [The official guide](https://facebook.github.io/jest/docs/en/webpack.html) covers quite a few of the common problems. You can also configure Jest to use Babel through [babel-jest](https://www.npmjs.com/package/babel-jest) as it allows you to use Babel plugins like [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) to match webpack's functionality.
 
-T> [jest-webpack](https://www.npmjs.com/package/jest-webpack) provides an integration between webpack and Jest.
+> [jest-webpack](https://www.npmjs.com/package/jest-webpack) provides an integration between webpack and Jest.
 
 ## AVA
 
@@ -438,8 +428,6 @@ plugins: [
   ),
 ]
 ```
-
-{pagebreak}
 
 ## Conclusion
 

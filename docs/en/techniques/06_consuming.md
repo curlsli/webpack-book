@@ -37,7 +37,7 @@ If you are using *react-lite*, configure it as below:
 },
 ```
 
-T> The same technique works with loaders too. You can use `resolveLoader.alias` similarly. You can use the method to adapt a RequireJS project to work with webpack.
+> The same technique works with loaders too. You can use `resolveLoader.alias` similarly. You can use the method to adapt a RequireJS project to work with webpack.
 
 ## `resolve.extensions`
 
@@ -87,19 +87,17 @@ externals: {
 You still have to point to a CDN and ideally provide a local fallback, so there is something to load if the CDN does not work for the client:
 
 ```html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script>
-    window.jQuery || document.write('<script src="js/jquery-3.1.1.min.js"><\/script>')
-</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></scrip>
+<scrip>
+    window.jQuery || document.write('<script src="js/jquery-3.1.1.min.js"><\/scrip>')
+</scrip>
 ```
 
-T> [html-webpack-cdn-plugin](https://www.npmjs.com/package/html-webpack-cdn-plugin) is one option if you are using `HtmlWebpackPlugin` and want to inject a `script` tag automatically.
+> [html-webpack-cdn-plugin](https://www.npmjs.com/package/html-webpack-cdn-plugin) is one option if you are using `HtmlWebpackPlugin` and want to inject a `script` tag automatically.
 
 ## Dealing with Globals
 
 Sometimes modules depend on globals. `$` provided by jQuery is a good example. Webpack offers a few ways that allow you to handle them.
-
-{pagebreak}
 
 ### Injecting Globals
 
@@ -134,8 +132,6 @@ Webpack's `ProvidePlugin` allows webpack to resolve globals as it encounters the
 },
 ```
 
-{pagebreak}
-
 ### Exposing Globals to the Browser
 
 Sometimes you have to expose packages to third-party scripts. [expose-loader](https://www.npmjs.com/package/expose-loader) allows this as follows:
@@ -155,11 +151,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 ```
 
-T> It can be a good idea to install [React Developer Tools](https://github.com/facebook/react-devtools) to Chrome for even more information as it allows you to inspect *props* and *state* of your application.
+> It can be a good idea to install [React Developer Tools](https://github.com/facebook/react-devtools) to Chrome for even more information as it allows you to inspect *props* and *state* of your application.
 
-T> [script-loader](https://www.npmjs.com/package/script-loader) allows you to execute scripts in a global context. You have to do this if the scripts you are using rely on a global registration setup.
-
-{pagebreak}
+> [script-loader](https://www.npmjs.com/package/script-loader) allows you to execute scripts in a global context. You have to do this if the scripts you are using rely on a global registration setup.
 
 ## Removing Unused Modules
 
@@ -173,7 +167,7 @@ The easiest method to disable that behavior is to use `IgnorePlugin` to ignore l
 },
 ```
 
-T> You can use the same mechanism to work around problematic dependencies. Example: `new webpack.IgnorePlugin(/^(buffertools)$/)`.
+> You can use the same mechanism to work around problematic dependencies. Example: `new webpack.IgnorePlugin(/^(buffertools)$/)`.
 
 To bring specific locales to your project, you should use `ContextReplacementPlugin`:
 
@@ -188,9 +182,7 @@ To bring specific locales to your project, you should use `ContextReplacementPlu
 },
 ```
 
-T> There's a [Stack Overflow question](https://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack/25426019) that covers these ideas in detail. See also [Ivan Akulov's explanation of `ContextReplacementPlugin`](https://iamakulov.com/notes/webpack-contextreplacementplugin/).
-
-{pagebreak}
+> There's a [Stack Overflow question](https://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack/25426019) that covers these ideas in detail. See also [Ivan Akulov's explanation of `ContextReplacementPlugin`](https://iamakulov.com/notes/webpack-contextreplacementplugin/).
 
 ## Managing Pre-built Dependencies
 
@@ -217,15 +209,13 @@ The warning can be eliminated by aliasing the package to a source version as dis
 
 W> Take care when disabling warnings as it can hide underlying issues. Consider alternatives first. There's a [webpack issue](https://github.com/webpack/webpack/issues/1617) that discusses the problem in detail.
 
-{pagebreak}
-
 ## Managing Symbolic Links
 
 Symbolic links, or symlinks, are an operating system level feature that allows you to point to other files through a file system without copying them. You can use `npm link` to create global symlinks for packages under development and then use `npm unlink` to remove the links.
 
 Webpack resolves symlinks to their full path as Node does. The problem is that if you are unaware of this fact, the behavior can surprise you especially if you rely on webpack processing. It's possible to work around the behavior as discussed in webpack issues [#1643](https://github.com/webpack/webpack/issues/1643) and [#985](https://github.com/webpack/webpack/issues/985). Webpack core behavior may improve in the future to make these workarounds unnecessary.
 
-T> You can disable webpack's symlink handling by setting `resolve.symlinks` as `false`.
+> You can disable webpack's symlink handling by setting `resolve.symlinks` as `false`.
 
 ## Getting Insights on Packages
 

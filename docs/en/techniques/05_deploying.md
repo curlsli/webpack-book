@@ -16,8 +16,6 @@ To get started, execute
 npm install gh-pages --save-dev
 ```
 
-{pagebreak}
-
 You are also going to need a script in *package.json*:
 
 **package.json**

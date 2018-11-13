@@ -6,13 +6,11 @@ The problem can be solved by deciding a set of browsers and platforms that shoul
 
 You can approach the problem in several ways through webpack. You can still use *url-loader* and *file-loader* as with images. Font `test` patterns tend to be more complicated, though, and you have to worry about font file related lookups.
 
-T> [canifont](https://www.npmjs.com/package/canifont) helps you to figure out which font formats you should support. It accepts a **.browserslistrc** definition and then checks font support of each browser based on the definition.
+> [canifont](https://www.npmjs.com/package/canifont) helps you to figure out which font formats you should support. It accepts a **.browserslistrc** definition and then checks font support of each browser based on the definition.
 
 ## Choosing One Format
 
 If you exclude Opera Mini, all browsers support the *.woff* format. Its newer version, *.woff2*, is widely supported by modern browsers and can be a good alternative.
-
-{pagebreak}
 
 Going with one format, you can use a similar setup as for images and rely on both *file-loader* and *url-loader* while using the limit option:
 
@@ -51,8 +49,6 @@ A more elaborate approach to achieve a similar result that includes *.woff2* and
 },
 ```
 
-{pagebreak}
-
 ## Supporting Multiple Formats
 
 In case you want to make sure the site looks good on a maximum amount of browsers, you can use *file-loader* and forget about inlining. Again, it's a trade-off as you get extra requests, but perhaps it's the right move. Here you could end up with a loader configuration:
@@ -82,9 +78,7 @@ The way you write your CSS definition matters. To make sure you are getting the 
 }
 ```
 
-T> [MDN discusses the font-family rule](https://developer.mozilla.org/en/docs/Web/CSS/@font-face) in detail.
-
-{pagebreak}
+> [MDN discusses the font-family rule](https://developer.mozilla.org/en/docs/Web/CSS/@font-face) in detail.
 
 ## Manipulating *file-loader* Output Path and `publicPath`
 

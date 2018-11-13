@@ -12,8 +12,6 @@ The matched files can be processed through loaders like [file-loader](https://ww
 
 Since inlining CSS isn't a good idea for production usage, it makes sense to use `MiniCssExtractPlugin` to generate a separate CSS file. You will do this in the next chapter.
 
-{pagebreak}
-
 To get started, invoke
 
 ```bash
@@ -57,9 +55,9 @@ The added configuration means that files ending with `.css` should invoke the gi
 
 Loaders are transformations that are applied to source files, and return the new source and can be chained together like a pipe in Unix. They evaluated from right to left. This means that `loaders: ["style-loader", "css-loader"]` can be read as `styleLoader(cssLoader(input))`.
 
-T> If you want to disable *css-loader* `url` parsing set `url: false`. The same idea applies to `@import`. To disable parsing imports you can set `import: false` through the loader options.
+> If you want to disable *css-loader* `url` parsing set `url: false`. The same idea applies to `@import`. To disable parsing imports you can set `import: false` through the loader options.
 
-T> In case you don't need HMR capability, support for old Internet Explorer, and source maps, consider using [micro-style-loader](https://www.npmjs.com/package/micro-style-loader) instead of *style-loader*.
+> In case you don't need HMR capability, support for old Internet Explorer, and source maps, consider using [micro-style-loader](https://www.npmjs.com/package/micro-style-loader) instead of *style-loader*.
 
 ## Setting Up the Initial CSS
 
@@ -90,7 +88,7 @@ You continue from here in the next chapter. Before that, though, you'll learn ab
 
 ![Hello cornsilk world](../../images/hello_02.png)
 
-T> The *CSS Modules* appendix discusses an approach that allows you to treat local to files by default. It avoids the scoping problem of CSS.
+> The *CSS Modules* appendix discusses an approach that allows you to treat local to files by default. It avoids the scoping problem of CSS.
 
 ## Loading Less
 
@@ -124,15 +122,13 @@ Webpack doesn't need much configuration:
 },
 ```
 
-T> If you want more performance, especially during development, check out [fast-sass-loader](https://www.npmjs.com/package/fast-sass-loader).
+> If you want more performance, especially during development, check out [fast-sass-loader](https://www.npmjs.com/package/fast-sass-loader).
 
 ## Loading Stylus and Yeticss
 
 ![Stylus](../../images/stylus.png)
 
 [Stylus](http://stylus-lang.com/) is yet another example of a CSS processor. It works well through [stylus-loader](https://www.npmjs.com/package/stylus-loader). [yeticss](https://www.npmjs.com/package/yeticss) is a pattern library that works well with it.
-
-{pagebreak}
 
 Consider the following configuration:
 
@@ -196,7 +192,7 @@ The example below illustrates how to set up autoprefixing using PostCSS. It also
 
 You have to remember to include [autoprefixer](https://www.npmjs.com/package/autoprefixer) and [precss](https://www.npmjs.com/package/precss) to your project for this to work. The technique is discussed in detail in the *Autoprefixing* chapter.
 
-T> PostCSS supports *postcss.config.js* based configuration. It relies on [cosmiconfig](https://www.npmjs.com/package/cosmiconfig) internally for other formats.
+> PostCSS supports *postcss.config.js* based configuration. It relies on [cosmiconfig](https://www.npmjs.com/package/cosmiconfig) internally for other formats.
 
 ### cssnext
 
@@ -215,7 +211,7 @@ T> PostCSS supports *postcss.config.js* based configuration. It relies on [cosmi
 
 See [the usage documentation](http://cssnext.io/usage/) for available options.
 
-T> cssnext includes *autoprefixer*! You don't have to configure autoprefixing separately for it to work in this case.
+> cssnext includes *autoprefixer*! You don't have to configure autoprefixing separately for it to work in this case.
 
 ## Understanding Lookups
 
@@ -223,13 +219,11 @@ To get most out of *css-loader*, you should understand how it performs its looku
 
 [copy-webpack-plugin](https://www.npmjs.com/package/copy-webpack-plugin) works for this purpose, but you can also copy the files outside of webpack. The benefit of the former approach is that webpack-dev-server can pick that up.
 
-T> [resolve-url-loader](https://www.npmjs.com/package/resolve-url-loader) comes in handy if you use Sass or Less. It adds support for relative imports to the environments.
+> [resolve-url-loader](https://www.npmjs.com/package/resolve-url-loader) comes in handy if you use Sass or Less. It adds support for relative imports to the environments.
 
 ### Processing *css-loader* Imports
 
 If you want to process *css-loader* imports in a specific way, you should set up `importLoaders` option to a number that tells the loader how many loaders before the *css-loader* should be executed against the imports found. If you import other CSS files from your CSS through the `@import` statement and want to process the imports through specific loaders, this technique is essential.
-
-{pagebreak}
 
 Consider the following import from a CSS file:
 

@@ -20,7 +20,7 @@ const req = require.context(
 );
 ```
 
-T> The loader definition could be pushed to webpack configuration. The inline form is used to keep the example minimal.
+> The loader definition could be pushed to webpack configuration. The inline form is used to keep the example minimal.
 
 `require.context` returns a function to `require` against. It also knows its module `id` and it provides a `keys()` method for figuring out the contents of the context. To give you a better example, consider the code below:
 
@@ -34,7 +34,7 @@ const demoPage = req("./demo.md");
 
 The technique can be valuable for other purposes, such as testing or adding files for webpack to watch. In that case, you would set up a `require.context` within a file which you then point to through a webpack `entry`.
 
-T> The information is enough for generating an entire site as showcased in [Antwar](https://github.com/antwarjs/antwar).
+> The information is enough for generating an entire site as showcased in [Antwar](https://github.com/antwarjs/antwar).
 
 ## Dynamic Paths with a Dynamic `import`
 
@@ -50,7 +50,7 @@ import(`translations/${target}.json`).then(...).catch(...);
 
 The same idea works with `require` as webpack can then perform static analysis. For example, `require(`assets/modals/${imageSrc}.js`);` would generate a context and resolve against an image based on the `imageSrc` that was passed to the `require`.
 
-T> When using dynamic imports, specify file extension in the path as that helps with performance by keeping the context smaller.
+> When using dynamic imports, specify file extension in the path as that helps with performance by keeping the context smaller.
 
 ## Combining Multiple `require.context`s
 
@@ -76,8 +76,6 @@ const combineContexts = (...contexts) => {
   return webpackContext;
 };
 ```
-
-{pagebreak}
 
 ## Dealing with Dynamic Paths
 

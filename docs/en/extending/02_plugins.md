@@ -14,7 +14,7 @@ Regardless of your approach, you should capture possible options passed by a use
 
 When the plugin is connected to webpack configuration, webpack will run its constructor and call `apply` with a compiler object passed to it. The object exposes webpack's plugin API and allows you to use its hooks as listed by [the official compiler reference](https://webpack.js.org/api/plugins/compiler/).
 
-T> [webpack-defaults](https://www.npmjs.com/package/webpack-defaults) works as a starting point for webpack plugins. It contains the infrastructure used to develop official webpack loaders and plugins.
+> [webpack-defaults](https://www.npmjs.com/package/webpack-defaults) works as a starting point for webpack plugins. It contains the infrastructure used to develop official webpack loaders and plugins.
 
 ## Setting Up a Development Environment
 
@@ -43,7 +43,7 @@ module.exports = {
 };
 ```
 
-T> If you don't have a `lib` entry file set up yet, write one. The contents don't matter as long as it's JavaScript that webpack can parse.
+> If you don't have a `lib` entry file set up yet, write one. The contents don't matter as long as it's JavaScript that webpack can parse.
 
 To make it convenient to run, set up a build shortcut:
 
@@ -60,7 +60,7 @@ leanpub-end-insert
 
 Executing it should result in an `Error: Cannot find module` failure as the actual plugin is still missing.
 
-T> If you want an interactive development environment, consider setting up [nodemon](https://www.npmjs.com/package/nodemon) against the build. Webpack's watcher won't work in this case.
+> If you want an interactive development environment, consider setting up [nodemon](https://www.npmjs.com/package/nodemon) against the build. Webpack's watcher won't work in this case.
 
 ## Implementing a Basic Plugin
 
@@ -77,8 +77,6 @@ module.exports = class DemoPlugin {
 ```
 
 If you run the plugin (`npm run build:plugin`), you should see `applying` message at the console. Given most plugins accept options, it's a good idea to capture those and pass them to `apply`.
-
-{pagebreak}
 
 ## Capturing Options
 
@@ -117,8 +115,6 @@ leanpub-end-insert
 ```
 
 Now you should see `apply { name: 'demo' }` after running.
-
-{pagebreak}
 
 ## Understanding Compiler and Compilation
 
@@ -169,9 +165,9 @@ W> Forgetting the callback and running the plugin makes webpack fail silently!
 
 Running the build should show more information than before because a compilation object contains whole dependency graph traversed by webpack. You have access to everything related to it here including entries, chunks, modules, assets, and more.
 
-T> Many of the available hooks expose compilation, but sometimes they reveal a more specific structure, and it takes a more particular study to understand those.
+> Many of the available hooks expose compilation, but sometimes they reveal a more specific structure, and it takes a more particular study to understand those.
 
-T> Loaders have dirty access to `compiler` and `compilation` through underscore (`this._compiler`/`this._compilation`).
+> Loaders have dirty access to `compiler` and `compilation` through underscore (`this._compiler`/`this._compilation`).
 
 ## Writing Files Through Compilation
 
@@ -182,8 +178,6 @@ To write an asset, you have to use [webpack-sources](https://www.npmjs.com/packa
 ```bash
 npm install webpack-sources --save-dev
 ```
-
-{pagebreak}
 
 Adjust the code as follows to write through `RawSource`:
 
@@ -231,7 +225,7 @@ lib.js   2.9 kB       0  [emitted]  lib
 
 If you examine *build/demo* file, you'll see it contains the word *demo* as per code above.
 
-T> Compilation has a set of hooks of its own as covered in [the official compilation reference](https://webpack.js.org/api/plugins/compiler/).
+> Compilation has a set of hooks of its own as covered in [the official compilation reference](https://webpack.js.org/api/plugins/compiler/).
 
 ## Managing Warnings and Errors
 

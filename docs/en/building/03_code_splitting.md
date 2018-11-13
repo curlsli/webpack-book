@@ -6,7 +6,7 @@ Even though splitting bundles can help a notch, they are not the only solution, 
 
 You can load more code as the user enters a new view of the application. You can also tie loading to a specific action like scrolling or clicking a button. You could also try to predict what the user is trying to do next and load code based on your guess. This way the functionality would be already there as the user tries to access it.
 
-T> Incidentally, it's possible to implement Google's [PRPL pattern](https://developers.google.com/web/fundamentals/performance/prpl-pattern/) using webpack's lazy loading. PRPL (Push, Render, Pre-cache, Lazy-load) has been designed with mobile web in mind.
+> Incidentally, it's possible to implement Google's [PRPL pattern](https://developers.google.com/web/fundamentals/performance/prpl-pattern/) using webpack's lazy loading. PRPL (Push, Render, Pre-cache, Lazy-load) has been designed with mobile web in mind.
 
 ## Code Splitting Formats
 
@@ -30,8 +30,6 @@ import(/* webpackChunkName: "optional-name" */ "./module").then(
 );
 ```
 
-{pagebreak}
-
 The optional name allows you to pull multiple split points into a single bundle. As long as they have the same name, they will be grouped. Each split point generates a separate bundle by default.
 
 The interface allows composition, and you could load multiple resources in parallel:
@@ -52,11 +50,9 @@ The code above creates separate bundles to a request. If you wanted only one, yo
 
 W> The syntax works only with JavaScript after configuring it the right way. If you use another environment you may have to use alternatives covered in the following sections.
 
-T> There's an older syntax, [require.ensure](https://webpack.js.org/api/module-methods/#require-ensure). In practice the new syntax can cover the same functionality. See also [require.include](https://webpack.js.org/api/module-methods/#require-include).
+> There's an older syntax, [require.ensure](https://webpack.js.org/api/module-methods/#require-ensure). In practice the new syntax can cover the same functionality. See also [require.include](https://webpack.js.org/api/module-methods/#require-include).
 
-T> [webpack-pwa](https://github.com/webpack/webpack-pwa) illustrates the idea on a larger scale and discusses different shell based approaches. You get back to this topic in the *Multiple Pages* chapter.
-
-{pagebreak}
+> [webpack-pwa](https://github.com/webpack/webpack-pwa) illustrates the idea on a larger scale and discusses different shell based approaches. You get back to this topic in the *Multiple Pages* chapter.
 
 ## Setting Up Code Splitting
 
@@ -86,8 +82,6 @@ leanpub-end-insert
 ```
 
 W> If you are using ESLint, you should install `babel-eslint` and set `parser: "babel-eslint"` in addition to `parserOptions.allowImportExportEverywhere: true` at ESLint configuration.
-
-{pagebreak}
 
 ### Defining a Split Point Using a Dynamic `import`
 
@@ -148,13 +142,11 @@ leanpub-end-insert
 
 That *0.js* is your split point. Examining the file reveals that webpack has wrapped the code in a `webpackJsonp` block and processed the code bit.
 
-T> If you want to adjust the name of the chunk, set `output.chunkFilename`. For example, setting it to `"chunk.[id].js"` would prefix each split chunk with the word "chunk".
+> If you want to adjust the name of the chunk, set `output.chunkFilename`. For example, setting it to `"chunk.[id].js"` would prefix each split chunk with the word "chunk".
 
-T> [bundle-loader](https://www.npmjs.com/package/bundle-loader) gives similar results, but through a loader interface. It supports bundle naming through its `name` option.
+> [bundle-loader](https://www.npmjs.com/package/bundle-loader) gives similar results, but through a loader interface. It supports bundle naming through its `name` option.
 
-T> The *Dynamic Loading* chapter covers other techniques that come in handy when you have to deal with more complicated splits.
-
-{pagebreak}
+> The *Dynamic Loading* chapter covers other techniques that come in handy when you have to deal with more complicated splits.
 
 ## Code Splitting in React
 
@@ -190,7 +182,7 @@ AsyncComponent.propTypes = {
 };
 ```
 
-T> [react-async-component](https://www.npmjs.com/package/react-async-component) wraps the pattern in a `createAsyncComponent` call and provides server side rendering specific functionality. [loadable-components](https://www.npmjs.com/package/loadable-components) is another option.
+> [react-async-component](https://www.npmjs.com/package/react-async-component) wraps the pattern in a `createAsyncComponent` call and provides server side rendering specific functionality. [loadable-components](https://www.npmjs.com/package/loadable-components) is another option.
 
 ## Disabling Code Splitting
 
@@ -210,9 +202,7 @@ module.exports = {
 };
 ```
 
-T> See [Glenn Reyes' detailed explanation](https://medium.com/@glennreyes/how-to-disable-code-splitting-in-webpack-1c0b1754a3c5).
-
-{pagebreak}
+> See [Glenn Reyes' detailed explanation](https://medium.com/@glennreyes/how-to-disable-code-splitting-in-webpack-1c0b1754a3c5).
 
 ## Conclusion
 
@@ -228,4 +218,4 @@ To recap:
 
 You'll learn to tidy up the build in the next chapter.
 
-T> The *Searching with React* appendix contains a complete example of code splitting. It shows how to set up a static site index that's loaded when the user searches information.
+> The *Searching with React* appendix contains a complete example of code splitting. It shows how to set up a static site index that's loaded when the user searches information.

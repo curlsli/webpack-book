@@ -35,9 +35,7 @@ If the configuration file is broken into separate pieces, they have to be combin
 
 Even though *webpack-merge* was designed for this book, it has proven to be an invaluable tool beyond it. You can consider it as a learning tool and pick it up in your work if you find it handy.
 
-T> [webpack-chain](https://www.npmjs.com/package/webpack-chain) provides a fluent API for configuring webpack allowing you to avoid configuration shape-related problems while enabling composition.
-
-{pagebreak}
+> [webpack-chain](https://www.npmjs.com/package/webpack-chain) provides a fluent API for configuring webpack allowing you to avoid configuration shape-related problems while enabling composition.
 
 ## Setting Up *webpack-merge*
 
@@ -63,9 +61,7 @@ exports.devServer = ({ host, port } = {}) => ({
 });
 ```
 
-T> The same `stats` idea works for production configuration as well. See [the official documentation](https://webpack.js.org/configuration/stats/) for all the available options.
-
-{pagebreak}
+> The same `stats` idea works for production configuration as well. See [the official documentation](https://webpack.js.org/configuration/stats/) for all the available options.
 
 To connect this configuration part, set up *webpack.config.js* as in the code example below:
 
@@ -127,11 +123,9 @@ After these changes, the build should behave the same way as before. This time, 
 
 You can add more targets by expanding the *package.json* definition and branching at *webpack.config.js* based on the need. *webpack.parts.js* grows to contain specific techniques you can then use to compose the configuration.
 
-T> `productionConfig` is a stub for now and it will grow later as we expand the configuration further.
+> `productionConfig` is a stub for now and it will grow later as we expand the configuration further.
 
-T> The [process](https://nodejs.org/api/process.html) module used in the code is exposed by Node as a global. In addition to `env`, it provides plenty of other functionality that allows you to get more information of the host system.
-
-{pagebreak}
+> The [process](https://nodejs.org/api/process.html) module used in the code is exposed by Node as a global. In addition to `env`, it provides plenty of other functionality that allows you to get more information of the host system.
 
 ### Understanding `--env`
 
@@ -179,8 +173,6 @@ If you split the configuration per target, you could end up with a file structur
 
 In this case, you would point to the targets through webpack `--config` parameter and `merge` common configuration through `module.exports = merge(common, config);`.
 
-{pagebreak}
-
 ### Split Parts per Purpose
 
 To add hierarchy to the way configuration parts are managed, you could decompose *webpack.parts.js* per category:
@@ -201,8 +193,6 @@ This arrangement would make it faster to find configuration related to a categor
 ### Pushing Parts to Packages
 
 Given all configuration is JavaScript, nothing prevents you from consuming it as a package or packages. It would be possible to package the shared configuration so that you can consume it across multiple projects. See the [SurviveJS - Maintenance](https://survivejs.com/maintenance/) book for further information on how to achieve this.
-
-{pagebreak}
 
 ## Conclusion
 

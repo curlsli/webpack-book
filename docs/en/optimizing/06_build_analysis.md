@@ -24,7 +24,7 @@ You can also consider using the following flags:
 * `--profile` to capture timing-related information. The setting is optional but good to set.
 * `--progress` to show how long webpack spent in different stages of the build.
 
-T> To understand why webpack includes a specific module to the build while processing, use [whybundled](https://www.npmjs.com/package/whybundled) or [webpack-why](https://www.npmjs.com/package/webpack-why). `--display-reasons` flag gives more information as well. Example: `npm run build -- --display-reasons`.
+> To understand why webpack includes a specific module to the build while processing, use [whybundled](https://www.npmjs.com/package/whybundled) or [webpack-why](https://www.npmjs.com/package/webpack-why). `--display-reasons` flag gives more information as well. Example: `npm run build -- --display-reasons`.
 
 W> Given you piggyback on the production target in the current setup; this process cleans the build directory! If you want to avoid that, set up a separate destination where you don't clean.
 
@@ -51,9 +51,9 @@ webpack(config, (err, stats) => {
 
 This technique can be valuable if you want to do further processing on stats although often the other solutions are enough.
 
-T> If you want JSON output from `stats`, use `stats.toJson()`. To get *verbose* output, use `stats.toJson("verbose")`. It follows all stat options webpack supports.
+> If you want JSON output from `stats`, use `stats.toJson()`. To get *verbose* output, use `stats.toJson("verbose")`. It follows all stat options webpack supports.
 
-T> To mimic the `--json` flag, use `console.log(JSON.stringify(stats.toJson(), null, 2));`. The output is formatted to be readable.
+> To mimic the `--json` flag, use `console.log(JSON.stringify(stats.toJson(), null, 2));`. The output is formatted to be readable.
 
 ### `StatsWebpackPlugin` and `WebpackStatsPlugin`
 
@@ -64,8 +64,6 @@ If you want to manage stats through a plugin, check out [stats-webpack-plugin](h
 ## Enabling a Performance Budget
 
 Webpack allows you to define a **performance budget**. The idea is that it gives your build size constraint which it has to follow. The feature is disabled by default and the calculation includes extracted chunks to entry calculation. If a budget isn't met and it has been configured to emit an error, it would terminate the entire build.
-
-{pagebreak}
 
 To integrate the feature into the project, adjust the configuration:
 
@@ -102,8 +100,6 @@ Entrypoints:
 
 You can increase the limit or remove the configuration to get rid of the warning. An attractive option would be to replace React with a lighter alternative as discussed in the *Consuming Packages* chapter.
 
-{pagebreak}
-
 ## Available Analysis Tools
 
 Even though having a look at the file itself gives you an idea of what's going on, often it's preferable to use a particular tool for that. Consider the following.
@@ -113,8 +109,6 @@ Even though having a look at the file itself gives you an idea of what's going o
 ![The Official Analyse Tool](../../images/analyse.png)
 
 [The official analyse tool](https://github.com/webpack/analyse) gives you recommendations and a good idea of your application's dependency graph. It can be run locally as well.
-
-{pagebreak}
 
 ### Webpack Visualizer
 
@@ -152,8 +146,6 @@ Even though having a look at the file itself gives you an idea of what's going o
 
 [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) provides a zoomable treemap.
 
-{pagebreak}
-
 ### webpack-bundle-size-analyzer
 
 [webpack-bundle-size-analyzer](https://www.npmjs.com/package/webpack-bundle-size-analyzer) gives a text based composition.
@@ -187,8 +179,6 @@ $ inspectpack --action=duplicates --bundle=bundle.js
     * Pct of Bundle Size:  15 %
 ```
 
-{pagebreak}
-
 ### Jarvis
 
 [Jarvis](https://www.npmjs.com/package/webpack-jarvis) is a user interface that has been designed to show all information relevant to your webpack build. For example, it shows the amount of treeshakeable modules in the project and how well your assets perform against different connection types.
@@ -204,8 +194,6 @@ $ inspectpack --action=duplicates --bundle=bundle.js
 ### webpack-deps-tree
 
 [webpack-deps-tree](https://restrry.github.io/webpack-deps-tree/static/) displays webpack module graph. Using it you can understand how modules of your bundles are related to each other.
-
-{pagebreak}
 
 ## Duplication Analysis
 
@@ -229,8 +217,6 @@ In addition to tools that work with webpack output, there are a couple that are 
 ![madge](../../images/madge.png)
 
 [madge](https://www.npmjs.com/package/madge) is another independent tool that can output a graph based on module input. The graph output allows you to understand the dependencies of your project in greater detail.
-
-{pagebreak}
 
 ## Conclusion
 

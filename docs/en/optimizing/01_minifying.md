@@ -20,8 +20,6 @@ To get started, include the plugin to the project:
 npm install uglifyjs-webpack-plugin --save-dev
 ```
 
-{pagebreak}
-
 To attach it to the configuration, define a part for it first:
 
 **webpack.parts.js**
@@ -52,11 +50,9 @@ leanpub-end-insert
 
 If you execute `npm run build` now, you should see result close to the same as before. The outcome may be a slightly better as you are likely using a newer version of UglifyJS this way.
 
-T> Source maps are disabled by default. You can enable them through the `sourceMap` flag. You should check *uglifyjs-webpack-plugin* for more options.
+> Source maps are disabled by default. You can enable them through the `sourceMap` flag. You should check *uglifyjs-webpack-plugin* for more options.
 
-T> To strip `console.log` calls from the resulting source, set `uglifyOptions.compress.drop_console` to `true` as [discussed on Stack Overflow](https://stackoverflow.com/questions/49101152/webpack-v4-remove-console-logs-with-webpack-uglify).
-
-{pagebreak}
+> To strip `console.log` calls from the resulting source, set `uglifyOptions.compress.drop_console` to `true` as [discussed on Stack Overflow](https://stackoverflow.com/questions/49101152/webpack-v4-remove-console-logs-with-webpack-uglify).
 
 ## Other Ways to Minify JavaScript
 
@@ -74,7 +70,7 @@ Specific solutions allow you to preprocess code so that it will run faster. They
 
 Since webpack 4, it applies scope hoisting in production mode by default. It hoists all modules to a single scope instead of writing a separate closure for each. Doing this slows down the build but gives you bundles that are faster to execute. [Read more about scope hoisting](https://medium.com/webpack/brief-introduction-to-scope-hoisting-in-webpack-8435084c171f) at the webpack blog.
 
-T>  Pass `--display-optimization-bailout` flag to webpack to gain debugging information related to hoisting results.
+>  Pass `--display-optimization-bailout` flag to webpack to gain debugging information related to hoisting results.
 
 ### Pre-evaluation
 
@@ -102,8 +98,6 @@ Out of the available solutions, `OptimizeCSSAssetsPlugin` composes the best. To 
 npm install optimize-css-assets-webpack-plugin cssnano --save-dev
 ```
 
-{pagebreak}
-
 Like for JavaScript, you can wrap the idea in a configuration part:
 
 **webpack.parts.js**
@@ -126,8 +120,6 @@ exports.minifyCSS = ({ options }) => ({
 ```
 
 W> If you use `--json` output with webpack as discussed in the *Build Analysis* chapter, you should set `canPrint: false` for the plugin.
-
-{pagebreak}
 
 Then, connect with the main configuration:
 
@@ -173,7 +165,7 @@ leanpub-end-insert
 ...
 ```
 
-T> [compression-webpack-plugin](https://www.npmjs.com/package/compression-webpack-plugin) allows you to push the problem of generating compressed files to webpack to potentially save processing time on the server.
+> [compression-webpack-plugin](https://www.npmjs.com/package/compression-webpack-plugin) allows you to push the problem of generating compressed files to webpack to potentially save processing time on the server.
 
 ## Minifying Images
 
