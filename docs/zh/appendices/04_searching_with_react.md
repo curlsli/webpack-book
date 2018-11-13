@@ -16,8 +16,6 @@ import("./asset").then(asset => ...).catch(err => ...)
 
 The beautiful thing is that this gives error handling in case something goes wrong (network is down etc.) and gives a chance to recover. You can also use `Promise` based utilities like `Promise.all` for composing more complicated queries.
 
-{pagebreak}
-
 In this case, you need to detect when the user selects the search element, load the data unless it has been loaded already, and then execute search logic against it. Consider the React implementation below:
 
 **App.js**
@@ -122,15 +120,13 @@ function loadIndex() {
 
 In the example, webpack detects the `import` statically. It can generate a separate bundle based on this split point. Given it relies on static analysis, you cannot generalize `loadIndex` in this case and pass the search index path as a parameter.
 
-{pagebreak}
-
-## Conclusion
+## 总结
 
 Beyond search, the approach can be used with routers too. As the user enters a route, you can load the dependencies the resulting view needs. Alternately, you can start loading dependencies as the user scrolls a page and gets adjacent parts with actual functionality. `import` provides a lot of power and allows you to keep your application lean.
 
 You can find a [full example](https://github.com/survivejs-demos/lunr-demo) showing how it all goes together with lunr, React, and webpack. The basic idea is the same, but there's more setup in place.
 
-To recap:
+内容回顾：
 
 * If your dataset is small and static, client-side search is a good option.
 * You can index your content using a solution like [lunr](http://lunrjs.com/) and then perform a search against it.
